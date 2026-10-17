@@ -1,0 +1,20 @@
+meta {
+  name: Health
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/health
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:3000
+}
+
+assert {
+  res.status: eq 200
+  res.body.ok: eq true
+}
