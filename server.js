@@ -121,4 +121,7 @@ app.get(/^\/(data|reference)\//, async (req, res) => {
 
 app.use((req, res) => res.status(404).json({ error: "Not found. Try /health, /companies/top, /data/... or /reference/..." }));
 
-app.listen(PORT, () => console.log(`[startup] Dealroom server on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log("Phillippine's server is running");
+  console.log(`[startup] Dealroom server on http://localhost:${PORT}`);
+});
