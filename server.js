@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { buildReport } from "./marseille-aix.js";
+import { buildCgtReport } from "./cgt-europe.js";
 
 dotenv.config();
 
@@ -104,8 +106,8 @@ app.get("/companies/top", async (req, res) => {
   }
 });
 
-// Pass any GET on /data/... or /reference/... through to the Dealroom API, auth added.
-app.get(/^\/(data|reference)\//, async (req, res) => {
+// Pass any GET on /data/..., /reference/... or /analytics/... through to the Dealroom API, auth added.
+app.get(/^\/(data|reference|analytics)\//, async (req, res) => {
   try {
     const upstream = await dealroomGet(req.originalUrl);
     const credits = upstream.headers.get("x-credits-used");
@@ -118,6 +120,36 @@ app.get(/^\/(data|reference)\//, async (req, res) => {
     res.status(502).json({ error: err.message });
   }
 });
+
+// Challenge 2: Aix-Marseille-Provence ecosystem report. Cached on disk because a full build costs credits;
+// add ?refresh=1 to rebuild.
+const REPORT_FILE = "data/marseille-aix.json";
+app.get("/api/marseille-aix", async (req, res) => {
+  try {
+    if (!req.query.refresh && existsSync(REPORT_FILE)) return res.type("json").send(readFileSync(REPORT_FILE, "utf8"));
+    const report = await buildReport(dealroomGet);
+    mkdirSync("data", { recursive: true });
+    writeFileSync(REPORT_FILE, JSON.stringify(report));
+    res.json(report);
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+
+// Challenge 3: European cell & gene therapy report, cached the same way.
+const CGT_FILE = "data/cgt-europe.json";
+app.get("/api/cgt-europe", async (req, res) => {
+  try {
+    if (!req.query.refresh && existsSync(CGT_FILE)) return res.type("json").send(readFileSync(CGT_FILE, "utf8"));
+    const report = await buildCgtReport(dealroomGet);
+    mkdirSync("data", { recursive: true });
+    writeFileSync(CGT_FILE, JSON.stringify(report));
+    res.json(report);
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+app.use(express.static("public", { extensions: ["html"] }));
 
 app.use((req, res) => res.status(404).json({ error: "Not found. Try /health, /companies/top, /data/... or /reference/..." }));
 

@@ -8,6 +8,8 @@
 
 - `GET /health`, `GET /companies/top` (VC-backed companies launched since 2020, by valuation), and any `GET /data/...` or `/reference/...` passed through to `https://api.beta.dealroom.app` with auth added, e.g. `curl "localhost:3000/data/companies?limit=5&view=summary"`.
 
+- Challenge 2 page: http://localhost:3000/marseille-aix (data from `GET /api/marseille-aix`, cached in `data/`, add `?refresh=1` to rebuild for about 780 credits). `/analytics/...` is also passed through.
+
 ## Credentials and authentication
 
 - Credentials live in `.env` in this folder (gitignored). Never commit the client secret or paste it anywhere.
