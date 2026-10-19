@@ -16,12 +16,14 @@ const SECTORS = {
   "Digital and cyber": "1998401|2189301",
 };
 
+const LOCAL_CITIES = ["Marseille", "Aix-en-Provence", "Aubagne", "La Ciotat", "Gémenos", "Vitrolles", "Martigues", "Meyreuil", "Gardanne", "Marignane", "Salon-de-Provence", "Istres", "Fos-sur-Mer", "Miramas", "Pertuis", "Les Pennes-Mirabeau", "Rousset", "Éguilles", "Cabriès"];
+const MIN_LOCAL_COMPANIES = 5; // a school needs this many local alumni-founded companies to be listed
 const hqCity = (e) => e.locations?.find((l) => l.role === "hq")?.city?.name ?? null;
 
-export async function buildReport(dealroomGet) {
+// Throttled API client shared by the full build and the university-only refresh.
+function makeClient(dealroomGet) {
   let credits = 0;
   const warnings = [];
-
   // The API rate-limits bursts (429): run calls one at a time and retry with backoff.
   let queue = Promise.resolve();
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -53,6 +55,49 @@ export async function buildReport(dealroomGet) {
       return fallback;
     }
   }
+  return { get, safe, warnings, spent: () => credits };
+}
+
+// Universities and schools: alumni founders and spin-outs, restricted to what belongs to the territory.
+export async function buildUniversities(get, safe) {
+  // --- Universities: alumni founders and spin-outs ------------------------------
+  // The API matches a school on any of its locations, so multi-campus schools headquartered elsewhere
+  // (KEDGE, Epitech, ESSCA) come back with institution-wide alumni figures. To keep only what belongs to
+  // the territory, count the companies their alumni founded that are founded or headquartered here.
+  return safe("universities", async () => {
+    const b = await get("/data/universities", { limit: 40, sort: "-alumni_founders_count", filter: `any_location[in_any]:${LOC}` });
+    const rows = [];
+    for (const u of b.data.filter((x) => x.alumni || x.spinouts_count)) {
+      const count = async (extra) => {
+        const r = await get("/data/companies", {
+          view: "summary", limit: 1, include_total: "true",
+          filter: `and(${IN_TERRITORY},founder__university.id[in_any]:${u.uuid}${extra})`,
+        });
+        return r.page?.total ?? 0;
+      };
+      const localCompanies = await count("");
+      const localSpinouts = localCompanies ? await count(",classification[in_any]:spinout") : 0;
+      rows.push({
+        name: u.name,
+        city: hqCity(u),
+        url: u.dealroom_url,
+        campusBased: !LOCAL_CITIES.includes(hqCity(u)),
+        alumni: u.alumni?.count ?? 0,
+        founders: u.alumni?.founders_count ?? 0,
+        foundedCompanies: u.alumni?.founded_companies_count ?? 0,
+        unicorns: u.alumni?.unicorn_companies_count ?? 0,
+        spinoutsTotal: u.spinouts_count ?? 0,
+        localCompanies,
+        localSpinouts,
+        patents: u.patents?.count ?? null,
+      });
+    }
+    return rows.filter((r) => r.localCompanies >= MIN_LOCAL_COMPANIES).sort((x, y) => y.localCompanies - x.localCompanies);
+  }, []);
+}
+
+export async function buildReport(dealroomGet) {
+  const { get, safe, warnings, spent } = makeClient(dealroomGet);
   const agg = (source, params) => get(`/analytics/aggregate/${source}`, params).then((b) => b.data);
   const company = (c) => ({
     name: c.name,
@@ -99,23 +144,7 @@ export async function buildReport(dealroomGet) {
     ),
   );
 
-  // --- Universities: alumni founders and spin-outs ------------------------------
-  const universities = await safe("universities", async () => {
-    const b = await get("/data/universities", { limit: 30, sort: "-alumni_founders_count", filter: `any_location[in_any]:${LOC}` });
-    return b.data
-      .filter((u) => u.alumni || u.spinouts_count)
-      .map((u) => ({
-        name: u.name,
-        city: hqCity(u),
-        url: u.dealroom_url,
-        alumni: u.alumni?.count ?? 0,
-        founders: u.alumni?.founders_count ?? 0,
-        foundedCompanies: u.alumni?.founded_companies_count ?? 0,
-        unicorns: u.alumni?.unicorn_companies_count ?? 0,
-        spinouts: u.spinouts_count ?? 0,
-        patents: u.patents?.count ?? null,
-      }));
-  }, []);
+  const universities = await buildUniversities(get, safe);
 
   // --- Accelerators and incubators ----------------------------------------------
   const accelerators = await safe("accelerators", async () => {
@@ -239,8 +268,9 @@ export async function buildReport(dealroomGet) {
 
   return {
     generatedAt: new Date().toISOString(),
+    universityMinLocalCompanies: MIN_LOCAL_COMPANIES,
     territory: { name: "Aix-Marseille-Provence Metropole", locationId: LOC, fromYear: FROM_YEAR },
-    creditsUsed: credits,
+    creditsUsed: spent(),
     warnings,
     kpis: {
       companies: totals[0]?.count ?? null,
@@ -265,4 +295,11 @@ export async function buildReport(dealroomGet) {
     success: { topFunded, topJobs, fastGrowers, scaleUps, spinouts, patents },
     infrastructure: { institutions, dataCenters },
   };
+}
+
+// Refresh only the university block of a cached report (about 50 credits instead of about 780).
+export async function refreshUniversities(dealroomGet, report) {
+  const { get, safe, warnings, spent } = makeClient(dealroomGet);
+  const universities = await buildUniversities(get, safe);
+  return { ...report, universities, universityMinLocalCompanies: MIN_LOCAL_COMPANIES, warnings: [...(report.warnings ?? []), ...warnings], creditsUsed: (report.creditsUsed ?? 0) + spent() };
 }

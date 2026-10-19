@@ -10,6 +10,8 @@
 
 - Challenge 2 page: http://localhost:3000/marseille-aix (data from `GET /api/marseille-aix`, cached in `data/`, add `?refresh=1` to rebuild for about 780 credits). `/analytics/...` is also passed through.
 
+- Challenge 3 page: http://localhost:3000/cgt-europe (European cell & gene therapy; data from `GET /api/cgt-europe`, cached in `data/cgt-europe.json`, add `?refresh=1` to rebuild for about 440 credits).
+
 ## Credentials and authentication
 
 - Credentials live in `.env` in this folder (gitignored). Never commit the client secret or paste it anywhere.

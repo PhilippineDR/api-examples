@@ -124,8 +124,7 @@ function render(d) {
   const sectors = [...d.sectors].sort((a, b) => b.funding - a.funding);
   const sectorTotal = sum(d.sectors, (s) => s.companies);
   const accel = d.accelerators.filter((a) => a.portfolio > 3 || a.investments > 3);
-  const topUni = d.universities.filter((u) => u.spinouts > 0).sort((a, b) => b.spinouts - a.spinouts);
-
+  
   const peak = cre.filter((y) => y.year >= 2015 && y.year <= 2020);
   const peakAvg = peak.length ? sum(peak, (y) => y.created) / peak.length : 0;
   const recentFull = recent.filter((y) => y.year < new Date().getFullYear() - 0);
@@ -143,8 +142,11 @@ function render(d) {
   const small = d.sectors.filter((s) => s.companies && s.companies < 0.08 * sectorTotal).map((s) => `${s.name} (${s.companies})`);
   if (small.length)
     recs.push(`Sector depth is uneven: ${esc(small.join(", "))} have very few companies compared with the biotech and health base (${num(d.sectors.find((s) => /Biotech/.test(s.name))?.companies)}). These are candidates for dedicated programmes.`);
-  if (topUni.length)
-    recs.push(`Aix-Marseille University and Centrale Mediterranee are the main spin-out sources (${topUni.filter((u) => /Aix-Marseille University$|Centrale M/.test(u.name)).map((u) => esc(u.name) + ": " + u.spinouts).join(", ")}), but alumni-founder numbers are led by business and engineering schools. Connect lab spin-outs to the incubators earlier.`);
+  if (d.universities.length) {
+    const lead = d.universities.slice(0, 3).map((u) => `${esc(u.name)} (${u.localCompanies})`).join(", ");
+    const campus = d.universities.filter((u) => u.campusBased).map((u) => esc(u.name));
+    recs.push(`The schools whose alumni founded the most companies in the territory are ${lead}.${campus.length ? " " + campus.join(", ") + " are headquartered elsewhere but feed the local ecosystem through their campuses, so partnerships with them matter." : ""} Connect lab and school spin-outs to the incubators earlier.`);
+  }
   const LOCAL = ["Marseille", "Aix-en-Provence", "Aubagne", "La Ciotat", "Gémenos", "Vitrolles", "Martigues", "Meyreuil", "Gardanne", "Marignane", "Les Pennes-Mirabeau", "Rousset", "Salon-de-Provence", "Istres", "Fos-sur-Mer", "Miramas", "Pertuis", "Éguilles", "Cabriès"];
   const left = topFunded.filter((c) => c.city && !LOCAL.includes(c.city)).map((c) => `${c.name} (HQ ${c.city})`);
   if (k.foundedHereLeft || left.length)
@@ -202,16 +204,15 @@ function render(d) {
   </section>
 
   <section id="universities"><h2>Universities creating startups</h2>
-    <p class="lead">Alumni founders and lab spin-outs per university or school located in the territory.</p>
+    <p class="lead">Universities and schools with a presence in the territory, ranked by the companies their alumni founded that are founded or headquartered in the metropole. Schools need at least ${d.universityMinLocalCompanies ?? 5} such companies to be listed.</p>
     <div class="card">${table([
-      { h: "Institution", f: (u) => link(u.name, u.url) },
-      { h: "City", f: (u) => esc(u.city) },
-      { h: "Alumni founders", n: 1, f: (u) => num(u.founders) },
-      { h: "Companies founded by alumni", n: 1, f: (u) => num(u.foundedCompanies) },
-      { h: "Spin-outs", n: 1, f: (u) => num(u.spinouts) },
-      { h: "Unicorns", n: 1, f: (u) => num(u.unicorns) },
-    ], d.universities.slice(0, 12))}
-    <div class="note">Alumni figures follow the institution as a whole (for example multi-campus schools), not only the Marseille-Aix campus.</div></div>
+      { h: "Institution", f: (u) => `${link(u.name, u.url)}${u.campusBased ? ` <span class="tag" title="Headquartered in ${esc(u.city)}; has a campus in the territory">campus in territory</span>` : ""}` },
+      { h: "HQ", f: (u) => esc(u.city) },
+      { h: "Local companies founded by alumni", n: 1, f: (u) => num(u.localCompanies) },
+      { h: "Local spin-outs", n: 1, f: (u) => num(u.localSpinouts) },
+      { h: "Alumni founders (all campuses)", n: 1, f: (u) => `<span class="muted">${num(u.founders)}</span>` },
+    ], d.universities.slice(0, 15))}
+    <div class="note">Local figures count only companies founded or headquartered in the Aix-Marseille-Provence Metropole. "Alumni founders (all campuses)" is Dealroom's institution-wide number, shown in grey for context only. Local spin-outs are spin-out companies founded by the school's alumni, a proxy because Dealroom does not link spin-outs to a school directly.</div></div>
   </section>
 
   <section id="support"><h2>Accelerators and incubators</h2>

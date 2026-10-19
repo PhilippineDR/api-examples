@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
-import { buildReport } from "./marseille-aix.js";
+import { buildReport, refreshUniversities } from "./marseille-aix.js";
 import { buildCgtReport } from "./cgt-europe.js";
 
 dotenv.config();
@@ -145,6 +145,15 @@ app.get("/api/cgt-europe", async (req, res) => {
     mkdirSync("data", { recursive: true });
     writeFileSync(CGT_FILE, JSON.stringify(report));
     res.json(report);
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+app.get("/api/marseille-aix/refresh-universities", async (req, res) => {
+  try {
+    const next = await refreshUniversities(dealroomGet, JSON.parse(readFileSync(REPORT_FILE, "utf8")));
+    writeFileSync(REPORT_FILE, JSON.stringify(next));
+    res.json({ universities: next.universities.length, creditsUsed: next.creditsUsed, warnings: next.warnings });
   } catch (err) {
     res.status(502).json({ error: err.message });
   }

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>European Cell and Gene Therapy</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --ink: #14202e; --muted: #5b6b7d; --line: #e2e7ee;
+    --accent: #0b6bcb; --accent2: #e07a1f; --good: #1a8a5a; --warn: #b8541a; --bar: #cfe0f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0e141b; --card: #151d27; --ink: #e8eef5; --muted: #93a3b5; --line: #243040;
+            --accent: #5aa6f0; --accent2: #f0a35a; --good: #4cc790; --warn: #f09a64; --bar: #22456b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 24px 16px 64px; }
+  header h1 { font-size: 28px; margin: 0 0 4px; }
+  header p { margin: 0; color: var(--muted); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 16px 0 8px; font-size: 14px; }
+  nav a { color: var(--accent); text-decoration: none; }
+  section { margin-top: 36px; }
+  h2 { font-size: 20px; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 14px; max-width: 760px; }
+  .grid { display: grid; gap: 12px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+  .two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .kpi .v { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .kpi .l { color: var(--muted); font-size: 13px; }
+  .takeaway { border-left: 4px solid var(--accent); background: var(--card); border-radius: 6px; padding: 10px 14px; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .scroll { overflow-x: auto; }
+  a { color: var(--accent); }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--bar); color: var(--ink); margin-right: 4px; }
+  .tag.local { background: var(--good); color: #fff; }
+  .muted { color: var(--muted); }
+  .chart { display: flex; align-items: flex-end; gap: 8px; height: 190px; padding-top: 8px; }
+  .col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+  .col .bar { width: 100%; max-width: 46px; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 2px; }
+  .col .bar.alt { background: var(--accent2); }
+  .col .val { font-size: 11px; color: var(--muted); margin-bottom: 3px; white-space: nowrap; }
+  .col .lab { font-size: 12px; margin-top: 4px; }
+  .hbar { height: 8px; background: var(--bar); border-radius: 4px; overflow: hidden; min-width: 70px; }
+  .hbar span { display: block; height: 100%; background: var(--accent); }
+  ol.actions { padding-left: 20px; margin: 0; } ol.actions li { margin-bottom: 8px; }
+  .note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .loading, .error { padding: 40px; text-align: center; color: var(--muted); }
+  .error { color: var(--warn); }
+  footer { margin-top: 48px; font-size: 13px; color: var(--muted); }
+  @media print { nav { display: none; } body { background: #fff; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cell and gene therapy in Europe</h1>
+    <p id="sub">Sub-sector analysis built on the Dealroom API.</p>
+    <nav>
+      <a href="#overview">Overview</a><a href="#countries">Countries</a><a href="#funding">Funding and creation</a>
+      <a href="#segments">Sub-segments</a><a href="#companies">Companies</a><a href="#investors">Investors</a>
+      <a href="#enablers">Enablers</a><a href="#takeaways">Takeaways</a>
+    </nav>
+  </header>
+  <div id="app"><div class="loading">Loading the data (the first build calls the Dealroom API and can take a minute)...</div></div>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = (v) => (v == null ? "n/a" : Math.round(v).toLocaleString("en-GB"));
+const usd = (v) => {
+  if (v == null) return "n/a";
+  const a = Math.abs(v);
+  if (a >= 1e9) return "$" + (v / 1e9).toFixed(2) + "B";
+  if (a >= 1e6) return "$" + (v / 1e6).toFixed(a >= 1e8 ? 0 : 1) + "M";
+  if (a >= 1e3) return "$" + Math.round(v / 1e3) + "K";
+  return "$" + Math.round(v);
+};
+const pct = (a, b) => (b ? Math.round((100 * a) / b) + "%" : "n/a");
+const link = (name, url) => (url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name));
+const sum = (arr, f) => arr.reduce((s, x) => s + (f(x) || 0), 0);
+
+function bars(rows, key, label, fmt, alt) {
+  const max = Math.max(1, ...rows.map((r) => r[key] || 0));
+  return `<div class="chart">${rows.map((r) =>
+    `<div class="col"><div class="val">${fmt(r[key])}</div><div class="bar${alt ? " alt" : ""}" style="height:${Math.max(1, Math.round(((r[key] || 0) / max) * 140))}px"></div><div class="lab">${esc(r[label])}</div></div>`).join("")}</div>`;
+}
+
+function table(cols, rows) {
+  return `<div class="scroll"><table><thead><tr>${cols.map((c) => `<th class="${c.n ? "n" : ""}">${esc(c.h)}</th>`).join("")}</tr></thead>
+  <tbody>${rows.map((r) => `<tr>${cols.map((c) => `<td class="${c.n ? "n" : ""}">${c.f(r)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+
+function companyTable(rows) {
+  return table([
+    { h: "Company", f: (c) => `${link(c.name, c.url)}<div class="muted">${esc(c.tagline || "")}</div>` },
+    { h: "HQ city", f: (c) => esc(c.city) },
+    { h: "Founded", f: (c) => esc(c.founded) },
+    { h: "Employees", n: 1, f: (c) => num(c.employees) },
+    { h: "Funding", n: 1, f: (c) => usd(c.funding) },
+  ], rows);
+}
+
+
+function render(d) {
+  const k = d.kpis, from = d.scope.fromYear, c = d.companies;
+  const thisYear = new Date().getFullYear();
+  const fy = d.fundingByYear, cre = d.creation;
+  const countries = d.countries.slice(0, 12);
+  const maxCountry = Math.max(1, ...countries.map((x) => x.companies));
+  const totalCo = k.companies || 1;
+  const top3 = countries.slice(0, 3);
+  const full = fy.filter((y) => y.year < thisYear);
+  const best = [...full].sort((a, b) => b.amount - a.amount)[0];
+  const trough = [...full].sort((a, b) => a.amount - b.amount)[0];
+  const segs = [...d.segments].filter((s) => s.companies).sort((a, b) => b.companies - a.companies);
+  const withInv = d.investors.filter((i) => i.country);
+  const invTotal = sum(d.investors, (i) => i.capital);
+  const nonEu = d.investors.filter((i) => i.country && !["United Kingdom","France","Germany","Switzerland","Netherlands","Sweden","Denmark","Spain","Belgium","Italy","Ireland","Portugal","Finland","Norway","Austria"].includes(i.country));
+  const topFund = c.topFunded[0];
+
+  const takeaways = [
+    `${num(k.companies)} companies are headquartered in Europe with a CGT or RNA tag, and they raised ${usd(k.totalFunding)} in total. ${top3.map((x) => esc(x.country) + " (" + num(x.companies) + ")").join(", ")} lead by company count, together ${pct(sum(top3, (x) => x.companies), totalCo)} of the sub-sector.`,
+    best && trough ? `VC funding peaked in ${best.year} at ${usd(best.amount)} and bottomed out in ${trough.year} at ${usd(trough.amount)}. ${thisYear} is a partial year so far (${usd(fy.find((y) => y.year === thisYear)?.amount)}).` : "",
+    topFund ? `${esc(topFund.name)} alone accounts for ${pct(topFund.funding, k.totalFunding)} of all funding ever raised, so the totals are concentrated in a handful of mRNA and CRISPR leaders.` : "",
+    d.investors.length ? `The ${d.investors.length} largest investors deployed about ${usd(invTotal)} since ${from} (each round split equally between its investors). ${nonEu.length} of them are based outside Europe, which shows how much late-stage capital is imported.` : "",
+    `${num(k.createdSince)} of the companies were founded since ${from}, so the pipeline of early-stage companies keeps renewing even though VC volumes fell after 2021.`,
+  ].filter(Boolean);
+
+  $("#sub").textContent = `Cell and gene therapy companies headquartered in Europe, funding and investors since ${from}. Source: Dealroom API, amounts in USD.`;
+  $("#foot").innerHTML = `Data generated ${esc(new Date(d.generatedAt).toLocaleString("en-GB"))} from the Dealroom API (${num(d.creditsUsed)} credits).
+    Definition: companies tagged Gene Therapy, Cell Therapy, CRISPR, T-Cell, Stem Cells, Viral Vectors, RNA, mRNA Medicines or Antisense Nucleic Acid Drugs, with HQ in Europe (Dealroom location ${d.scope.locationId}).
+    Dealroom tags are broad: a few non-CGT companies (sequencing, cultivated meat, bioprinting) carry these tags and are hidden from the lists but still counted in the totals. Funding totals are all-time, not limited to ${from}.
+    Investor capital splits each round equally between its investors, and ${num(k.roundsAnalysed - k.roundsWithAmount)} of ${num(k.roundsAnalysed)} rounds have no disclosed amount.
+    ${d.warnings.length ? `<br>Some blocks could not be loaded: ${esc(d.warnings.join("; "))}` : ""}`;
+
+  $("#app").innerHTML = `
+  <section id="overview"><h2>Overview</h2>
+    <p class="lead">Size of the European cell and gene therapy sub-sector and five-year funding at a glance.</p>
+    <div class="grid kpis">
+      ${[
+        [num(k.companies), "companies headquartered in Europe"],
+        [usd(k.totalFunding), "total funding ever raised"],
+        [num(k.createdSince), `companies founded since ${from}`],
+        [usd(k.vcAmount), `VC funding since ${from} (${num(k.vcRounds)} rounds)`],
+        [num(k.unicorns), "unicorns and thoroughbreds"],
+        [num(k.enablers), "biomanufacturing enablers (separate)"],
+      ].map(([v, l]) => `<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join("")}
+    </div>
+  </section>
+
+  <section id="countries"><h2>Where the companies are</h2>
+    <p class="lead">Companies by headquarters country, with funding and the pace of new company creation.</p>
+    <div class="card">${table([
+      { h: "Country", f: (x) => esc(x.country) },
+      { h: "Companies", n: 1, f: (x) => num(x.companies) },
+      { h: "", f: (x) => `<div class="hbar"><span style="width:${Math.round((100 * x.companies) / maxCountry)}%"></span></div>` },
+      { h: `Founded since ${from}`, n: 1, f: (x) => num(x.createdSince) },
+      { h: "Total funding", n: 1, f: (x) => usd(x.funding) },
+      { h: `VC funding since ${from}`, n: 1, f: (x) => usd(x.vcSince) },
+    ], countries)}
+    <div class="note">Germany's total funding is driven by BioNTech and CureVac, so funding per company is very uneven.</div></div>
+  </section>
+
+  <section id="funding"><h2>Funding and company creation</h2>
+    <p class="lead">VC funding rounds into European CGT companies, and the number of companies founded each year.</p>
+    <div class="grid two">
+      <div class="card"><b>VC funding raised per year (USD)</b>${bars(fy, "amount", "year", usd, true)}
+        <div class="note">${fy.map((y) => `${y.year}: ${num(y.rounds)} rounds, ${num(y.companies)} companies`).join(" | ")}</div></div>
+      <div class="card"><b>Companies founded per year</b>${bars(cre, "created", "year", num)}
+        <div class="note">Recent years are understated because Dealroom is still discovering the newest companies.</div></div>
+    </div>
+  </section>
+
+  <section id="segments"><h2>Sub-segments</h2>
+    <p class="lead">Companies per Dealroom sector tag. A company can carry several tags, so rows overlap.</p>
+    <div class="card">${table([
+      { h: "Segment", f: (s) => esc(s.name) },
+      { h: "Companies", n: 1, f: (s) => num(s.companies) },
+      { h: `Founded since ${from}`, n: 1, f: (s) => num(s.createdSince) },
+      { h: "Total funding", n: 1, f: (s) => usd(s.funding) },
+    ], segs)}</div>
+  </section>
+
+  <section id="companies"><h2>Company leaderboards</h2>
+    <p class="lead">All stages, ranked by total funding raised. Listed companies are included.</p>
+    <h3>Most funded</h3><div class="card">${companyTable(c.topFunded)}</div>
+    <h3>Unicorns and thoroughbreds</h3><div class="card">${companyTable(c.unicorns)}</div>
+    <h3>Most funded companies founded since ${from}</h3><div class="card">${companyTable(c.newcomers)}</div>
+  </section>
+
+  <section id="investors"><h2>Investors by capital deployed</h2>
+    <p class="lead">Largest investors in European CGT companies since ${from}, ranked by their share of disclosed round amounts.</p>
+    <div class="card">${table([
+      { h: "Investor", f: (i) => link(i.name, i.url) },
+      { h: "Type", f: (i) => i.types.map((t) => `<span class="tag">${esc(t)}</span>`).join("") },
+      { h: "Based in", f: (i) => esc([i.city, i.country].filter(Boolean).join(", ")) },
+      { h: "Capital deployed", n: 1, f: (i) => usd(i.capital) },
+      { h: "Deals", n: 1, f: (i) => num(i.deals) },
+      { h: "As lead", n: 1, f: (i) => num(i.leads) },
+      { h: "Companies", n: 1, f: (i) => num(i.companies) },
+    ], d.investors)}
+    <div class="note">A single very large round can put a generalist investor at the top of this list; deal counts show who is consistently active.</div></div>
+  </section>
+
+  <section id="enablers"><h2>Enablers: biomanufacturing</h2>
+    <p class="lead">Companies tagged Biomanufacturing, shown apart from the therapy developers. The tag also covers synthetic biology and industrial biotech, so read it as a proxy.</p>
+    <div class="grid two">
+      <div class="card"><b>Most funded</b>${companyTable(c.enablers)}</div>
+      <div class="card"><b>By country</b>${table([
+        { h: "Country", f: (x) => esc(x.country) },
+        { h: "Companies", n: 1, f: (x) => num(x.companies) },
+        { h: "Funding", n: 1, f: (x) => usd(x.funding) },
+      ], d.enablersByCountry.slice(0, 10))}</div>
+    </div>
+  </section>
+
+  <section id="takeaways"><h2>Takeaways</h2>
+    <div class="card"><ul>${takeaways.map((t) => `<li>${t}</li>`).join("")}</ul></div>
+  </section>`;
+}
+
+fetch("/api/cgt-europe")
+  .then((r) => r.json().then((b) => (r.ok ? b : Promise.reject(new Error(b.error || r.status)))))
+  .then(render)
+  .catch((e) => { $("#app").innerHTML = `<div class="error">Could not load the report: ${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>

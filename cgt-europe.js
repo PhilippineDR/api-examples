@@ -23,6 +23,10 @@ const CORE = Object.values(SEGMENTS).join("|");
 // "Cell Manufacturers" (2265201) is left out: it means battery cells (Northvolt).
 const ENABLERS = "2279801"; // Biomanufacturing (also covers synthetic biology and industrial biotech)
 
+// Tagged with a CGT sector but not cell or gene therapy (sequencing tools, cultivated meat, bioprinting, IVF).
+// Applied to the company lists only; the counts and funding totals come from API aggregates and still include them.
+const NOT_CGT = /oxford nanopore|mosa meat|cellink|ovo labs/i;
+
 const hq = (e) => e.locations?.find((l) => l.role === "hq");
 
 export async function buildCgtReport(dealroomGet) {
@@ -73,7 +77,9 @@ export async function buildCgtReport(dealroomGet) {
     classifications: c.classifications ?? [],
     url: c.dealroom_url,
   });
-  const list = (params) => get("/data/companies", { view: "summary", ...params }).then((b) => b.data.map(company));
+  const list = (params) =>
+    get("/data/companies", { view: "summary", ...params, limit: Number(params.limit) + 5 })
+      .then((b) => b.data.filter((c) => !NOT_CGT.test(c.name)).slice(0, params.limit).map(company));
   const inCore = `and(${HQ},taxonomy_id[in_any]:${CORE}`;
 
   // --- Size and funding -----------------------------------------------------------
@@ -81,7 +87,7 @@ export async function buildCgtReport(dealroomGet) {
     await safe("core by country", () => agg("companies", { metric: "count,sum:total_funding", group_by: "hq_country", sort: "-count", limit: 80, filter: `${inCore})` }), []),
     await safe("created by country", () => agg("companies", { metric: "count", group_by: "hq_country", sort: "-count", limit: 80, filter: `${inCore},launch_year[gte]:${FROM_YEAR})` }), []),
     await safe("enablers by country", () => agg("companies", { metric: "count,sum:total_funding", group_by: "hq_country", sort: "-count", limit: 80, filter: `and(${HQ},taxonomy_id[in_any]:${ENABLERS})` }), []),
-    await safe("creation", () => agg("companies", { metric: "count,sum:total_funding", group_by: "launch_year", sort: "dimension", limit: 30, filter: `${inCore},launch_year[gte]:2015)` }), []),
+    await safe("creation", () => agg("companies", { metric: "count,sum:total_funding", group_by: "launch_year", sort: "dimension", limit: 100, filter: `${inCore})` }), []).then((rows) => rows.filter((r) => r.dimension >= 2015)),
     await safe("funding by year", () => agg("funding-rounds", { metric: "count,sum:amount,count_distinct:entity_id", group_by: "year", sort: "dimension", limit: 20, filter: `${inCore},year[gte]:${FROM_YEAR},is_vc_round[eq]:true)` }), []),
     await safe("funding by country", () => agg("funding-rounds", { metric: "count,sum:amount", group_by: "hq_country", sort: "-sum_amount", limit: 15, filter: `${inCore},year[gte]:${FROM_YEAR},is_vc_round[eq]:true)` }), []),
     await safe("unicorns", () => agg("companies", { metric: "count", group_by: "hq_country", limit: 1, filter: `${inCore},classification[in_any]:unicorn|thoroughbred)` }), []),

@@ -42,6 +42,7 @@ Status key: Not started / In progress / Done
   - A full build costs about 780 credits, hence the disk cache. The API returns 429 on bursts, so calls run one at a time.
   - Accelerators and incubators are investors with `investor_type` accelerator/incubator; there is no separate filter.
   - Sorting universities by `alumni_founded_companies_count` returns a 500, so I sort by `alumni_founders_count`.
+  - Universities use `any_location`, which also returns multi-campus schools headquartered elsewhere (KEDGE, Epitech, ESSCA). They are kept, tagged "campus in territory", and ranked by local companies their alumni founded (`founder__university.id` + `founding_or_hq_location`), minimum 5. Dealroom's alumni totals are institution-wide, so they are shown only as context. Local spin-outs are a proxy (spin-out companies founded by the school's alumni). Refresh just this block with `GET /api/marseille-aix/refresh-universities` (about 65 credits).
   - Technopoles, science parks and subsea cables are not in Dealroom; the page says so and needs another source.
   - No benchmark against other territories (not requested). Dealroom under-records closures and the newest companies.
 
@@ -51,19 +52,25 @@ Status key: Not started / In progress / Done
 
 **Challenge:** Build an analysis of a sub sector of Defense, Deep Tech or Biotech.
 
-- **Status:** Scoped, not started
+- **Status:** Done (v1: page live at http://localhost:3000/cgt-europe, data refreshed with `?refresh=1`)
 - **Sub sector:** Biotech > Cell & gene therapy (CGT), Europe
-- **Where in the code:** _not yet_
+- **Where in the code:** `cgt-europe.js` (collects all data via the API, throttled with 429/500 retry), `server.js` (route `GET /api/cgt-europe`, cached in `data/cgt-europe.json`), `public/cgt-europe.html` (dashboard page)
 - **Idea / plan:** Dashboard page (same style as challenge 2: KPI tiles, charts, ranked tables, short narrative).
-  - Definition (confirmed): CGT core = taxonomy ids `1544701|2199201|1382201|1860901|2246801|771001|2297301|1634301|2167701|2199401` (Gene Therapy, Cell Therapy, CRISPR, Genome Engineering, T-Cell, Stem Cells, Viral Vectors, RNA, mRNA Medicines, Antisense Nucleic Acid Drugs). Separate "enablers" segment = `2265201|2279801` (Cell Manufacturers, Biomanufacturing). Left out: Immunotherapy, Regenerative Medicine, Genetics and Genomics, Oncology.
+  - Definition (final): CGT core = taxonomy ids `1544701|2199201|1382201|2246801|771001|2297301|1634301|2167701|2199401` (Gene Therapy, Cell Therapy, CRISPR, T-Cell, Stem Cells, Viral Vectors, RNA, mRNA Medicines, Antisense Nucleic Acid Drugs). Separate "enablers" segment = Biomanufacturing `2279801`.
+  - Dropped after checking the data: Genome Engineering `1860901` (broad genomics tools, diagnostics, AstraZeneca) and Cell Manufacturers `2265201` (means battery cells, e.g. Northvolt with $7.7B). Also left out: Immunotherapy, Regenerative Medicine, Genetics and Genomics, Oncology.
   - Europe filter: location id 76 (`region/europe`) via `hq_location[in_any]:76`
-  - Geography: Europe, with a country breakdown
   - Time window: last 5 years (2021 to today) for funding and investor activity
-  - Companies: all stages, leaderboard ranked by total funding, plus unicorns
+  - Companies: all stages, leaderboard ranked by total funding, plus unicorns and newcomers
   - Investors: ranked by capital deployed in European CGT over the window
-  - Not in scope: exits/M&A, funding trend deep-dive, co-investment network (could be added later)
-- **Endpoints used:**
+  - Not in scope: exits/M&A, co-investment network (could be added later)
+- **Endpoints used:** `/reference/filters/taxonomy_id/values`, `/reference/filters/location/values`, `/analytics/aggregate/{companies,funding-rounds}`, `/data/companies`, `/data/transactions`, `/data/investors`
 - **Notes / problems:**
+  - A full build costs about 440 credits, hence the disk cache.
+  - Result: 435 companies, $8.4B total funding, 191 founded since 2021, 183 VC rounds worth $2.8B since 2021.
+  - Dealroom tags are broad: Oxford Nanopore, Mosa Meat, CELLINK and Ovo Labs are hidden from the lists (regex `NOT_CGT`) but still counted in the aggregate totals.
+  - There is no aggregate by investor, so investor capital is built from `/data/transactions`, splitting each round equally between its investors. About 20% of rounds have no disclosed amount.
+  - `/analytics/aggregate/companies` with `group_by=launch_year` plus a `launch_year[gte]` filter returns a 500, so the year filter is applied client side.
+  - Biomanufacturing is a loose proxy for enablers: it also covers synthetic biology and industrial biotech.
 
 ---
 
