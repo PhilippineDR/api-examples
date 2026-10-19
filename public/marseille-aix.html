@@ -7,68 +7,59 @@
 <style>
   :root {
     --bg: #f6f7f9; --card: #ffffff; --ink: #14202e; --muted: #5b6b7d; --line: #e2e7ee;
-    --accent: #0b6bcb; --accent2: #e07a1f; --good: #1a8a5a; --warn: #b8541a; --bar: #cfe0f5;
+    --accent: #0b6bcb; --accent2: #e07a1f; --good: #1a8a5a; --bar: #cfe0f5;
   }
   @media (prefers-color-scheme: dark) {
     :root { --bg: #0e141b; --card: #151d27; --ink: #e8eef5; --muted: #93a3b5; --line: #243040;
-            --accent: #5aa6f0; --accent2: #f0a35a; --good: #4cc790; --warn: #f09a64; --bar: #22456b; }
+            --accent: #5aa6f0; --accent2: #f0a35a; --good: #4cc790; --bar: #22456b; }
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 24px 16px 64px; }
-  header h1 { font-size: 28px; margin: 0 0 4px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 26px; margin: 0 0 2px; }
   header p { margin: 0; color: var(--muted); }
-  nav { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 16px 0 8px; font-size: 14px; }
-  nav a { color: var(--accent); text-decoration: none; }
-  section { margin-top: 36px; }
-  h2 { font-size: 20px; margin: 0 0 4px; }
-  .lead { color: var(--muted); margin: 0 0 14px; max-width: 760px; }
+  section { margin-top: 28px; }
+  h2 { font-size: 18px; margin: 0 0 10px; }
+  h3 { font-size: 14px; margin: 0 0 6px; }
   .grid { display: grid; gap: 12px; }
-  .kpis { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-  .two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
-  .kpi .v { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
-  .kpi .l { color: var(--muted); font-size: 13px; }
-  .takeaway { border-left: 4px solid var(--accent); background: var(--card); border-radius: 6px; padding: 10px 14px; margin: 12px 0; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .two { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .three { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .findings { border-left: 4px solid var(--accent); }
+  .findings ol { margin: 6px 0 0; padding-left: 20px; } .findings li { margin-bottom: 6px; }
+  .kpi .v { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .kpi .l { color: var(--muted); font-size: 12px; line-height: 1.3; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
   td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
   .scroll { overflow-x: auto; }
   a { color: var(--accent); }
-  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--bar); color: var(--ink); margin-right: 4px; }
-  .tag.local { background: var(--good); color: #fff; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--bar); color: var(--ink); margin-left: 4px; }
+  .tag.local { background: var(--good); color: #fff; margin: 0 4px 0 0; }
   .muted { color: var(--muted); }
-  .chart { display: flex; align-items: flex-end; gap: 8px; height: 190px; padding-top: 8px; }
+  .chart { display: flex; align-items: flex-end; gap: 6px; height: 150px; }
   .col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
-  .col .bar { width: 100%; max-width: 46px; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 2px; }
+  .col .bar { width: 100%; max-width: 40px; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 2px; }
   .col .bar.alt { background: var(--accent2); }
-  .col .val { font-size: 11px; color: var(--muted); margin-bottom: 3px; white-space: nowrap; }
-  .col .lab { font-size: 12px; margin-top: 4px; }
-  .hbar { height: 8px; background: var(--bar); border-radius: 4px; overflow: hidden; min-width: 70px; }
-  .hbar span { display: block; height: 100%; background: var(--accent); }
-  ol.actions { padding-left: 20px; margin: 0; } ol.actions li { margin-bottom: 8px; }
-  .note { font-size: 13px; color: var(--muted); margin-top: 8px; }
-  .loading, .error { padding: 40px; text-align: center; color: var(--muted); }
-  .error { color: var(--warn); }
-  footer { margin-top: 48px; font-size: 13px; color: var(--muted); }
-  @media print { nav { display: none; } body { background: #fff; } }
+  .col .val { font-size: 10.5px; color: var(--muted); margin-bottom: 2px; white-space: nowrap; }
+  .col .lab { font-size: 11.5px; margin-top: 3px; }
+  .sectors { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 13px; }
+  ul.actions { padding-left: 20px; margin: 6px 0 0; } ul.actions li { margin-bottom: 4px; }
+  .about { font-size: 12.5px; color: var(--muted); }
+  .error, .loading { padding: 40px; text-align: center; color: var(--muted); }
+  @media print { body { background: #fff; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>Aix-Marseille-Provence innovation ecosystem</h1>
-    <p id="sub">Performance report for the Mayor, built on the Dealroom API.</p>
-    <nav>
-      <a href="#overview">Overview</a><a href="#creation">Startup creation</a><a href="#sectors">Sectors</a>
-      <a href="#universities">Universities</a><a href="#support">Accelerators and incubators</a>
-      <a href="#investors">Investors</a><a href="#success">Success stories</a>
-      <a href="#infra">Infrastructure</a><a href="#recommendations">Recommendations</a>
-    </nav>
+    <p id="sub">Performance report for the Mayor.</p>
   </header>
-  <div id="app"><div class="loading">Loading the ecosystem data (the first build calls the Dealroom API and can take a minute)...</div></div>
-  <footer id="foot"></footer>
+  <div id="app"><div class="loading">Loading the ecosystem data...</div></div>
 </div>
 
 <script>
@@ -90,206 +81,119 @@ const sum = (arr, f) => arr.reduce((s, x) => s + (f(x) || 0), 0);
 function bars(rows, key, label, fmt, alt) {
   const max = Math.max(1, ...rows.map((r) => r[key] || 0));
   return `<div class="chart">${rows.map((r) =>
-    `<div class="col"><div class="val">${fmt(r[key])}</div><div class="bar${alt ? " alt" : ""}" style="height:${Math.max(1, Math.round(((r[key] || 0) / max) * 140))}px"></div><div class="lab">${esc(r[label])}</div></div>`).join("")}</div>`;
+    `<div class="col"><div class="val">${fmt(r[key])}</div><div class="bar${alt ? " alt" : ""}" style="height:${Math.max(1, Math.round(((r[key] || 0) / max) * 105))}px"></div><div class="lab">${esc(r[label])}</div></div>`).join("")}</div>`;
 }
-
 function table(cols, rows) {
   return `<div class="scroll"><table><thead><tr>${cols.map((c) => `<th class="${c.n ? "n" : ""}">${esc(c.h)}</th>`).join("")}</tr></thead>
   <tbody>${rows.map((r) => `<tr>${cols.map((c) => `<td class="${c.n ? "n" : ""}">${c.f(r)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
-function companyTable(rows) {
-  return table([
-    { h: "Company", f: (c) => `${link(c.name, c.url)}<div class="muted">${esc(c.tagline || "")}</div>` },
-    { h: "HQ city", f: (c) => esc(c.city) },
-    { h: "Founded", f: (c) => esc(c.founded) },
-    { h: "Employees", n: 1, f: (c) => num(c.employees) },
-    { h: "Funding", n: 1, f: (c) => usd(c.funding) },
-  ], rows);
-}
-
 function render(d) {
-  const k = d.kpis, from = d.territory.fromYear;
-  const cre = d.creation, recent = cre.filter((y) => y.year >= from);
-  const closedRecentOld = cre.filter((y) => y.year >= 2015 && y.year <= 2020);
-  const survival = pct(sum(closedRecentOld, (y) => y.created) - sum(closedRecentOld, (y) => y.closed), sum(closedRecentOld, (y) => y.created));
-  const fy = d.fundingByYear;
-  const fullYears = fy.filter((y) => y.year < new Date().getFullYear());
-  const avgRound = k.vcRounds ? k.vcAmount / k.vcRounds : null;
-  const top25 = d.investors;
-  const localDeals = sum(top25.filter((i) => i.local), (i) => i.deals), allDeals = sum(top25, (i) => i.deals);
-  const outsideTop = top25.filter((i) => !i.local && !i.person).slice(0, 3).map((i) => i.name);
-  const topFunded = d.success.topFunded;
-  const top1Share = topFunded[0] && k.totalFunding ? topFunded[0].funding / k.totalFunding : null;
-  const sectors = [...d.sectors].sort((a, b) => b.funding - a.funding);
-  const sectorTotal = sum(d.sectors, (s) => s.companies);
-  const accel = d.accelerators.filter((a) => a.portfolio > 3 || a.investments > 3);
-  
-  const peak = cre.filter((y) => y.year >= 2015 && y.year <= 2020);
-  const peakAvg = peak.length ? sum(peak, (y) => y.created) / peak.length : 0;
-  const recentFull = recent.filter((y) => y.year < new Date().getFullYear() - 0);
+  const k = d.kpis, from = d.territory.fromYear, thisYear = new Date().getFullYear();
+  const cre = d.creation, fy = d.fundingByYear;
+  const recentFull = cre.filter((y) => y.year >= from && y.year < thisYear);
+  const base = cre.filter((y) => y.year >= 2015 && y.year <= 2020);
   const recentAvg = recentFull.length ? sum(recentFull, (y) => y.created) / recentFull.length : 0;
+  const baseAvg = base.length ? sum(base, (y) => y.created) / base.length : 0;
+  const localDeals = sum(d.investors.filter((i) => i.local), (i) => i.deals), allDeals = sum(d.investors, (i) => i.deals);
+  const top = d.success.topFunded[0];
+  const topShare = top && k.totalFunding ? top.funding / k.totalFunding : 0;
+  const bio = d.sectors.find((s) => /Biotech/.test(s.name));
+  const thin = d.sectors.filter((s) => s.companies < 30).map((s) => s.name.toLowerCase());
+  const lead = d.universities[0];
+  const accel = d.accelerators.filter((a) => a.portfolio > 3);
+  const accelFunding = sum(accel, (a) => a.portfolioFunding);
 
-  const recs = [];
-  if (recentAvg && peakAvg && recentAvg < peakAvg)
-    recs.push(`Startup creation recorded since ${from} averages ${Math.round(recentAvg)} per year against ${Math.round(peakAvg)} per year in 2015-2020 (recent cohorts are also still being discovered by Dealroom, so part of the gap is a data lag). Keep a pre-seed and creation pipeline running.`);
-  if (allDeals)
-    recs.push(`Local investors account for ${pct(localDeals, allDeals)} of the deals made by the 25 most active investors. ${outsideTop.length ? "The rest are national or international funds (" + esc(outsideTop.join(", ")) + "), so growth rounds depend on capital from outside the territory." : ""}`);
-  if (top1Share != null && top1Share > 0.2)
-    recs.push(`${esc(topFunded[0].name)} alone represents ${pct(topFunded[0].funding, k.totalFunding)} of all funding ever raised by territory companies. Concentration is high: a second and third wave of scale-ups is the best protection.`);
-  if (avgRound)
-    recs.push(`The average VC round into the territory is ${usd(avgRound)} across ${num(k.vcRounds)} rounds. Few companies reach the late stages, so growth-stage capital is the gap to close.`);
-  const small = d.sectors.filter((s) => s.companies && s.companies < 0.08 * sectorTotal).map((s) => `${s.name} (${s.companies})`);
-  if (small.length)
-    recs.push(`Sector depth is uneven: ${esc(small.join(", "))} have very few companies compared with the biotech and health base (${num(d.sectors.find((s) => /Biotech/.test(s.name))?.companies)}). These are candidates for dedicated programmes.`);
-  if (d.universities.length) {
-    const lead = d.universities.slice(0, 3).map((u) => `${esc(u.name)} (${u.localCompanies})`).join(", ");
-    const campus = d.universities.filter((u) => u.campusBased).map((u) => esc(u.name));
-    recs.push(`The schools whose alumni founded the most companies in the territory are ${lead}.${campus.length ? " " + campus.join(", ") + " are headquartered elsewhere but feed the local ecosystem through their campuses, so partnerships with them matter." : ""} Connect lab and school spin-outs to the incubators earlier.`);
-  }
-  const LOCAL = ["Marseille", "Aix-en-Provence", "Aubagne", "La Ciotat", "Gémenos", "Vitrolles", "Martigues", "Meyreuil", "Gardanne", "Marignane", "Les Pennes-Mirabeau", "Rousset", "Salon-de-Provence", "Istres", "Fos-sur-Mer", "Miramas", "Pertuis", "Éguilles", "Cabriès"];
-  const left = topFunded.filter((c) => c.city && !LOCAL.includes(c.city)).map((c) => `${c.name} (HQ ${c.city})`);
-  if (k.foundedHereLeft || left.length)
-    recs.push(`${num(k.foundedHereLeft)} companies were founded in the territory but are now headquartered elsewhere${left.length ? ", and the biggest funded names include " + esc(left.join(", ")) : ""}. Retaining HQs and growth teams as companies scale is part of the challenge.`);
-
-  const actions = [
-    "Set up a metropolitan seed and growth co-investment fund with Region Sud Investissement and Bpifrance, to keep follow-on rounds local.",
-    "Create a deeptech and biotech spin-out maturation programme linking university labs to the incubators and to venture builders.",
-    "Use anchor corporates and public buyers (port, logistics, healthcare) as first customers of local startups through a procurement pilot.",
-    "Launch focused programmes for the thin sectors (marine, space, cyber) to reach critical mass in each.",
-    "Publish this dashboard every year and track creation, survival, funding, jobs and exits as the ecosystem scorecard.",
+  // Three findings, each tied to one number from the data.
+  const findings = [
+    `<b>Growth capital comes mostly from outside.</b> ${usd(k.vcAmount)} of VC went into local companies since ${from} (${num(k.vcRounds)} rounds), but only ${pct(localDeals, allDeals)} of the deals by the 25 most active investors come from local investors.${topShare > 0.2 ? ` ${esc(top.name)} alone is ${pct(top.funding, k.totalFunding)} of all funding ever raised.` : ""}`,
+    `<b>Creation has slowed.</b> About ${Math.round(recentAvg)} companies founded per year since ${from}, against ${Math.round(baseAvg)} per year in 2015-2020 (recent years are partly a data lag).`,
+    `<b>The science base is the strength.</b> ${bio ? num(bio.companies) + " biotech and health companies" : "Biotech and health"}${lead ? `, and ${esc(lead.name)} alumni founded ${num(lead.localCompanies)} local companies` : ""}. ${thin.length ? "Thin spots: " + esc(thin.join(", ")) + "." : ""}`,
   ];
 
-  $("#sub").textContent = `Performance report for the Mayor: ${d.territory.name}, ${from} to today. Source: Dealroom API, amounts in USD.`;
-  $("#foot").innerHTML = `Data generated ${esc(new Date(d.generatedAt).toLocaleString("en-GB"))} from the Dealroom API (${num(d.creditsUsed)} credits). Territory: companies founded or headquartered in the Aix-Marseille-Provence Metropole (Dealroom location ${d.territory.locationId}).
-  Dealroom coverage of the newest companies is still growing, so recent years are likely understated. ${d.warnings.length ? `<br>Some blocks could not be loaded: ${esc(d.warnings.join("; "))}` : ""}`;
+  const recs = [
+    "Set up a metropolitan seed and growth co-investment fund with Region Sud Investissement and Bpifrance to keep follow-on rounds local.",
+    "Create a spin-out maturation programme linking university labs and schools to the incubators.",
+    "Open public and anchor-corporate procurement (port, logistics, health) to local startups.",
+    `Launch focused programmes for the thin sectors (${esc(thin.join(", ") || "marine, space, cyber")}).`,
+    "Publish this dashboard every year as the ecosystem scorecard.",
+  ];
+
+  $("#sub").textContent = `Performance report for the Mayor: ${d.territory.name}, ${from} to today.`;
 
   $("#app").innerHTML = `
-  <section id="overview"><h2>Overview</h2>
-    <p class="lead">Ecosystem size and five-year performance at a glance.</p>
-    <div class="grid kpis">
-      ${[
-        [num(k.companies), "companies tracked in the territory"],
-        [num(k.createdSince), `companies founded since ${from}`],
-        [usd(k.totalFunding), "total funding ever raised"],
-        [usd(k.vcAmount), `VC funding since ${from} (${num(k.vcRounds)} rounds)`],
-        [num(k.exits5y), `exits (acquisitions) since ${from}`],
-        [num(k.unicorns), "unicorns and thoroughbreds"],
-        [num(k.accelerators), "accelerators and incubators"],
-        [num(k.universities), "universities and schools with founders"],
-      ].map(([v, l]) => `<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join("")}
-    </div>
-  </section>
+  <div class="card findings"><b>Three findings</b><ol>${findings.map((f) => `<li>${f}</li>`).join("")}</ol></div>
 
-  <section id="creation"><h2>Startup creation, funding and survival</h2>
-    <p class="lead">Companies founded each year in the territory, and the VC funding they and their peers attracted.</p>
+  <section><div class="grid kpis">
+    ${[
+      [num(k.companies), "companies tracked"],
+      [num(k.createdSince), `founded since ${from}`],
+      [usd(k.vcAmount), `VC raised since ${from}`],
+      [num(k.exits5y), `exits since ${from}`],
+      [num(k.unicorns), "unicorns and thoroughbreds"],
+      [num(k.accelerators), "accelerators and incubators"],
+    ].map(([v, l]) => `<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join("")}
+  </div></section>
+
+  <section><h2>Creation and funding</h2>
     <div class="grid two">
-      <div class="card"><b>Companies founded per year</b>${bars(cre, "created", "year", num)}</div>
-      <div class="card"><b>VC funding raised per year (USD)</b>${bars(fy, "amount", "year", usd, true)}
-        <div class="note">${fy.map((y) => `${y.year}: ${num(y.rounds)} rounds, ${num(y.companies)} companies`).join(" | ")}</div></div>
+      <div class="card"><h3>Companies founded per year</h3>${bars(cre.filter((y) => y.year >= 2017), "created", "year", num)}</div>
+      <div class="card"><h3>VC raised per year (USD, ${num(k.vcRounds)} rounds since ${from})</h3>${bars(fy, "amount", "year", usd, true)}</div>
     </div>
-    <div class="takeaway"><b>Survival:</b> of the ${num(sum(closedRecentOld, (y) => y.created))} companies founded 2015-2020, ${survival} are not recorded as closed. Dealroom probably under-records quiet closures, so read this as an upper bound. Funding is lumpy: a few large rounds drive each year.</div>
+    <div class="sectors">${[...d.sectors].sort((a, b) => b.funding - a.funding).map((s) => `<span><b>${esc(s.name)}</b>: ${num(s.companies)} companies, ${usd(s.funding)}</span>`).join("")}</div>
   </section>
 
-  <section id="sectors"><h2>Sector focus</h2>
-    <p class="lead">Deeptech, biotech and health, marine, space and cyber, ranked by cumulative funding.</p>
-    <div class="card">${table([
-      { h: "Sector", f: (s) => esc(s.name) },
-      { h: "Companies", n: 1, f: (s) => num(s.companies) },
-      { h: `Founded since ${from}`, n: 1, f: (s) => num(s.createdSince) },
-      { h: "Total funding", n: 1, f: (s) => usd(s.funding) },
-      { h: "Share of focus companies", f: (s) => `<div class="hbar"><span style="width:${sectorTotal ? Math.round((100 * s.companies) / sectorTotal) : 0}%"></span></div>` },
-    ], sectors)}
-    <div class="note">A company can belong to several sectors, so rows overlap.</div></div>
+  <section><h2>Universities and incubators</h2>
+    <div class="grid two">
+      <div class="card"><h3>Top 5 schools by local companies founded by alumni</h3>${table([
+        { h: "School", f: (u) => `${link(u.name, u.url)}${u.campusBased ? `<span class="tag">campus</span>` : ""}` },
+        { h: "Companies", n: 1, f: (u) => num(u.localCompanies) },
+        { h: "Spin-outs", n: 1, f: (u) => num(u.localSpinouts) },
+      ], d.universities.slice(0, 5))}</div>
+      <div class="card"><h3>Top 5 accelerators and incubators by portfolio funding</h3>${table([
+        { h: "Structure", f: (a) => link(a.name, a.url) },
+        { h: "Companies", n: 1, f: (a) => num(a.portfolio) },
+        { h: "Raised", n: 1, f: (a) => usd(a.portfolioFunding) },
+        { h: "Jobs", n: 1, f: (a) => num(a.portfolioJobs) },
+        { h: "Exits", n: 1, f: (a) => num(a.portfolioExits) },
+      ], accel.slice(0, 5))}</div>
+    </div>
   </section>
 
-  <section id="universities"><h2>Universities creating startups</h2>
-    <p class="lead">Universities and schools with a presence in the territory, ranked by the companies their alumni founded that are founded or headquartered in the metropole. Schools need at least ${d.universityMinLocalCompanies ?? 5} such companies to be listed.</p>
+  <section><h2>Most active investors</h2>
     <div class="card">${table([
-      { h: "Institution", f: (u) => `${link(u.name, u.url)}${u.campusBased ? ` <span class="tag" title="Headquartered in ${esc(u.city)}; has a campus in the territory">campus in territory</span>` : ""}` },
-      { h: "HQ", f: (u) => esc(u.city) },
-      { h: "Local companies founded by alumni", n: 1, f: (u) => num(u.localCompanies) },
-      { h: "Local spin-outs", n: 1, f: (u) => num(u.localSpinouts) },
-      { h: "Alumni founders (all campuses)", n: 1, f: (u) => `<span class="muted">${num(u.founders)}</span>` },
-    ], d.universities.slice(0, 15))}
-    <div class="note">Local figures count only companies founded or headquartered in the Aix-Marseille-Provence Metropole. "Alumni founders (all campuses)" is Dealroom's institution-wide number, shown in grey for context only. Local spin-outs are spin-out companies founded by the school's alumni, a proxy because Dealroom does not link spin-outs to a school directly.</div></div>
-  </section>
-
-  <section id="support"><h2>Accelerators and incubators</h2>
-    <p class="lead">What each structure backed, and how those portfolios have performed (up to 100 portfolio companies per structure).</p>
-    <div class="card">${table([
-      { h: "Structure", f: (a) => `${link(a.name, a.url)}<div class="muted">${esc(a.about || "")}</div>` },
-      { h: "Type", f: (a) => esc(a.kind) },
-      { h: "Portfolio companies", n: 1, f: (a) => num(a.portfolio) },
-      { h: "Still operating", n: 1, f: (a) => num(a.portfolioActive) },
-      { h: "Funding raised by portfolio", n: 1, f: (a) => usd(a.portfolioFunding) },
-      { h: "Jobs in portfolio", n: 1, f: (a) => num(a.portfolioJobs) },
-      { h: "Exits", n: 1, f: (a) => num(a.portfolioExits) },
-    ], d.accelerators)}
-    <div class="note">Portfolios include every company a structure backed, wherever it is based (ZEBOX runs an international network), so totals are not all local.</div></div>
-  </section>
-
-  <section id="investors"><h2>Most active investors in the territory</h2>
-    <p class="lead">Ranked by number of VC deals in territory companies since ${from}, with where they are based.</p>
-    <div class="card">${table([
-      { h: "Investor", f: (i) => `${link(i.name, i.url)}` },
-      { h: "Type", f: (i) => i.types.map((t) => `<span class="tag">${esc(t)}</span>`).join("") },
+      { h: "Investor", f: (i) => link(i.name, i.url) },
+      { h: "Type", f: (i) => esc(i.types.slice(0, 1).join("")) },
       { h: "Based in", f: (i) => (i.local ? `<span class="tag local">local</span>` : "") + esc([i.city, i.country].filter(Boolean).join(", ")) },
       { h: "Deals", n: 1, f: (i) => num(i.deals) },
-      { h: "As lead", n: 1, f: (i) => num(i.leads) },
-      { h: "Companies backed", n: 1, f: (i) => num(i.companies) },
-    ], d.investors)}
-    <div class="note">Round amounts are not split between co-investors, so only deal counts are ranked.</div></div>
+      { h: "Lead", n: 1, f: (i) => num(i.leads) },
+    ], d.investors.slice(0, 10))}</div>
   </section>
 
-  <section id="success"><h2>Success stories</h2>
-    <p class="lead">Exits, scale-ups, job creators and technology breakthroughs from the territory.</p>
-    <h3>Biggest funding raised</h3><p class="note">Companies founded or headquartered in the territory; the HQ city shows where each one is based today.</p><div class="card">${companyTable(d.success.topFunded)}</div>
-    <h3>Most jobs created by funded startups (founded 2000 or later, at least $1M raised)</h3><div class="card">${companyTable(d.success.topJobs)}</div>
-    <h3>Fastest hiring (one-year headcount growth, 20+ employees)</h3>
-      <div class="card">${table([
-        { h: "Company", f: (c) => `${link(c.name, c.url)}<div class="muted">${esc(c.tagline || "")}</div>` },
-        { h: "Employees", n: 1, f: (c) => num(c.employees) },
-        { h: "1-year growth", n: 1, f: (c) => (c.growth1y == null ? "n/a" : Math.round(c.growth1y * (Math.abs(c.growth1y) <= 10 ? 100 : 1)) + "%") },
-        { h: "Funding", n: 1, f: (c) => usd(c.funding) },
-      ], d.success.fastGrowers)}</div>
-    <h3>Scale-ups (founded 2012 or later)</h3><div class="card">${companyTable(d.success.scaleUps)}</div>
-    <h3>Technology breakthroughs: lab spin-outs and patent holders</h3>
-      <div class="grid two"><div class="card"><b>Spin-outs by funding</b>${companyTable(d.success.spinouts)}</div>
-      <div class="card"><b>Most patents</b>${companyTable(d.success.patents)}</div></div>
-    <h3>Exits since ${from} (${num(d.exits.total)} acquisitions of local companies, newest first)</h3>
-    <div class="card">${table([
-      { h: "Company", f: (e) => `${link(e.company, e.url)}<div class="muted">${esc(e.tagline || "")}</div>` },
-      { h: "Date", f: (e) => esc(e.date) },
-      { h: "Type", f: (e) => esc(e.type) },
-      { h: "Funding raised before exit", n: 1, f: (e) => usd(e.funding) },
-    ], d.exits.items.slice(0, 15))}
-    <div class="note">Exit values are rarely disclosed, so the list shows the company's funding before the exit instead.</div></div>
-  </section>
-
-  <section id="infra"><h2>Infrastructure benefiting the ecosystem</h2>
-    <p class="lead">Public bodies, clusters, research institutes and data infrastructure registered in the territory.</p>
-    <div class="grid two">
-      <div class="card"><b>Institutions, clusters and research bodies</b>${table([
-        { h: "Name", f: (g) => link(g.name, g.url) },
-        { h: "City", f: (g) => esc(g.city) },
-        { h: "Staff", n: 1, f: (g) => num(g.employees) },
-      ], d.infrastructure.institutions)}</div>
-      <div class="card"><b>Data centre companies</b>${table([
-        { h: "Company", f: (c) => `${link(c.name, c.url)}<div class="muted">${esc(c.tagline || "")}</div>` },
-        { h: "Funding", n: 1, f: (c) => usd(c.funding) },
-      ], d.infrastructure.dataCenters)}
-      <div class="note">Dealroom does not list technopoles, science parks or subsea cables as such. Those assets (Luminy, Chateau-Gombert, Arbois, Cadarache, the Marseille cable landing hub) need a separate source to be mapped.</div></div>
+  <section><h2>Success stories</h2>
+    <div class="grid three">
+      <div class="card"><h3>Most funding raised</h3>${table([
+        { h: "Company", f: (c) => link(c.name, c.url) }, { h: "Raised", n: 1, f: (c) => usd(c.funding) },
+      ], d.success.topFunded.slice(0, 5))}</div>
+      <div class="card"><h3>Most jobs (funded startups)</h3>${table([
+        { h: "Company", f: (c) => link(c.name, c.url) }, { h: "Staff", n: 1, f: (c) => num(c.employees) },
+      ], d.success.topJobs.slice(0, 5))}</div>
+      <div class="card"><h3>Latest exits (${num(d.exits.total)} since ${from})</h3>${table([
+        { h: "Company", f: (e) => link(e.company, e.url) }, { h: "Date", n: 1, f: (e) => esc(e.date) },
+      ], d.exits.items.slice(0, 5))}</div>
     </div>
   </section>
 
-  <section id="recommendations"><h2>Recommendations</h2>
-    <p class="lead">What the data says about the gaps, then what the city could do about them.</p>
-    <div class="card"><b>What the data shows</b><ul>${recs.map((r) => `<li>${r}</li>`).join("")}</ul></div>
-    <div class="card" style="margin-top:12px"><b>Proposed actions for the Mayor</b>
-      <ol class="actions">${actions.map((a) => `<li>${esc(a)}</li>`).join("")}</ol>
-      <div class="note">These actions are proposals derived from the gaps above, not Dealroom data.</div></div>
-  </section>`;
+  <section><h2>Recommendations</h2>
+    <div class="card"><ul class="actions">${recs.map((r) => `<li>${r}</li>`).join("")}</ul></div>
+  </section>
+
+  <section><div class="card about"><b>About this data.</b> Source: Dealroom API, amounts in USD, generated ${esc(new Date(d.generatedAt).toLocaleDateString("en-GB"))}. Territory: companies founded or headquartered in the Aix-Marseille-Provence Metropole.
+    Recent years are understated while Dealroom's coverage catches up, and closures are under-recorded.
+    "Campus" marks schools headquartered elsewhere with a campus here; their ranking counts only local companies founded by alumni (at least ${d.universityMinLocalCompanies ?? 5}), and spin-outs are those founded by alumni, a proxy.
+    Accelerator portfolios include companies from outside the territory. Investors are ranked by deal count; round amounts are not split between co-investors.
+    Sectors overlap. Technopoles, science parks and subsea cables are not in Dealroom, so infrastructure is not covered here.
+    ${d.warnings.length ? "<br>Some blocks could not be loaded: " + esc(d.warnings.join("; ")) : ""}</div></section>`;
 }
 
 fetch("/api/marseille-aix")
