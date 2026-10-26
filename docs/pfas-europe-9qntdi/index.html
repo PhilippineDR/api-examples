@@ -411,7 +411,6 @@ function render(d) {
         <p><b>Search 1, the tag.</b> Dealroom has a dedicated PFAS sector tag: <code>taxonomy_id[in_any]:${d.scope.pfasTaxonomyId}</code> with <code>hq_location[in_any]:${d.scope.locationId}</code> (Europe). It finds ${f.europe} companies, but misses companies that treat PFAS without carrying the tag.</p>
         <p><b>Search 2, the screen.</b> We pulled every European company in four neighbouring tags, ${Object.entries(d.adjacent).map(([n, v]) => `${esc(n)} (${v ?? "n/a"})`).join(", ")}, and searched their tagline and description for PFAS, PFOA, PFOS, "forever chemicals", fluorinated and micropollutant terms. This added ${f.screeningKept} companies the tag misses, ${screeningRecent} of them founded since ${RECENT_FROM_YEAR}.</p>
         <p><b>The review.</b> Each match was read by hand. We kept companies whose business captures, destroys or cleans up PFAS, and left out household tap filters and companies that only list PFAS among many pollutants.</p>
-        <p><b>Smart Keyword.</b> Dealroom's meaning-based search (<code>semantic_keyword</code>) would be the natural next step, but on the current beta API it ignores the phrase and returns unranked results, so it was not used.</p>
         <p><b>How to widen it further.</b> Screening Water Treatment and Water Tech the same way would roughly double the pool (about 750 more companies and credits).</p>
       </div>
     </div>
