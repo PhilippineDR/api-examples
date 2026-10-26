@@ -111,39 +111,40 @@
   .seg .thumb { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); border-radius: 9px; background: var(--surface); box-shadow: 0 1px 2px rgba(31,22,16,.08), 0 2px 8px -2px rgba(31,22,16,.10); }
   .controls { display: flex; gap: 10px; flex-wrap: wrap; }
 
-  /* Landscape (SVG) */
-  .stage { position: relative; padding: 8px; overflow: hidden; }
-  .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); flex-wrap: wrap; padding: 4px 18px 14px; }
-  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
-  #land { width: 100%; height: auto; display: block; }
-  #land text { fill: var(--ink); font-family: Inter, sans-serif; pointer-events: none; }
-  #land .sub { fill: var(--muted); }
-  #land .nd { cursor: pointer; outline: none; }
-  #land .ring { fill: none; stroke: var(--line); stroke-dasharray: 2 7; stroke-linecap: round; }
-  #land .spoke { stroke: var(--line); stroke-width: 1.25; transition: stroke .2s, stroke-width .2s; }
-  #land .spoke.hub { stroke: var(--brand-100); stroke-width: 2; }
-  #land .spoke.hot { stroke: var(--brand); stroke-width: 2; }
+  /* Market map: one column per segment, a logo tile per company */
+  .mm { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .mm { grid-template-columns: minmax(0, 1fr); } }
+  .mseg { padding: 20px; display: grid; gap: 14px; }
+  .mseg .top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .mseg h3 { font-size: 16px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  .mseg .n { color: var(--brand-600); font-size: 13px; white-space: nowrap; }
+  .mseg p { margin: 0; color: var(--muted); font-size: 14px; }
+  .mseg .fb { color: var(--ink-2); padding-bottom: 14px; border-bottom: 1px solid var(--line-2); }
+  .mseg .fb b { color: var(--brand-600); font-weight: 600; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 10px; }
+  .tile { position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; padding: 14px 8px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2); cursor: pointer; transition: border-color .2s, box-shadow .25s; min-width: 0; }
+  .tile:hover { border-color: var(--brand-300); box-shadow: var(--shadow); }
+  #viewBox .tile { opacity: 0; }
+  .no-motion #viewBox .tile { opacity: 1; }
+  @media print { #viewBox .tile { opacity: 1 !important; } }
+  .tile .nm { font-size: 13px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; overflow-wrap: anywhere; }
+  .tile .f { font-size: 11.5px; color: var(--muted); }
+  .tile .dot { position: absolute; top: 9px; right: 9px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); flex-wrap: wrap; margin-top: 14px; }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
 
-  /* Segment explainers under the landscape */
-  .segs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
-  @media (max-width: 860px) { .segs { grid-template-columns: 1fr; } }
-  .segx { padding: 20px 22px; display: grid; gap: 8px; align-content: start; }
-  .segx .top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-  .segx h3 { font-size: 16px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
-  .segx .n { color: var(--brand); font-size: 13px; white-space: nowrap; }
-  .segx p { margin: 0; color: var(--muted); font-size: 14px; }
-  .segx .fb { color: var(--ink-2); }
-  .segx .fb b { color: var(--brand-600); font-weight: 600; }
-
-  /* Company cards (grid view) */
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
-  .pc { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 22px 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
-        box-shadow: var(--shadow-sm); color: var(--ink); cursor: pointer; transition: border-color .2s, box-shadow .25s; }
-  .pc:hover { border-color: var(--brand-100); box-shadow: var(--shadow); }
-  .pc .st { position: absolute; top: 12px; right: 12px; }
-  .pc .cn { font-weight: 600; font-size: 15px; letter-spacing: -.01em; margin-top: 12px; }
-  .pc .tg { font-size: 12.5px; color: var(--muted); margin: 6px 0 10px; line-height: 1.45; min-height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .pc .ft { margin-top: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px; font-size: 12px; color: var(--faint); }
+  /* Founding-year view: one column per period, tiles stacked */
+  .yrs { display: grid; grid-template-columns: repeat(var(--periods), minmax(0, 1fr)); gap: 12px; align-items: end; }
+  @media (max-width: 760px) { .yrs { grid-template-columns: minmax(0, 1fr); align-items: start; } }
+  .yr { display: grid; gap: 8px; align-content: end; }
+  .yr .stack { display: grid; gap: 8px; }
+  .yr .tile { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; align-items: center; padding: 10px; }
+  .yr .tile .nm { font-size: 12.5px; }
+  .yr .base { border-top: 2px solid var(--ink-2); padding-top: 8px; display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+  .yr .base b { font-weight: 600; }
+  .yr .base span { color: var(--brand-600); }
+  .yr.recent .base { border-top-color: var(--accent); }
+  .yr.recent .base span { color: var(--accent); }
 
   /* Logos: white tile with the company logo, or brand-orange initials when there is none */
   .lg { flex: none; width: var(--s, 64px); height: var(--s, 64px); border-radius: 16px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; box-shadow: var(--shadow-sm); }
@@ -157,7 +158,7 @@
   .chip.s::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
   /* Charts */
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
   @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
   .panel { padding: 22px 24px; }
   .panel h3 { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
@@ -192,11 +193,13 @@
   .funnel { display: grid; gap: 12px; }
   .step { display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center; }
   .step b { font-size: 26px; font-weight: 600; text-align: right; letter-spacing: -.02em; }
-  .step .fb { height: 34px; border-radius: 10px; background: linear-gradient(90deg, var(--brand), var(--brand-300)); display: flex; align-items: center; padding: 0 12px; color: #fff; font-size: 13.5px; font-weight: 500; white-space: nowrap; transform-origin: left; overflow: hidden; }
+  .step .track { height: 12px; border-radius: 99px; background: var(--line-2); overflow: hidden; }
+  .step .fb { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--brand), var(--brand-300)); transform-origin: left; }
+  .step .sl { margin-top: 5px; font-size: 13.5px; color: var(--ink-2); }
   .method { display: grid; gap: 14px; font-size: 14.5px; }
   .method p { margin: 0; color: var(--ink-2); }
   .method b { color: var(--ink); }
-  code { font-family: "JetBrains Mono", monospace; font-size: 12.5px; background: var(--brand-50); color: var(--brand-600); padding: 2px 6px; border-radius: 6px; }
+  code { overflow-wrap: anywhere; font-family: "JetBrains Mono", monospace; font-size: 12.5px; background: var(--brand-50); color: var(--brand-600); padding: 2px 6px; border-radius: 6px; }
 
   /* Tooltip + drawer */
   #tip { position: fixed; z-index: 40; pointer-events: none; max-width: 300px; padding: 10px 12px; font-size: 13px; line-height: 1.45; background: var(--ink); color: var(--bg); border-radius: 10px; box-shadow: var(--shadow-lg); opacity: 0; }
@@ -260,8 +263,9 @@ if (REDUCED) document.documentElement.classList.add("no-motion");
 const anim = (el, kf, o = {}) => animate(el, kf, REDUCED ? { ...o, duration: 0, delay: 0 } : o);
 const EASE = [0.22, 1, 0.36, 1];
 const SPRING = { type: "spring", stiffness: 260, damping: 24 };
-const seen = new WeakSet();
-const onView = (target, fn, opts = { amount: 0.25 }) => inView(target, (a) => { const el = a?.target ?? a; if (seen.has(el)) return; seen.add(el); fn(el); }, opts);
+// One "seen" set per call, so an element can both reveal and run its own chart animation (e.g. #funnel).
+const onView = (target, fn, opts = { amount: 0.25 }) => { const seen = new WeakSet();
+  return inView(target, (a) => { const el = a?.target ?? a; if (seen.has(el)) return; seen.add(el); fn(el); }, opts); };
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -273,12 +277,17 @@ const PERCENT = 100;
 const RECENT_FROM_YEAR = 2020;              // "young company" = founded in or after this year
 const RANKED_ROWS_SHOWN = 5;                // ranked list shows this many before "Show all"
 const TOP_HOLDERS_COUNT = 2;                // finding: share of funding held by the best-funded companies
-const PHONE_WIDTH_PX = 640;                 // below this the landscape defaults to the grid view
-const LABEL_MAX_CHARS = 20;                 // truncate long company names in the landscape
-const SEARCH_DEBOUNCE_MS = 120;
-const FUNNEL_MIN_BAR_PERCENT = 45;          // keeps the smallest funnel bar wide enough for its label
+const FUNNEL_MIN_BAR_PERCENT = 4;           // keeps the smallest funnel bar visible
 const TOOLTIP_OFFSET_PX = 16, TOOLTIP_WIDTH_PX = 300;
-const LOGO_SIZE = { row: 44, card: 64, drawer: 76 };
+const LOGO_SIZE = { row: 44, tile: 52, yearTile: 32, drawer: 76 };
+// Founding-year view: periods from oldest to newest; the last ones count as "recent".
+const PERIODS = [
+  { label: "Before 2010", from: -Infinity, to: 2009 },
+  { label: "2010–2014", from: 2010, to: 2014 },
+  { label: "2015–2019", from: 2015, to: 2019 },
+  { label: "2020–2022", from: 2020, to: 2022 },
+  { label: "2023 onwards", from: 2023, to: Infinity },
+];
 
 const usd = (n) => n == null ? "n/a" : n >= MILLION ? `$${(n / MILLION).toFixed(1)}M` : n >= THOUSAND ? `$${Math.round(n / THOUSAND)}K` : `$${Math.round(n)}`;
 const year = (c) => (c.founded ? Number(String(c.founded).slice(0, 4)) : null);
@@ -289,12 +298,17 @@ const logo = (c, size) => c.logo
   ? `<div class="lg" style="--s:${size}px"><img src="${esc(c.logo)}" alt="" loading="lazy"></div>`
   : `<div class="lg blank" style="--s:${size}px">${esc(initials(c.name))}</div>`;
 
-// Segment copy: short name for the landscape hubs, a plain description, and where it fits on a building site.
+// Segment copy: short name for chips and filters, a plain description, and where it fits on a building site.
 const SEGMENTS = {
   "Water capture and filtration": { short: "Water capture", what: "Filters and adsorbents that pull PFAS out of water.", fit: "Site drainage, dewatering and groundwater." },
   "Destruction and biological treatment": { short: "Destruction", what: "Technologies that break PFAS down for good: plasma, electrochemistry, oxidation or bacteria.", fit: "What happens to the PFAS once it has been captured." },
   "Soil and sediment": { short: "Soil & sediment", what: "Heat and processing methods that clean contaminated soil and dredged material.", fit: "Contaminated land and excavated soil, before building." },
 };
+
+const tileHtml = (c) => `<div class="tile" tabindex="0" role="button" data-n="${esc(c.name)}">${isRecent(c) ? `<span class="dot" title="Founded since ${RECENT_FROM_YEAR}"></span>` : ""}
+  ${logo(c, LOGO_SIZE.tile)}<div class="nm">${esc(c.name)}</div><div class="f mono">${c.funding ? usd(c.funding) : "no funding recorded"}</div></div>`;
+const yearTileHtml = (c) => `<div class="tile" tabindex="0" role="button" data-n="${esc(c.name)}">${logo(c, LOGO_SIZE.yearTile)}
+  <div><div class="nm">${esc(c.name)}</div><div class="f mono">${year(c)} · ${esc(SEGMENTS[c.segment].short)}</div></div></div>`;
 
 fetch("pfas-europe.json").then((r) => r.json()).then((d) => { if (d.error) throw new Error(d.error); render(d); })
   .catch((e) => { $("#app").innerHTML = `<div class="loading error">Could not load the data: ${esc(e.message)}</div>`; });
@@ -344,15 +358,19 @@ function render(d) {
   </section>
 
   <section id="landscape">
-    <div class="sh reveal" data-r><div><p class="kicker">02 · Landscape</p><h2>Three kinds of solution</h2><p class="lead">Each company sits around its segment. Bigger circles have raised more. Click any company for details.</p></div>
-      <div class="controls"><div class="seg" id="segView"><span class="thumb"></span><button data-v="map" class="on">Landscape</button><button data-v="grid">Grid</button></div></div></div>
+    <div class="sh reveal" data-r><div><p class="kicker">02 · Landscape</p><h2>Three kinds of solution</h2><p class="lead">The market map groups companies by what they do, best-funded first. Switch to founding year to see how recent the field is. Click any company for details.</p></div>
+      <div class="controls"><div class="seg" id="segView"><span class="thumb"></span><button data-v="map" class="on">Market map</button><button data-v="years">By founding year</button></div></div></div>
     <div id="viewBox">
-      <div class="card stage reveal" data-r id="mapBox"><svg id="land" viewBox="0 0 ${LAND.width} ${LAND.height}" role="img" aria-label="PFAS clean-up companies grouped by segment"></svg>
-        <div class="legend"><span><i style="background:var(--accent)"></i>Founded since ${RECENT_FROM_YEAR}</span><span><i style="background:var(--brand)"></i>Founded earlier</span><span class="mono" style="color:var(--faint)">Circle size = funding raised</span></div></div>
-      <div class="cards" id="gridBox" style="display:none"></div>
+      <div id="mapBox"><div class="mm">${segStats.map((s) => `<div class="card mseg">
+        <div class="top"><h3>${esc(s.name)}</h3><span class="n mono">${s.companies} · ${usd(s.funding)}</span></div>
+        <p>${esc(s.what)}</p><p class="fb"><b>For Bouygues:</b> ${esc(s.fit)}</p>
+        <div class="tiles">${s.items.map(tileHtml).join("")}</div></div>`).join("")}</div></div>
+      <div id="yearsBox" style="display:none"><div class="card panel"><div class="yrs" style="--periods:${PERIODS.length}">${PERIODS.map((pd) => {
+        const items = C.filter((c) => year(c) >= pd.from && year(c) <= pd.to).sort((a, b) => year(a) - year(b));
+        return `<div class="yr${pd.from >= RECENT_FROM_YEAR ? " recent" : ""}"><div class="stack">${items.map(yearTileHtml).join("")}</div>
+          <div class="base"><b>${esc(pd.label)}</b><span class="mono">${items.length}</span></div></div>`; }).join("")}</div></div></div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Founded since ${RECENT_FROM_YEAR}</span></div>
     </div>
-    <div class="segs">${segStats.map((s) => `<div class="card segx reveal" data-r><div class="top"><h3>${esc(s.name)}</h3><span class="n mono">${s.companies} · ${usd(s.funding)}</span></div>
-      <p>${esc(s.what)}</p><p class="fb"><b>For Bouygues:</b> ${esc(s.fit)}</p></div>`).join("")}</div>
   </section>
 
   <section id="funding">
@@ -374,7 +392,7 @@ function render(d) {
     <div class="two">
       <div class="card panel funnel reveal" data-r id="funnel">
         ${[[f.worldwide, "tagged PFAS worldwide"], [f.europe, "headquartered in Europe"], [f.inScope, "capture, destroy or clean up PFAS"]]
-          .map(([n, l]) => `<div class="step"><b class="mono">${n}</b><div class="fb" style="width:${Math.max((n / f.worldwide) * PERCENT, FUNNEL_MIN_BAR_PERCENT)}%;transform:scaleX(0)">${esc(l)}</div></div>`).join("")}
+          .map(([n, l]) => `<div class="step"><b class="mono">${n}</b><div><div class="track"><span class="fb" style="width:${Math.max((n / f.worldwide) * PERCENT, FUNNEL_MIN_BAR_PERCENT)}%;transform:scaleX(0)"></span></div><div class="sl">${esc(l)}</div></div></div>`).join("")}
         <p class="note">Removed (${f.europe - f.inScope}): PFAS-free alternatives such as batteries, coatings and membranes, and a few unrelated companies: ${d.outOfScope.map((c) => esc(c.name)).join(", ")}.</p>
       </div>
       <div class="card panel method reveal" data-r>
@@ -402,87 +420,24 @@ function render(d) {
     if (!tipOn) { tipOn = true; anim(tip, { opacity: [0, 1], y: [4, 0] }, { duration: 0.18 }); } };
   const hideTip = () => { if (tipOn) { tipOn = false; anim(tip, { opacity: 0 }, { duration: 0.12 }); } };
 
-  // Landscape: centre -> one hub per segment -> its companies in a circle around the hub
-  let loops = [];
-  function drawLandscape() {
-    loops.forEach((l) => l.stop?.()); loops = [];
-    const svg = $("#land"), { cx, cy } = LAND.centre, maxFunding = Math.max(...C.map((c) => c.funding ?? 0), 1);
-    const radiusFor = (c) => LAND.nodeMinR + (LAND.nodeMaxR - LAND.nodeMinR) * Math.sqrt((c.funding ?? 0) / maxFunding);
-    const hubs = segStats.map((s, si) => ({ s, ...LAND.hubs[si] }));
-    const nodes = [];
-    hubs.forEach((h, hi) => h.s.items.forEach((c, i) => {
-      const angle = h.startAngle + (i / h.s.items.length) * 2 * Math.PI;
-      nodes.push({ c, hi, r: radiusFor(c), x: h.x + LAND.hubOrbit * Math.cos(angle), y: h.y + LAND.hubOrbit * Math.sin(angle) });
-    }));
-    let h = `<defs><radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--brand)" stop-opacity=".16"/><stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/></radialGradient>
-      <filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1f1610" flood-opacity=".14"/></filter>
-      ${nodes.map((n, i) => `<clipPath id="clip${i}"><circle r="${n.r - LAND.logoInset}"/></clipPath>`).join("")}</defs>
-      <circle cx="${cx}" cy="${cy}" r="${LAND.glowR}" fill="url(#core)"/>`;
-    h += hubs.map((hb) => `<circle class="ring" cx="${hb.x}" cy="${hb.y}" r="${LAND.hubOrbit}"/>`).join("");
-    h += hubs.map((hb, hi) => `<line class="spoke hub" data-h="${hi}" x1="${cx}" y1="${cy}" x2="${hb.x}" y2="${hb.y}"/>`).join("");
-    h += nodes.map((n, i) => `<line class="spoke" data-i="${i}" x1="${hubs[n.hi].x}" y1="${hubs[n.hi].y}" x2="${n.x}" y2="${n.y}"/>`).join("");
-    h += `<circle class="pulse" cx="${cx}" cy="${cy}" r="${LAND.centreR}" fill="none" stroke="var(--brand)" stroke-width="1.5" opacity="0"/>
-      <g class="core"><circle cx="${cx}" cy="${cy}" r="${LAND.centreR}" fill="var(--surface)" stroke="var(--line)" filter="url(#sh)"/>
-        <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="22" font-weight="700">PFAS</text><text x="${cx}" y="${cy + 20}" text-anchor="middle" font-size="13" class="sub">clean-up · Europe</text></g>`;
-    h += hubs.map((hb, hi) => `<g class="hb" data-h="${hi}" transform="translate(${hb.x} ${hb.y})"><g class="in">
-        <circle r="${LAND.hubR}" fill="var(--brand-600)" filter="url(#sh)"/>
-        <text y="-2" text-anchor="middle" font-size="14" font-weight="600" style="fill:#fff">${esc(hb.s.short)}</text>
-        <text y="16" text-anchor="middle" font-size="12" style="fill:#fff;opacity:.85">${hb.s.companies} companies</text></g></g>`).join("");
-    h += nodes.map((n, i) => { const c = n.c, name = c.name.length > LABEL_MAX_CHARS ? c.name.slice(0, LABEL_MAX_CHARS - 1) + "…" : c.name;
-      const inner = c.logo
-        ? `<circle r="${n.r - LAND.logoInset}" fill="#fff"/><image href="${esc(c.logo)}" x="${-(n.r - LAND.logoInset)}" y="${-(n.r - LAND.logoInset)}" width="${2 * (n.r - LAND.logoInset)}" height="${2 * (n.r - LAND.logoInset)}" clip-path="url(#clip${i})" preserveAspectRatio="xMidYMid meet"/>`
-        : `<circle r="${n.r - LAND.logoInset}" fill="var(--brand)"/><text y="5" text-anchor="middle" font-size="14" font-weight="600" style="fill:#fff">${esc(initials(c.name))}</text>`;
-      return `<g class="nd" data-i="${i}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(c.name)}"><g class="in">
-        <circle r="${n.r}" fill="var(--surface)" filter="url(#sh)"/><circle r="${n.r - 1}" fill="none" stroke="${isRecent(c) ? "var(--accent)" : "var(--brand)"}" stroke-width="2.5"/>${inner}
-        <text y="${n.r + LAND.labelGap}" text-anchor="middle" font-size="13" font-weight="600">${esc(name)}</text>
-        <text y="${n.r + LAND.labelGap + LAND.subLabelGap}" text-anchor="middle" font-size="11.5" class="sub">${c.funding ? usd(c.funding) : "no funding recorded"}</text></g></g>`; }).join("");
-    svg.innerHTML = h;
-
-    $$(".ring", svg).forEach((el, i) => { el.style.transformOrigin = `${hubs[i].x}px ${hubs[i].y}px`; anim(el, { opacity: [0, 1], transform: ["scale(.85)", "scale(1)"] }, { duration: 0.9, delay: 0.1 + i * 0.12, ease: EASE }); });
-    $$(".spoke", svg).forEach((el) => { const len = Math.hypot(el.x2.baseVal.value - el.x1.baseVal.value, el.y2.baseVal.value - el.y1.baseVal.value); el.style.strokeDasharray = len; el.style.strokeDashoffset = len;
-      const delay = el.dataset.h != null ? 0.2 : 0.5 + nodes[el.dataset.i].hi * 0.15;
-      anim(el, { strokeDashoffset: [len, 0] }, { duration: 0.8, delay, ease: EASE }); });
-    const core = $(".core", svg); core.style.transformOrigin = `${cx}px ${cy}px`;
-    anim(core, { opacity: [0, 1], transform: ["scale(.6)", "scale(1)"] }, { ...SPRING, delay: 0.05 });
-    $$(".hb .in", svg).forEach((el, i) => anim(el, { opacity: [0, 1], transform: ["scale(.4)", "scale(1)"] }, { ...SPRING, delay: 0.3 + i * 0.1 }));
-    $$(".nd .in", svg).forEach((el, i) => anim(el, { opacity: [0, 1], transform: ["scale(.3)", "scale(1)"] }, { ...SPRING, delay: 0.6 + nodes[i].hi * 0.16 + i * 0.03 }));
-    if (!REDUCED) {
-      loops.push(animate($(".pulse", svg), { r: [LAND.centreR, LAND.pulseMaxR], opacity: [0.35, 0] }, { duration: 3.2, repeat: Infinity, ease: "easeOut", delay: 1.2 }));
-      $$(".ring", svg).forEach((el, i) => loops.push(animate(el, { strokeDashoffset: [0, i % 2 ? 90 : -90] }, { duration: 24 + i * 6, repeat: Infinity, ease: "linear" })));
-    }
-    $$(".nd", svg).forEach((g) => { const i = +g.dataset.i, c = nodes[i].c, el = $(".in", g), sp = $(`.spoke[data-i="${i}"]`, svg);
-      const on = () => { sp.classList.add("hot"); anim(el, { transform: "scale(1.1)" }, { type: "spring", stiffness: 400, damping: 18 }); };
-      const off = () => { sp.classList.remove("hot"); anim(el, { transform: "scale(1)" }, { type: "spring", stiffness: 300, damping: 22 }); hideTip(); };
-      g.addEventListener("mouseenter", on); g.addEventListener("mousemove", (e) => showTip(e, c)); g.addEventListener("mouseleave", off);
-      g.addEventListener("focus", on); g.addEventListener("blur", off);
-      g.addEventListener("click", () => openDrawer(c)); g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDrawer(c); } }); });
-  }
-
   const chips = (c) => `<span class="chip b">${esc(SEGMENTS[c.segment].short)}</span>${isRecent(c) ? `<span class="chip s">Since ${RECENT_FROM_YEAR}</span>` : ""}${c.spinout ? `<span class="chip">Spinout</span>` : ""}`;
 
-  function drawGrid() {
-    $("#gridBox").innerHTML = C.map((c, i) => `<div class="pc" data-i="${i}" tabindex="0" role="button">${isRecent(c) ? `<span class="st chip s">Since ${RECENT_FROM_YEAR}</span>` : ""}
-      ${logo(c, LOGO_SIZE.card)}<div class="cn">${esc(c.name)}</div><div><span class="chip b">${esc(SEGMENTS[c.segment].short)}</span></div><div class="tg">${esc(c.tagline)}</div>
-      <div class="ft"><span class="mono">${raised(c)}</span><span>·</span><span>${esc(c.country)}</span></div></div>`).join("");
-    const cards = $$("#gridBox .pc");
-    anim(cards, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, delay: stagger(0.025, { startDelay: 0.05 }), ease: EASE });
-    cards.forEach((el) => { const c = C[el.dataset.i];
-      el.addEventListener("mouseenter", () => anim(el, { y: -4 }, SPRING)); el.addEventListener("mouseleave", () => anim(el, { y: 0 }, SPRING));
-      el.addEventListener("click", () => openDrawer(c)); el.addEventListener("keydown", (e) => { if (e.key === "Enter") openDrawer(c); }); });
-  }
-
-  let view = innerWidth < PHONE_WIDTH_PX ? "grid" : "map", firstDraw = true;   // the landscape is too dense for phones
-  if (view === "grid") $$("#segView button").forEach((b) => b.classList.toggle("on", b.dataset.v === "grid"));
-  async function redraw() {
-    const box = $("#viewBox");
-    if (!firstDraw) await anim(box, { opacity: 0, y: 8 }, { duration: 0.18 });
-    $("#mapBox").style.display = view === "map" ? "" : "none"; $("#gridBox").style.display = view === "grid" ? "" : "none"; $("#mapBox").style.opacity = 1;
-    view === "map" ? drawLandscape() : drawGrid();
-    if (!firstDraw) anim(box, { opacity: 1, y: 0 }, { duration: 0.3, ease: EASE });
-    firstDraw = false;
-  }
-  seg($("#segView"), "v", (v) => { view = v; redraw(); });
-  onView("#viewBox", () => redraw(), { amount: 0.15 });
+  // Landscape views: tiles open the drawer; each view animates its tiles the first time it is shown
+  const byName = Object.fromEntries(C.map((c) => [c.name, c]));
+  const bindTiles = (root) => $$(".tile", root).forEach((el) => { const c = byName[el.dataset.n];
+    el.addEventListener("click", () => openDrawer(c)); el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDrawer(c); } });
+    el.addEventListener("mouseenter", (e) => { anim(el, { y: -3 }, SPRING); }); el.addEventListener("mousemove", (e) => showTip(e, c));
+    el.addEventListener("mouseleave", () => { anim(el, { y: 0 }, SPRING); hideTip(); }); });
+  bindTiles($("#viewBox"));
+  const showTiles = (box) => anim($$(".tile", box), { opacity: [0, 1], y: [12, 0] }, { duration: 0.45, delay: stagger(0.03, { startDelay: 0.05 }), ease: EASE });
+  let view = "map";
+  seg($("#segView"), "v", async (v) => {
+    const from = view === "map" ? $("#mapBox") : $("#yearsBox"), to = v === "map" ? $("#mapBox") : $("#yearsBox");
+    view = v; hideTip();
+    await anim(from, { opacity: 0, y: 8 }, { duration: 0.18 });
+    from.style.display = "none"; to.style.display = ""; anim(to, { opacity: [0, 1], y: [8, 0] }, { duration: 0.3, ease: EASE }); showTiles(to);
+  });
+  onView("#mapBox", (el) => showTiles(el), { amount: 0.1 });
 
   // Charts: one colour, grow on view
   const hbars = (rows, fmt) => { const max = Math.max(...rows.map((r) => r.v), 1);
@@ -494,7 +449,7 @@ function render(d) {
   onView("#funnel", () => anim($$("#funnel .fb"), { transform: ["scaleX(0)", "scaleX(1)"] }, { duration: 0.8, delay: stagger(0.15), ease: EASE }));
 
   // Ranked list: top few, show all on demand, filter by segment
-  const maxFunding = C[0]?.funding || 1, byName = Object.fromEntries(C.map((c) => [c.name, c]));
+  const maxFunding = C[0]?.funding || 1;
   const rowHtml = (c) => `<div class="row" tabindex="0" role="button" data-n="${esc(c.name)}"><span class="rk mono">${String(c.rank).padStart(2, "0")}</span>${logo(c, LOGO_SIZE.row)}
     <div class="who"><div class="nm">${esc(c.name)}</div><div class="co">${esc(c.tagline)}</div><div>${chips(c)}</div></div>
     <div class="rt"><b class="mono">${raised(c)}</b>${esc(c.city)}, ${esc(c.country)}<br><span class="score"><span style="width:${((c.funding ?? 0) / maxFunding) * PERCENT}%"></span></span></div></div>`;
@@ -541,16 +496,6 @@ function render(d) {
   $("#foot").innerHTML = `<div><b>Source:</b> Dealroom API, companies tagged PFAS with headquarters in Europe, generated ${esc(d.generatedAt.slice(0, 10))}. Funding is the total raised, in USD as returned by the API.</div>
     <div><b>Caveats:</b> segments were assigned by hand. "No funding recorded" can mean undisclosed or bootstrapped. Haemers Technologies and Cornelsen Umwelttechnologie are established firms rather than startups, kept because they specialise in PFAS remediation. Colours approximate the Bouygues Construction palette.</div>`;
 }
-
-// Landscape geometry, in SVG units of the viewBox
-const LAND = {
-  width: 1100, height: 770,
-  centre: { cx: 550, cy: 400 }, centreR: 78, glowR: 240, pulseMaxR: 180,
-  hubR: 56, hubOrbit: 150,
-  // one hub per segment, in the order the API returns them (water, destruction, soil)
-  hubs: [{ x: 250, y: 290, startAngle: -Math.PI / 2 }, { x: 850, y: 290, startAngle: -Math.PI / 2 }, { x: 550, y: 640, startAngle: 0 }],
-  nodeMinR: 26, nodeMaxR: 46, logoInset: 6, labelGap: 18, subLabelGap: 15,
-};
 
 anim($$(".hero [data-r]"), { opacity: [0, 1], y: [20, 0] }, { duration: 0.8, delay: stagger(0.08, { startDelay: 0.05 }), ease: EASE });
 const GRID_CELL_PX = 48, GRID_DRIFT_SECONDS = 30;
