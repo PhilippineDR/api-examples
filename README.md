@@ -8,13 +8,12 @@
 
 - `GET /health`, `GET /companies/top` (VC-backed companies launched since 2020, by valuation), and any `GET /data/...` or `/reference/...` passed through to `https://api.beta.dealroom.app` with auth added, e.g. `curl "localhost:3000/data/companies?limit=5&view=summary"`.
 
-- Challenge 2 page: http://localhost:3000/marseille-aix (data from `GET /api/marseille-aix`, cached in `data/`, add `?refresh=1` to rebuild for about 780 credits). `/analytics/...` is also passed through.
+- Challenge 2 page: http://localhost:3000/marseille-aix-naecaj (data from `GET /api/marseille-aix-naecaj`, cached in `data/`, add `?refresh=1` to rebuild for about 780 credits). `/analytics/...` is also passed through.
 
-- Challenge 3 page: http://localhost:3000/cgt-europe (European cell & gene therapy; data from `GET /api/cgt-europe`, cached in `data/cgt-europe.json`, add `?refresh=1` to rebuild for about 440 credits).
+- Challenge 3 page: http://localhost:3000/cgt-europe-nlbu17 (European cell & gene therapy; data from `GET /api/cgt-europe-nlbu17`, cached in `data/cgt-europe.json`, add `?refresh=1` to rebuild for about 440 credits).
 
-- Challenge 4 page (HV Capital, Revolut founder mafia): http://localhost:3000/revolut-mafia (data from `GET /api/revolut-mafia`, cached in `data/revolut-mafia.json`, add `?refresh=1` to rebuild for about 960 credits).
+- Challenge 4 page (HV Capital, Revolut founder mafia): http://localhost:3000/revolut-mafia-1gw5ua (data from `GET /api/revolut-mafia-1gw5ua`, cached in `data/revolut-mafia.json`, add `?refresh=1` to rebuild for about 960 credits).
 
-- Bouygues Construction example (PFAS clean-up startups in Europe): http://localhost:3000/pfas-europe (data from `GET /api/pfas-europe`, cached in `data/pfas-europe.json`, add `?refresh=1` to rebuild for about 30 credits).
 
 ## Credentials and authentication
 

@@ -22,9 +22,9 @@ Status key: Not started / In progress / Done
 
 **Challenge:** Create a resource page for a city of your choice as if you were reporting about your performance to your mayor/government.
 
-- **Status:** Done (v1: page live at http://localhost:3000/marseille-aix, data refreshed with `?refresh=1`)
+- **Status:** Done (v1: page live at http://localhost:3000/marseille-aix-naecaj, data refreshed with `?refresh=1`)
 - **City:** Marseille-Aix-Provence (Aix-Marseille-Provence Metropole, 92 communes)
-- **Where in the code:** `marseille-aix.js` (collects all data via the API, throttled with 429 retry), `server.js` (route `GET /api/marseille-aix`, cached in `data/marseille-aix.json`, plus static serving of `public/`), `public/marseille-aix.html` (dashboard page)
+- **Where in the code:** `marseille-aix.js` (collects all data via the API, throttled with 429 retry), `server.js` (route `GET /api/marseille-aix-naecaj`, cached in `data/marseille-aix.json`, plus static serving of `public/`), `public/marseille-aix-naecaj.html` (dashboard page)
 - **Idea / plan:** Report to the mayor on the innovation ecosystem, last 5 years (2021 to today).
   - Map: universities spinning out startups, accelerators, incubators, with performance per structure
   - Startup performance: funding raised, jobs and headcount growth, exits and unicorns, creation and survival
@@ -42,7 +42,7 @@ Status key: Not started / In progress / Done
   - A full build costs about 780 credits, hence the disk cache. The API returns 429 on bursts, so calls run one at a time.
   - Accelerators and incubators are investors with `investor_type` accelerator/incubator; there is no separate filter.
   - Sorting universities by `alumni_founded_companies_count` returns a 500, so I sort by `alumni_founders_count`.
-  - Universities use `any_location`, which also returns multi-campus schools headquartered elsewhere (KEDGE, Epitech, ESSCA). They are kept, tagged "campus in territory", and ranked by local companies their alumni founded (`founder__university.id` + `founding_or_hq_location`), minimum 5. Dealroom's alumni totals are institution-wide, so they are shown only as context. Local spin-outs are a proxy (spin-out companies founded by the school's alumni). Refresh just this block with `GET /api/marseille-aix/refresh-universities` (about 65 credits).
+  - Universities use `any_location`, which also returns multi-campus schools headquartered elsewhere (KEDGE, Epitech, ESSCA). They are kept, tagged "campus in territory", and ranked by local companies their alumni founded (`founder__university.id` + `founding_or_hq_location`), minimum 5. Dealroom's alumni totals are institution-wide, so they are shown only as context. Local spin-outs are a proxy (spin-out companies founded by the school's alumni). Refresh just this block with `GET /api/marseille-aix-naecaj/refresh-universities` (about 65 credits).
   - Technopoles, science parks and subsea cables are not in Dealroom; the page says so and needs another source.
   - No benchmark against other territories (not requested). Dealroom under-records closures and the newest companies.
 
@@ -52,9 +52,9 @@ Status key: Not started / In progress / Done
 
 **Challenge:** Build an analysis of a sub sector of Defense, Deep Tech or Biotech.
 
-- **Status:** Done (v1: page live at http://localhost:3000/cgt-europe, data refreshed with `?refresh=1`)
+- **Status:** Done (v1: page live at http://localhost:3000/cgt-europe-nlbu17, data refreshed with `?refresh=1`)
 - **Sub sector:** Biotech > Cell & gene therapy (CGT), Europe
-- **Where in the code:** `cgt-europe.js` (collects all data via the API, throttled with 429/500 retry), `server.js` (route `GET /api/cgt-europe`, cached in `data/cgt-europe.json`), `public/cgt-europe.html` (dashboard page)
+- **Where in the code:** `cgt-europe.js` (collects all data via the API, throttled with 429/500 retry), `server.js` (route `GET /api/cgt-europe-nlbu17`, cached in `data/cgt-europe.json`), `public/cgt-europe-nlbu17.html` (dashboard page)
 - **Idea / plan:** Dashboard page (same style as challenge 2: KPI tiles, charts, ranked tables, short narrative).
   - Definition (final): CGT core = taxonomy ids `1544701|2199201|1382201|2246801|771001|2297301|1634301|2167701|2199401` (Gene Therapy, Cell Therapy, CRISPR, T-Cell, Stem Cells, Viral Vectors, RNA, mRNA Medicines, Antisense Nucleic Acid Drugs). Separate "enablers" segment = Biomanufacturing `2279801`.
   - Dropped after checking the data: Genome Engineering `1860901` (broad genomics tools, diagnostics, AstraZeneca) and Cell Manufacturers `2265201` (means battery cells, e.g. Northvolt with $7.7B). Also left out: Immunotherapy, Regenerative Medicine, Genetics and Genomics, Oncology.

@@ -125,7 +125,7 @@ app.get(/^\/(data|reference|analytics)\//, async (req, res) => {
 // Challenge 2: Aix-Marseille-Provence ecosystem report. Cached on disk because a full build costs credits;
 // add ?refresh=1 to rebuild.
 const REPORT_FILE = "data/marseille-aix.json";
-app.get("/api/marseille-aix", async (req, res) => {
+app.get("/api/marseille-aix-naecaj", async (req, res) => {
   try {
     if (!req.query.refresh && existsSync(REPORT_FILE)) return res.type("json").send(readFileSync(REPORT_FILE, "utf8"));
     const report = await buildReport(dealroomGet);
@@ -139,7 +139,7 @@ app.get("/api/marseille-aix", async (req, res) => {
 
 // Challenge 3: European cell & gene therapy report, cached the same way.
 const CGT_FILE = "data/cgt-europe.json";
-app.get("/api/cgt-europe", async (req, res) => {
+app.get("/api/cgt-europe-nlbu17", async (req, res) => {
   try {
     if (!req.query.refresh && existsSync(CGT_FILE)) return res.type("json").send(readFileSync(CGT_FILE, "utf8"));
     const report = await buildCgtReport(dealroomGet);
@@ -152,7 +152,7 @@ app.get("/api/cgt-europe", async (req, res) => {
 });
 // Challenge 4 (HV Capital): Revolut founder mafia, cached the same way.
 const REVOLUT_FILE = "data/revolut-mafia.json";
-app.get("/api/revolut-mafia", async (req, res) => {
+app.get("/api/revolut-mafia-1gw5ua", async (req, res) => {
   try {
     if (!req.query.refresh && existsSync(REVOLUT_FILE)) return res.type("json").send(readFileSync(REVOLUT_FILE, "utf8"));
     const report = await buildRevolutReport(dealroomGet);
@@ -163,7 +163,7 @@ app.get("/api/revolut-mafia", async (req, res) => {
     res.status(502).json({ error: err.message });
   }
 });
-app.get("/api/marseille-aix/refresh-universities", async (req, res) => {
+app.get("/api/marseille-aix-naecaj/refresh-universities", async (req, res) => {
   try {
     const next = await refreshUniversities(dealroomGet, JSON.parse(readFileSync(REPORT_FILE, "utf8")));
     writeFileSync(REPORT_FILE, JSON.stringify(next));

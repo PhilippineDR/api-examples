@@ -31,7 +31,7 @@ Copy the template below for each new request and fill it in. Newest requests go 
 - **Request:** A clean visual of who from ex-Revolut staff is building what, where and how, plus a list of people with who they are, where they are now and any signal they are building something worth knowing about. Purpose: spot very early potential founders and deals.
 - **What I'm building:** Page with KPIs, a bubble map of founded companies by industry (colour = stage, size = funding), founding-year and country charts, a scored "watchlist" of early signals with reasons, and a searchable list of all 311 people.
 - **Dealroom endpoints / filters used:** `GET /data/people` with `and(employer_id[eq]:<Revolut id>,roles[in_any]:founder,current_employer_id[neq]:<Revolut id>)` (full view); `GET /data/companies` with `id[in_any]:...` (summary view) for the founded companies. Revolut id found via `/reference/filters/employer_id/values?q=Revolut`. About 960 credits per rebuild.
-- **Files:** `revolut-mafia.js`, `public/revolut-mafia.html`, route `/api/revolut-mafia` in `server.js`, cache `data/revolut-mafia.json`. Page: http://localhost:3000/revolut-mafia (add `?refresh=1` to the API route to rebuild).
+- **Files:** `revolut-mafia.js`, `public/revolut-mafia-1gw5ua.html`, route `/api/revolut-mafia-1gw5ua` in `server.js`, cache `data/revolut-mafia.json`. Page: http://localhost:3000/revolut-mafia-1gw5ua (add `?refresh=1` to the API route to rebuild).
 - **Notes / open questions:** "Worked at Revolut" also includes advisers and board members. Profiles preview at most 5 roles, so some ventures may be missing. Ask HV whether they want non-founders (e.g. senior ex-Revolut staff who just left) as a second watch cohort.
 
 ### Bouygues Construction · PFAS sector landscape
@@ -47,7 +47,7 @@ Copy the template below for each new request and fill it in. Newest requests go 
   - Company types: startups and research spinouts
   - Angle: relevance to construction (water, soil remediation, infrastructure)
 - **Dealroom endpoints / filters used:** `GET /data/companies` (view=summary) with `taxonomy_id[in_any]:2284101` (sector PFAS) and `hq_location[in_any]:76` (Europe); `/reference/filters/taxonomy_id/values?q=` to find the tag; adjacent tag counts for context. 29 credits.
-- **Files:** `pfas-europe.js` (data builder), `public/pfas-europe.html` (page at http://localhost:3000/pfas-europe), cache `data/pfas-europe.json`
+- **Files:** `pfas-europe.js` (data builder), `public/pfas-europe-9qntdi.html` (page at http://localhost:3000/pfas-europe-9qntdi), cache `data/pfas-europe.json`
 - **Notes / open questions:**
   - Funnel: 60 PFAS-tagged worldwide, 24 in Europe, 13 kept (the rest are PFAS-free alternatives or unrelated). Segments assigned by hand.
   - Small extract on purpose, to show what the API can do. Possible extension: screen Remediation, Water Purification and Soil Restoration companies for PFAS mentions.
