@@ -71,6 +71,7 @@ export async function buildPfasReport(dealroomGet) {
     lon: hq(c)?.lon ?? null,
     founded: c.launch_date,
     tagline: c.tagline,
+    logo: c.image ? (c.image.startsWith("http") ? c.image : `https://${c.image}`) : null,
     employees: c.employees_count,
     funding: c.funding?.total ?? null,
     spinout: (c.taxonomy ?? []).some((t) => t.name === "Spinout"),
