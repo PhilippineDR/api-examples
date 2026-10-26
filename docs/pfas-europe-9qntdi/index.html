@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PFAS Clean-up in Europe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500;62..125,800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --bg: #fbf6f1; --surface: #ffffff; --ink: #2a1a10; --muted: #6b574a; --rule: #ecdfd3;
+    --orange: #e8590c; --orange-soft: #fde8d8; --amber: #f08c00; --rust: #9c3d0f;
+    --s1: #e8590c; --s2: #f59f00; --s3: #8c4a22;
+    --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+    --f-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    --f-data: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #17100b; --surface: #231811; --ink: #f8ede4; --muted: #c0a999; --rule: #3a2a1f;
+            --orange: #ff7a2f; --orange-soft: #3b2415; --amber: #ffb02e; --rust: #ff9a62;
+            --s1: #ff7a2f; --s2: #ffc04d; --s3: #d08a5a; color-scheme: dark; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 18px/1.6 var(--f-body); }
+  #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  .band { height: 10px; background: linear-gradient(90deg, var(--orange) 0 60%, var(--amber) 60%); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px 72px; }
+  a { color: var(--rust); text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+  h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+  .eyebrow { font: 600 12px/1.3 var(--f-data); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  header.hero { padding: 40px 0 24px; display: grid; gap: 18px; }
+  h1 { font-size: clamp(44px, 9vw, 92px); font-weight: 800; font-stretch: 70%; line-height: .92; text-transform: uppercase; letter-spacing: -.01em; }
+  h1 span { color: var(--orange); }
+  .intro { font-size: 22px; line-height: 1.45; font-weight: 600; max-width: 40em; margin: 0; }
+  .explain { max-width: 40em; color: var(--muted); margin: 0; }
+  nav.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  nav.jump a { font: 600 13px var(--f-data); text-decoration: none; padding: 7px 12px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+  nav.jump a:hover { border-color: var(--orange); color: var(--orange); }
+  .kpis { display: flex; flex-wrap: wrap; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .kpi { flex: 1 1 150px; background: var(--surface); padding: 16px 18px; display: grid; gap: 4px; }
+  .kpi b { font: 800 40px/1 var(--f-display); font-stretch: 80%; color: var(--orange); }
+  .kpi span { font-size: 15px; color: var(--muted); line-height: 1.3; }
+  section { margin-top: 56px; scroll-margin-top: 16px; }
+  h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; font-stretch: 75%; text-transform: uppercase; line-height: 1; }
+  .lead { color: var(--muted); margin: 8px 0 20px; max-width: 42em; }
+  .panel { background: var(--surface); border: 1px solid var(--rule); padding: 20px; }
+  .findings { border-left: 6px solid var(--orange); display: grid; gap: 14px; }
+  .findings h3 { font-size: 20px; font-stretch: 85%; }
+  .findings ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+  .segcard { background: var(--surface); border: 1px solid var(--rule); border-top: 6px solid var(--c); padding: 18px; display: grid; gap: 8px; align-content: start; }
+  .segcard h3 { font-size: 22px; font-stretch: 85%; }
+  .segcard .big { font: 800 44px/1 var(--f-display); font-stretch: 80%; color: var(--c); }
+  .segcard .big small { font: 400 16px var(--f-body); color: var(--muted); margin-left: 6px; }
+  .segcard p { margin: 0; font-size: 16px; color: var(--muted); }
+  .segcard .who { font-size: 15px; color: var(--ink); }
+  .meter { height: 10px; background: var(--rule); }
+  .meter span { display: block; height: 100%; background: var(--c); }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .filters input, .filters select { font: 16px var(--f-body); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); padding: 10px 12px; min-width: 0; }
+  .filters input { flex: 1 1 220px; }
+  .tablewrap { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 16px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 11px var(--f-data); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); white-space: nowrap; cursor: pointer; background: var(--surface); }
+  th[aria-sort="ascending"]::after { content: " \25B2"; } th[aria-sort="descending"]::after { content: " \25BC"; }
+  tbody tr:hover { background: var(--orange-soft); }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td .sub { display: block; font-size: 14px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+  .chip { display: inline-block; font: 600 11px/1 var(--f-data); padding: 5px 7px; background: var(--c); color: #fff; letter-spacing: .02em; white-space: nowrap; }
+  [data-seg="s2"] .chip, .chip.s2 { color: #2a1a10; }
+  .funnel { display: grid; gap: 10px; }
+  .step { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; }
+  .step b { font: 800 36px/1 var(--f-display); font-stretch: 80%; text-align: right; }
+  .step .bar { background: var(--orange); color: #fff; padding: 9px 12px; font-size: 15px; line-height: 1.3; }
+  .note { font-size: 15px; color: var(--muted); margin: 0; }
+  .method { border-left: 6px solid var(--amber); display: grid; gap: 10px; font-size: 16px; }
+  .method p { margin: 0; }
+  code { font: 14px var(--f-data); background: var(--orange-soft); padding: 2px 6px; }
+  .loading, .error { padding: 60px 0; text-align: center; color: var(--muted); }
+  footer { margin-top: 56px; font-size: 14px; color: var(--muted); }
+  @media (max-width: 640px) { body { font-size: 17px; } .intro { font-size: 20px; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="band"></div>
+<div class="wrap">
+  <div id="app"><div class="loading">Loading the data...</div></div>
+  <footer id="foot"></footer>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const usd = (n) => n == null ? "n/a" : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`;
+const KEY = { "Water capture and filtration": "s1", "Destruction and biological treatment": "s2", "Soil and sediment": "s3" };
+const SEG_INFO = {
+  "Water capture and filtration": "Filters and adsorbents that pull PFAS out of water.",
+  "Destruction and biological treatment": "Technologies that break PFAS down for good, with plasma, electrochemistry, oxidation or bacteria.",
+  "Soil and sediment": "Heat and processing methods that clean contaminated soil and dredged material.",
+};
+const RELEVANCE = {
+  "Water capture and filtration": "On site: site drainage, dewatering and groundwater.",
+  "Destruction and biological treatment": "After capture: what happens to the PFAS that was removed.",
+  "Soil and sediment": "Before building: contaminated land and excavated soil.",
+};
+
+fetch("pfas-europe.json").then((r) => r.json()).then((d) => {
+  if (d.error) throw new Error(d.error);
+  const k = d.kpis, f = d.funnel;
+  const byFunding = [...d.companies].sort((a, b) => (b.funding ?? 0) - (a.funding ?? 0));
+  const top = byFunding.slice(0, 5);
+  const soil = d.segments.find((s) => s.name === "Soil and sediment");
+  const lead = d.countries[0];
+  const maxF = Math.max(...d.segments.map((s) => s.funding), 1);
+  const chip = (c) => `<span class="chip ${KEY[c.segment]}" style="--c:var(--${KEY[c.segment]})">${esc(c.segment)}</span>`;
+  const row = (c, i) => `<tr data-seg="${KEY[c.segment]}">
+    <td><a href="${esc(c.url)}" target="_blank" rel="noopener"><b>${esc(c.name)}</b></a><span class="sub">${esc(c.tagline)}</span></td>
+    <td>${chip(c)}</td><td>${esc(c.city)}, ${esc(c.country)}</td>
+    <td class="n">${esc((c.founded ?? "").slice(0, 4)) || "n/a"}</td><td class="n">${usd(c.funding)}</td></tr>`;
+  const head = `<thead><tr><th>Company</th><th>Segment</th><th>Headquarters</th><th class="n">Founded</th><th class="n">Funding</th></tr></thead>`;
+
+  $("#app").innerHTML = `
+  <header class="hero">
+    <div class="eyebrow">Prepared for Bouygues Construction · Built with the Dealroom API</div>
+    <h1>PFAS clean-up<br>in <span>Europe</span></h1>
+    <p class="intro">${k.companies} startups and research spinouts that capture, destroy or clean up PFAS in water and soil.</p>
+    <p class="explain">PFAS are "forever chemicals": long-lasting industrial substances found in water and soil, and increasingly regulated. They matter on building sites because contaminated land and water have to be dealt with before and during construction.</p>
+    <nav class="jump"><a href="#findings">Key findings</a><a href="#segments">Segments</a><a href="#top">Top 5</a><a href="#all">All companies</a><a href="#method">How we searched</a></nav>
+    <div class="kpis">
+      ${[[k.companies, "companies in scope"], [k.countries, "countries"], [usd(k.totalFunding), "total funding raised"], [k.createdSince2020, "founded since 2020"], [k.spinouts, "research spinouts"]]
+        .map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("")}
+    </div>
+  </header>
+
+  <section id="findings">
+    <div class="panel findings"><h3>Three things to know</h3><ol>
+      <li><b>It is a young, early-stage field.</b> ${k.createdSince2020} of the ${k.companies} companies were founded since 2020, and together they have raised only ${usd(k.totalFunding)}.</li>
+      <li><b>Water is where the activity is.</b> ${d.segments[0].companies + d.segments[1].companies} of ${k.companies} companies work on water. Only ${soil.companies} work on soil and sediment (${usd(soil.funding)} raised), which is the closest match to construction sites.</li>
+      <li><b>${esc(lead.country)} has the most companies</b> (${lead.companies}), followed by ${esc(d.countries[1]?.country)} and ${esc(d.countries[2]?.country)}. The UK and Switzerland have the largest funding.</li>
+    </ol></div>
+  </section>
+
+  <section id="segments">
+    <h2>Three kinds of solution</h2>
+    <p class="lead">Each company was placed in one segment by hand, based on what it does.</p>
+    <div class="grid">${d.segments.map((s) => {
+      const names = d.companies.filter((c) => c.segment === s.name).map((c) => esc(c.name)).join(", ");
+      return `<div class="segcard" style="--c:var(--${KEY[s.name]})">
+        <h3>${esc(s.name)}</h3><div class="big">${s.companies}<small>companies · ${usd(s.funding)} raised</small></div>
+        <div class="meter"><span style="width:${(s.funding / maxF) * 100}%"></span></div>
+        <p>${esc(SEG_INFO[s.name])}</p><p><b>For Bouygues:</b> ${esc(RELEVANCE[s.name])}</p><p class="who">${names}</p></div>`;
+    }).join("")}</div>
+  </section>
+
+  <section id="top">
+    <h2>Top 5 by funding</h2>
+    <p class="lead">The best-funded companies. Click a name to open it in Dealroom.</p>
+    <div class="tablewrap"><table>${head}<tbody>${top.map(row).join("")}</tbody></table></div>
+  </section>
+
+  <section id="all">
+    <h2>All ${k.companies} companies</h2>
+    <p class="lead">Search by name or description, filter by segment or country, and click a column title to sort.</p>
+    <div class="filters">
+      <input id="q" type="search" placeholder="Search a company or technology" aria-label="Search companies">
+      <select id="seg" aria-label="Segment"><option value="">All segments</option>${d.segments.map((s) => `<option>${esc(s.name)}</option>`).join("")}</select>
+      <select id="ctry" aria-label="Country"><option value="">All countries</option>${d.countries.map((c) => `<option>${esc(c.country)}</option>`).join("")}</select>
+    </div>
+    <div class="tablewrap"><table id="tbl">${head}<tbody></tbody></table></div>
+    <p class="note" id="count" style="margin-top:8px"></p>
+  </section>
+
+  <section id="method">
+    <h2>How we searched</h2>
+    <p class="lead">A deliberately narrow extract, to show what the Dealroom API returns in a few calls (${d.creditsUsed} credits).</p>
+    <div class="grid">
+      <div class="panel funnel">
+        ${[[f.worldwide, "tagged PFAS worldwide", 100], [f.europe, "headquartered in Europe", (f.europe / f.worldwide) * 100], [f.inScope, "that capture, destroy or clean up PFAS", (f.inScope / f.worldwide) * 100]]
+          .map(([n, l, w]) => `<div class="step"><b>${n}</b><div class="bar" style="width:${Math.max(w, 55)}%">${l}</div></div>`).join("")}
+        <p class="note">Removed (${f.europe - f.inScope}): PFAS-free alternatives such as batteries, coatings and membranes, and a few unrelated companies. ${d.outOfScope.map((c) => esc(c.name)).join(", ")}.</p>
+      </div>
+      <div class="panel method">
+        <p><b>The query.</b> Dealroom has a dedicated <code>PFAS</code> sector tag. We filter companies on <code>taxonomy_id[in_any]:${d.scope.pfasTaxonomyId}</code> and <code>hq_location[in_any]:${d.scope.locationId}</code> (Europe).</p>
+        <p><b>What it misses.</b> The tag is the only criterion, so companies that treat PFAS without carrying the tag are not in this list.</p>
+        <p><b>How to widen it.</b> Neighbouring tags in Europe are much larger but mostly not about PFAS: ${Object.entries(d.adjacent).map(([n, v]) => `${esc(n)} (${v ?? "n/a"})`).join(", ")}. Screening their descriptions for PFAS would add candidates.</p>
+      </div>
+    </div>
+  </section>`;
+
+  // Filterable, sortable full list
+  let sortKey = "funding", dir = -1;
+  const val = { name: (c) => c.name.toLowerCase(), segment: (c) => c.segment, headquarters: (c) => `${c.country} ${c.city}`, founded: (c) => c.founded ?? "", funding: (c) => c.funding ?? -1 };
+  function render() {
+    const q = $("#q").value.trim().toLowerCase(), s = $("#seg").value, ct = $("#ctry").value;
+    const rows = d.companies.filter((c) => (!s || c.segment === s) && (!ct || c.country === ct) && (!q || `${c.name} ${c.tagline} ${c.city}`.toLowerCase().includes(q)))
+      .sort((a, b) => (val[sortKey](a) > val[sortKey](b) ? 1 : -1) * dir);
+    $("#tbl tbody").innerHTML = rows.map(row).join("") || `<tr><td colspan="5">No company matches these filters.</td></tr>`;
+    $("#count").textContent = `${rows.length} of ${d.companies.length} companies shown`;
+    document.querySelectorAll("#tbl th").forEach((th) => th.setAttribute("aria-sort", th.dataset.k === sortKey ? (dir > 0 ? "ascending" : "descending") : "none"));
+  }
+  document.querySelectorAll("#tbl th").forEach((th) => {
+    th.dataset.k = th.textContent.toLowerCase();
+    th.addEventListener("click", () => { dir = sortKey === th.dataset.k ? -dir : (th.dataset.k === "funding" || th.dataset.k === "founded" ? -1 : 1); sortKey = th.dataset.k; render(); });
+  });
+  ["#q", "#seg", "#ctry"].forEach((id) => $(id).addEventListener("input", render));
+  render();
+  $("#foot").textContent = `Source: Dealroom API, generated ${d.generatedAt.slice(0, 10)}. Funding is the total raised, in USD as returned by the API.`;
+}).catch((e) => { $("#app").innerHTML = `<div class="error">Could not load the data: ${esc(e.message)}</div>`; });
+
+// Background: a faint construction grid with a slow diagonal light sweep and drifting crosshair marks
+(function grid() {
+  const cv = $("#bg"), ctx = cv.getContext("2d");
+  const still = matchMedia("(prefers-reduced-motion: reduce)");
+  const STEP = 48, MARKS = 14;
+  let W, H, ink, strong, marks, raf, last = 0, t = 0;
+  function size() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const css = getComputedStyle(document.documentElement);
+    ink = css.getPropertyValue("--amber").trim(); strong = css.getPropertyValue("--orange").trim();
+    marks = Array.from({ length: MARKS }, (_, i) => ({ x: ((i * 97) % 101) / 101 * W, y: ((i * 53) % 103) / 103 * H, v: 4 + (i % 4) * 2, p: i }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const off = (t * 6) % STEP;
+    ctx.lineWidth = 1; ctx.strokeStyle = ink; ctx.globalAlpha = 0.16;
+    ctx.beginPath();
+    for (let x = -off; x < W; x += STEP) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+    for (let y = -off; y < H; y += STEP) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
+    ctx.stroke();
+    // bolder line every 4th cell
+    ctx.globalAlpha = 0.14; ctx.strokeStyle = strong; ctx.beginPath();
+    for (let x = -off; x < W; x += STEP) if (Math.round((x + off) / STEP) % 4 === 0) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+    for (let y = -off; y < H; y += STEP) if (Math.round((y + off) / STEP) % 4 === 0) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
+    ctx.stroke();
+    // diagonal light sweep
+    const d = ((t * 40) % (W + H + 400)) - 200;
+    const g = ctx.createLinearGradient(d - 160, 0, d + 160, 160);
+    g.addColorStop(0, "rgba(240,140,0,0)"); g.addColorStop(.5, "rgba(240,140,0,.10)"); g.addColorStop(1, "rgba(240,140,0,0)");
+    ctx.globalAlpha = 1; ctx.fillStyle = g;
+    ctx.save(); ctx.translate(0, 0); ctx.transform(1, 0, 0, 1, 0, 0);
+    ctx.beginPath(); ctx.moveTo(d - 160, 0); ctx.lineTo(d + 160, 0); ctx.lineTo(d - H + 160, H); ctx.lineTo(d - H - 160, H); ctx.closePath(); ctx.fill(); ctx.restore();
+    // drifting crosshairs that snap to grid intersections
+    ctx.strokeStyle = strong; ctx.lineWidth = 1.5;
+    for (const m of marks) {
+      const x = Math.round(((m.x + t * m.v) % W) / STEP) * STEP - off, y = Math.round(m.y / STEP) * STEP - off;
+      ctx.globalAlpha = 0.18 + 0.14 * Math.sin(t * 0.8 + m.p);
+      ctx.beginPath(); ctx.moveTo(x - 7, y); ctx.lineTo(x + 7, y); ctx.moveTo(x, y - 7); ctx.lineTo(x, y + 7); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(now) { raf = requestAnimationFrame(loop); if (now - last < 50) return; last = now; t += 0.05; draw(); }
+  function start() { cancelAnimationFrame(raf); size(); draw(); if (!still.matches && !document.hidden) raf = requestAnimationFrame(loop); }
+  addEventListener("resize", start);
+  document.addEventListener("visibilitychange", start);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", start);
+  start();
+})();
+</script>
+</body>
+</html>

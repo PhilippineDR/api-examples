@@ -37,7 +37,7 @@ Copy the template below for each new request and fill it in. Newest requests go 
 ### Bouygues Construction · PFAS sector landscape
 
 - **Date requested:** 2026-10-26
-- **Status:** In progress
+- **Status:** Delivered (first version, to review with the client)
 - **Contact:** —
 - **Request:** Map the landscape of the PFAS sector.
 - **What I'm building:** A single page in the style of https://aoife-dr.github.io/built-in-mayo/ with a map of companies, a segment breakdown and a top-companies table.
@@ -47,7 +47,7 @@ Copy the template below for each new request and fill it in. Newest requests go 
   - Company types: startups and research spinouts
   - Angle: relevance to construction (water, soil remediation, infrastructure)
 - **Dealroom endpoints / filters used:** `GET /data/companies` (view=summary) with `taxonomy_id[in_any]:2284101` (sector PFAS) and `hq_location[in_any]:76` (Europe); `/reference/filters/taxonomy_id/values?q=` to find the tag; adjacent tag counts for context. 29 credits.
-- **Files:** `pfas-europe.js` (data builder), `public/pfas-europe-9qntdi.html` (page at http://localhost:3000/pfas-europe-9qntdi), cache `data/pfas-europe.json`
+- **Files:** `pfas-europe.js` (data builder), `public/pfas-europe-9qntdi.html` (page at http://localhost:3000/pfas-europe-9qntdi), cache `data/pfas-europe.json`. Static GitHub Pages copy: `docs/pfas-europe-9qntdi/` (build with `npm run build:pages`), to be published at https://philippinedr.github.io/api-examples/pfas-europe-9qntdi/
 - **Notes / open questions:**
   - Funnel: 60 PFAS-tagged worldwide, 24 in Europe, 13 kept (the rest are PFAS-free alternatives or unrelated). Segments assigned by hand.
   - Small extract on purpose, to show what the API can do. Possible extension: screen Remediation, Water Purification and Soil Restoration companies for PFAS mentions.
