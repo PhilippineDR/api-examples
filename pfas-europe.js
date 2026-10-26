@@ -2,10 +2,10 @@
 // buildPfasReport(dealroomGet) returns one JSON object; server.js caches it in data/pfas-europe.json
 // and serves it to the page in public/pfas-europe-9qntdi.html.
 //
-// Two sources:
-//  1. companies carrying Dealroom's PFAS sector tag;
-//  2. companies in neighbouring water/soil tags whose description mentions PFAS (screened here, because the
-//     API's Smart Keyword filter, semantic_keyword, currently ignores the phrase and returns unranked results).
+// Two groups:
+//  1. PFAS specialists: companies in Dealroom's PFAS sector tag, whose core business is PFAS;
+//  2. broader players: European remediation and water-treatment companies screened for PFAS in their tagline and
+//     description, to include those that have also developed a PFAS solution.
 // A full rebuild costs about 730 credits, almost all of it the screening pages.
 
 const EUROPE = 76; // location id of region/europe
@@ -13,7 +13,7 @@ const PFAS = 2284101; // taxonomy id of sector/pfas, found with /reference/filte
 const HQ = `hq_location[in_any]:${EUROPE}`;
 const PAGE_SIZE = 100;
 
-// Neighbouring tags whose companies are screened for PFAS in their tagline and description.
+// Remediation and water-treatment tags whose companies are screened for a PFAS solution in their tagline and description.
 const ADJACENT = {
   "Remediation": 73001,
   "Soil Restoration": 2263801,

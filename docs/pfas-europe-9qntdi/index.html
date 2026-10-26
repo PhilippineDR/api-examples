@@ -328,7 +328,7 @@ function render(d) {
   const noFundingCount = C.filter((c) => !c.funding).length;
 
   $("#asof").textContent = `Prepared for Bouygues Construction · data as of ${new Date(d.generatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`;
-  $("#heroLine").textContent = `${C.length} startups and research spinouts that capture, destroy or clean up PFAS in water and soil, found through Dealroom's PFAS tag and a screening of ${d.funnel.screened} water and soil companies.`;
+  $("#heroLine").textContent = `${C.length} startups and research spinouts that capture, destroy or clean up PFAS in water and soil: companies whose core business is PFAS, plus remediation and water-treatment companies that have also developed a PFAS solution.`;
 
   // KPI strip with count-up
   const K = [
@@ -397,21 +397,21 @@ function render(d) {
   </section>
 
   <section id="method">
-    <div class="sh reveal" data-r><div><p class="kicker">05 · Method</p><h2>Two ways in: a tag and a description screen</h2><p class="lead">Every company comes from one of two Dealroom API searches, then a manual review (${d.creditsUsed} credits in total).</p></div></div>
+    <div class="sh reveal" data-r><div><p class="kicker">05 · Method</p><h2>PFAS specialists, plus broader players with a PFAS solution</h2><p class="lead">The list starts from Dealroom's PFAS tag, then widens the scope to European remediation and water-treatment companies that have also developed a PFAS solution. Every company was reviewed by hand (${d.creditsUsed} credits in total).</p></div></div>
     <div class="two">
       <div class="card panel funnel reveal" data-r id="funnel">
-        <h3>1 · Dealroom's PFAS tag</h3>
+        <h3>1 · PFAS specialists (Dealroom's PFAS tag)</h3>
         ${funnelSteps([[f.worldwide, "tagged PFAS worldwide"], [f.europe, "headquartered in Europe"], [f.tagKept, "capture, destroy or clean up PFAS"]])}
         <p class="note">Left out (${f.europe - f.tagKept}): PFAS-free alternatives such as batteries, coatings and membranes, and a few unrelated companies: ${d.outOfScope.map((c) => esc(c.name)).join(", ")}.</p>
-        <h3 class="gap">2 · Description screening</h3>
-        ${funnelSteps([[f.screened, "European companies in neighbouring tags"], [f.mentions, "mention PFAS or related terms"], [f.newMentions, "not already in the PFAS tag"], [f.screeningKept, "kept after review"]])}
+        <h3 class="gap">2 · Remediation and water treatment with a PFAS solution</h3>
+        ${funnelSteps([[f.screened, "European remediation and water-treatment companies"], [f.mentions, "mention PFAS or related terms"], [f.newMentions, "not already among the PFAS specialists"], [f.screeningKept, "with a real PFAS solution, kept after review"]])}
         <p class="note">Left out (${d.screenedOut.length}): ${Object.entries(screenedOutByReason).map(([r, names]) => `<b>${esc(r.toLowerCase())}</b> (${names.map(esc).join(", ")})`).join("; ")}.</p>
       </div>
       <div class="card panel method reveal" data-r>
-        <p><b>Search 1, the tag.</b> Dealroom has a dedicated PFAS sector tag: <code>taxonomy_id[in_any]:${d.scope.pfasTaxonomyId}</code> with <code>hq_location[in_any]:${d.scope.locationId}</code> (Europe). It finds ${f.europe} companies, but misses companies that treat PFAS without carrying the tag.</p>
-        <p><b>Search 2, the screen.</b> We pulled every European company in four neighbouring tags, ${Object.entries(d.adjacent).map(([n, v]) => `${esc(n)} (${v ?? "n/a"})`).join(", ")}, and searched their tagline and description for PFAS, PFOA, PFOS, "forever chemicals", fluorinated and micropollutant terms. This added ${f.screeningKept} companies the tag misses, ${screeningRecent} of them founded since ${RECENT_FROM_YEAR}.</p>
-        <p><b>The review.</b> Each match was read by hand. We kept companies whose business captures, destroys or cleans up PFAS, and left out household tap filters and companies that only list PFAS among many pollutants.</p>
-        <p><b>How to widen it further.</b> Screening Water Treatment and Water Tech the same way would roughly double the pool (about 750 more companies and credits).</p>
+        <p><b>PFAS specialists.</b> Dealroom's PFAS sector tag groups the companies whose core business is PFAS: <code>taxonomy_id[in_any]:${d.scope.pfasTaxonomyId}</code> with <code>hq_location[in_any]:${d.scope.locationId}</code> (Europe). It gives ${f.europe} companies, ${f.tagKept} of them working on clean-up rather than PFAS-free alternatives.</p>
+        <p><b>Broader players with a PFAS solution.</b> To widen the scope, we took every European company in four remediation and water-treatment tags, ${Object.entries(d.adjacent).map(([n, v]) => `${esc(n)} (${v ?? "n/a"})`).join(", ")}, and searched their tagline and description for PFAS, PFOA, PFOS, "forever chemicals", fluorinated and micropollutant terms. This adds ${f.screeningKept} companies whose wider offer includes a PFAS solution, ${screeningRecent} of them founded since ${RECENT_FROM_YEAR}.</p>
+        <p><b>The review.</b> Each screening match was read by hand. We kept companies whose business captures, destroys or cleans up PFAS, and left out household tap filters and companies that only list PFAS among many pollutants.</p>
+        <p><b>Going further.</b> Screening Water Treatment and Water Tech the same way would roughly double the pool (about 750 more companies and credits).</p>
       </div>
     </div>
   </section>`;
@@ -486,7 +486,7 @@ function render(d) {
       <div class="blk"><div class="lbl">Key facts</div><div class="facts">
         <div><span>Raised</span><b class="mono">${raised(c)}</b></div><div><span>Founded</span><b class="mono">${year(c) ?? "n/a"}</b></div>
         <div><span>Employees</span><b class="mono">${c.employees ?? "n/a"}</b></div><div><span>Funding rank</span><b class="mono">${c.rank} of ${C.length}</b></div></div></div>
-      <div class="blk"><div class="lbl">How we found it</div><p>${c.source === "PFAS tag" ? "Carries Dealroom's PFAS sector tag." : "Not tagged PFAS in Dealroom: found by screening its description."}</p></div>
+      <div class="blk"><div class="lbl">How we found it</div><p>${c.source === "PFAS tag" ? "PFAS specialist: part of Dealroom's PFAS sector tag." : "Remediation or water-treatment company that has also developed a PFAS solution, found by screening company descriptions."}</p></div>
       <div class="blk"><div class="lbl">${esc(c.segment)}</div><p>${esc(s.what)}</p><p><b>For Bouygues:</b> ${esc(s.fit)}</p></div>
       <div class="acts"><a class="btn primary" href="${esc(c.url)}" target="_blank" rel="noopener">Open in Dealroom</a></div>`;
     drawer.style.visibility = "visible"; scrim.classList.add("open");
