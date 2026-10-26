@@ -226,7 +226,7 @@ function render(d) {
   </section>`;
 }
 
-fetch("/api/cgt-europe")
+fetch("/api/cgt-europe-nlbu17")
   .then((r) => r.json().then((b) => (r.ok ? b : Promise.reject(new Error(b.error || r.status)))))
   .then(render)
   .catch((e) => { $("#app").innerHTML = `<div class="error">Could not load the report: ${esc(e.message)}</div>`; });

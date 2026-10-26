@@ -196,7 +196,7 @@ function render(d) {
     ${d.warnings.length ? "<br>Some blocks could not be loaded: " + esc(d.warnings.join("; ")) : ""}</div></section>`;
 }
 
-fetch("/api/marseille-aix")
+fetch("/api/marseille-aix-naecaj")
   .then((r) => r.json().then((b) => (r.ok ? b : Promise.reject(new Error(b.error || r.status)))))
   .then(render)
   .catch((e) => { $("#app").innerHTML = `<div class="error">Could not load the report: ${esc(e.message)}</div>`; });

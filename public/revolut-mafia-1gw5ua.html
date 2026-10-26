@@ -317,7 +317,7 @@ function render(d) {
     <br>Caveats: "worked at Revolut" includes advisers and board members as well as employees, and a person's profile previews at most 5 roles, so some ventures may be missing. Funding is the total recorded by Dealroom; "no funding recorded" can also mean undisclosed.`;
 }
 
-fetch("/api/revolut-mafia").then((r) => r.json()).then((d) => { if (d.error) throw new Error(d.error); render(d); })
+fetch("/api/revolut-mafia-1gw5ua").then((r) => r.json()).then((d) => { if (d.error) throw new Error(d.error); render(d); })
   .catch((e) => { $("#app").className = "error"; $("#app").textContent = "Could not load: " + e.message; });
 </script>
 </body>
