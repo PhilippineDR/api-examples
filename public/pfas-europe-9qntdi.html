@@ -191,6 +191,7 @@
 
   /* Method */
   .funnel { display: grid; gap: 12px; }
+  .funnel h3.gap { margin-top: 14px; padding-top: 18px; border-top: 1px solid var(--line-2); }
   .step { display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center; }
   .step b { font-size: 26px; font-weight: 600; text-align: right; letter-spacing: -.02em; }
   .step .track { height: 12px; border-radius: 99px; background: var(--line-2); overflow: hidden; }
@@ -302,7 +303,7 @@ const logo = (c, size) => c.logo
 const SEGMENTS = {
   "Water capture and filtration": { short: "Water capture", what: "Filters and adsorbents that pull PFAS out of water.", fit: "Site drainage, dewatering and groundwater." },
   "Destruction and biological treatment": { short: "Destruction", what: "Technologies that break PFAS down for good: plasma, electrochemistry, oxidation or bacteria.", fit: "What happens to the PFAS once it has been captured." },
-  "Soil and sediment": { short: "Soil & sediment", what: "Heat and processing methods that clean contaminated soil and dredged material.", fit: "Contaminated land and excavated soil, before building." },
+  "Soil and sediment": { short: "Soil & sediment", what: "In-situ, thermal and biological methods that clean contaminated soil, groundwater and dredged material.", fit: "Contaminated land, groundwater and excavated soil, before building." },
 };
 
 const tileHtml = (c) => `<div class="tile" tabindex="0" role="button" data-n="${esc(c.name)}">${isRecent(c) ? `<span class="dot" title="Founded since ${RECENT_FROM_YEAR}"></span>` : ""}
@@ -327,7 +328,7 @@ function render(d) {
   const noFundingCount = C.filter((c) => !c.funding).length;
 
   $("#asof").textContent = `Prepared for Bouygues Construction · data as of ${new Date(d.generatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`;
-  $("#heroLine").textContent = `${C.length} startups and research spinouts that capture, destroy or clean up PFAS in water and soil, found with a few Dealroom API calls.`;
+  $("#heroLine").textContent = `${C.length} startups and research spinouts that capture, destroy or clean up PFAS in water and soil, found through Dealroom's PFAS tag and a screening of ${d.funnel.screened} water and soil companies.`;
 
   // KPI strip with count-up
   const K = [
@@ -344,6 +345,14 @@ function render(d) {
   const leadCountry = d.countries[0];
   const topFunded = [...d.countries].sort((a, b) => b.funding - a.funding);
 
+  // Method funnels: bars are scaled to the first (largest) step of each funnel
+  const funnelSteps = (steps) => steps.map(([n, l]) => `<div class="step"><b class="mono">${n}</b><div><div class="track"><span class="fb" style="width:${Math.max((n / steps[0][0]) * PERCENT, FUNNEL_MIN_BAR_PERCENT)}%;transform:scaleX(0)"></span></div><div class="sl">${esc(l)}</div></div></div>`).join("");
+  const screenedOutByReason = d.screenedOut.reduce((m, c) => ((m[c.reason] ??= []).push(c.name), m), {});
+  const screeningRecent = C.filter((c) => c.source === "Description screening" && isRecent(c)).length;
+  const unknownYear = C.filter((c) => year(c) == null);
+  const leaders = d.countries.filter((c) => c.companies === leadCountry.companies);   // countries tied for most companies
+  const listJoin = (xs) => xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs[0];
+
   $("#app").innerHTML = `
   <section id="overview">
     <div class="sh reveal" data-r><div><p class="kicker">01 · Overview</p><h2>A young field, mostly about water</h2><p class="lead">Three things to take away before looking at the companies.</p></div></div>
@@ -353,7 +362,7 @@ function render(d) {
       <div class="card find reveal" data-r><div class="big mono">${waterCount}<small>of ${C.length}</small></div><h3>Water is where the activity is</h3>
         <p>Only ${smallest.companies} work on soil and sediment (${usd(smallest.funding)} raised), the segment closest to construction sites.</p></div>
       <div class="card find reveal" data-r><div class="big mono">${topHoldersShare}%</div><h3>Funding is concentrated</h3>
-        <p>${esc(C[0].name)} and ${esc(C[1].name)} hold ${topHoldersShare}% of the money. ${esc(leadCountry.country)} has the most companies (${leadCountry.companies}); ${esc(topFunded[0].country)} the most funding.</p></div>
+        <p>${esc(C[0].name)} and ${esc(C[1].name)} hold ${topHoldersShare}% of the money. ${esc(listJoin(leaders.map((c) => c.country)))} ${leaders.length > 1 ? "have" : "has"} the most companies (${leadCountry.companies}${leaders.length > 1 ? " each" : ""}); ${esc(topFunded[0].country)} the most funding.</p></div>
     </div>
   </section>
 
@@ -366,10 +375,10 @@ function render(d) {
         <p>${esc(s.what)}</p><p class="fb"><b>For Bouygues:</b> ${esc(s.fit)}</p>
         <div class="tiles">${s.items.map(tileHtml).join("")}</div></div>`).join("")}</div></div>
       <div id="yearsBox" style="display:none"><div class="card panel"><div class="yrs" style="--periods:${PERIODS.length}">${PERIODS.map((pd) => {
-        const items = C.filter((c) => year(c) >= pd.from && year(c) <= pd.to).sort((a, b) => year(a) - year(b));
+        const items = C.filter((c) => year(c) != null && year(c) >= pd.from && year(c) <= pd.to).sort((a, b) => year(a) - year(b));
         return `<div class="yr${pd.from >= RECENT_FROM_YEAR ? " recent" : ""}"><div class="stack">${items.map(yearTileHtml).join("")}</div>
           <div class="base"><b>${esc(pd.label)}</b><span class="mono">${items.length}</span></div></div>`; }).join("")}</div></div></div>
-      <div class="legend"><span><i style="background:var(--accent)"></i>Founded since ${RECENT_FROM_YEAR}</span></div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Founded since ${RECENT_FROM_YEAR}</span>${unknownYear.length ? `<span>Founding year unknown, not in the year view: ${unknownYear.map((c) => esc(c.name)).join(", ")}</span>` : ""}</div>
     </div>
   </section>
 
@@ -388,17 +397,22 @@ function render(d) {
   </section>
 
   <section id="method">
-    <div class="sh reveal" data-r><div><p class="kicker">05 · Method</p><h2>How specific this query is</h2><p class="lead">A deliberately narrow extract, to show what the Dealroom API returns in a few calls (${d.creditsUsed} credits).</p></div></div>
+    <div class="sh reveal" data-r><div><p class="kicker">05 · Method</p><h2>Two ways in: a tag and a description screen</h2><p class="lead">Every company comes from one of two Dealroom API searches, then a manual review (${d.creditsUsed} credits in total).</p></div></div>
     <div class="two">
       <div class="card panel funnel reveal" data-r id="funnel">
-        ${[[f.worldwide, "tagged PFAS worldwide"], [f.europe, "headquartered in Europe"], [f.inScope, "capture, destroy or clean up PFAS"]]
-          .map(([n, l]) => `<div class="step"><b class="mono">${n}</b><div><div class="track"><span class="fb" style="width:${Math.max((n / f.worldwide) * PERCENT, FUNNEL_MIN_BAR_PERCENT)}%;transform:scaleX(0)"></span></div><div class="sl">${esc(l)}</div></div></div>`).join("")}
-        <p class="note">Removed (${f.europe - f.inScope}): PFAS-free alternatives such as batteries, coatings and membranes, and a few unrelated companies: ${d.outOfScope.map((c) => esc(c.name)).join(", ")}.</p>
+        <h3>1 · Dealroom's PFAS tag</h3>
+        ${funnelSteps([[f.worldwide, "tagged PFAS worldwide"], [f.europe, "headquartered in Europe"], [f.tagKept, "capture, destroy or clean up PFAS"]])}
+        <p class="note">Left out (${f.europe - f.tagKept}): PFAS-free alternatives such as batteries, coatings and membranes, and a few unrelated companies: ${d.outOfScope.map((c) => esc(c.name)).join(", ")}.</p>
+        <h3 class="gap">2 · Description screening</h3>
+        ${funnelSteps([[f.screened, "European companies in neighbouring tags"], [f.mentions, "mention PFAS or related terms"], [f.newMentions, "not already in the PFAS tag"], [f.screeningKept, "kept after review"]])}
+        <p class="note">Left out (${d.screenedOut.length}): ${Object.entries(screenedOutByReason).map(([r, names]) => `<b>${esc(r.toLowerCase())}</b> (${names.map(esc).join(", ")})`).join("; ")}.</p>
       </div>
       <div class="card panel method reveal" data-r>
-        <p><b>The query.</b> Dealroom has a dedicated PFAS sector tag. Companies are filtered on <code>taxonomy_id[in_any]:${d.scope.pfasTaxonomyId}</code> and <code>hq_location[in_any]:${d.scope.locationId}</code> (Europe).</p>
-        <p><b>What it misses.</b> The tag is the only criterion, so companies that treat PFAS without carrying it are not listed.</p>
-        <p><b>How to widen it.</b> Neighbouring tags in Europe are larger but mostly not about PFAS: ${Object.entries(d.adjacent).map(([n, v]) => `${esc(n)} (${v ?? "n/a"})`).join(", ")}. Screening their descriptions for PFAS would add candidates.</p>
+        <p><b>Search 1, the tag.</b> Dealroom has a dedicated PFAS sector tag: <code>taxonomy_id[in_any]:${d.scope.pfasTaxonomyId}</code> with <code>hq_location[in_any]:${d.scope.locationId}</code> (Europe). It finds ${f.europe} companies, but misses companies that treat PFAS without carrying the tag.</p>
+        <p><b>Search 2, the screen.</b> We pulled every European company in four neighbouring tags, ${Object.entries(d.adjacent).map(([n, v]) => `${esc(n)} (${v ?? "n/a"})`).join(", ")}, and searched their tagline and description for PFAS, PFOA, PFOS, "forever chemicals", fluorinated and micropollutant terms. This added ${f.screeningKept} companies the tag misses, ${screeningRecent} of them founded since ${RECENT_FROM_YEAR}.</p>
+        <p><b>The review.</b> Each match was read by hand. We kept companies whose business captures, destroys or cleans up PFAS, and left out household tap filters and companies that only list PFAS among many pollutants.</p>
+        <p><b>Smart Keyword.</b> Dealroom's meaning-based search (<code>semantic_keyword</code>) would be the natural next step, but on the current beta API it ignores the phrase and returns unranked results, so it was not used.</p>
+        <p><b>How to widen it further.</b> Screening Water Treatment and Water Tech the same way would roughly double the pool (about 750 more companies and credits).</p>
       </div>
     </div>
   </section>`;
@@ -473,6 +487,7 @@ function render(d) {
       <div class="blk"><div class="lbl">Key facts</div><div class="facts">
         <div><span>Raised</span><b class="mono">${raised(c)}</b></div><div><span>Founded</span><b class="mono">${year(c) ?? "n/a"}</b></div>
         <div><span>Employees</span><b class="mono">${c.employees ?? "n/a"}</b></div><div><span>Funding rank</span><b class="mono">${c.rank} of ${C.length}</b></div></div></div>
+      <div class="blk"><div class="lbl">How we found it</div><p>${c.source === "PFAS tag" ? "Carries Dealroom's PFAS sector tag." : "Not tagged PFAS in Dealroom: found by screening its description."}</p></div>
       <div class="blk"><div class="lbl">${esc(c.segment)}</div><p>${esc(s.what)}</p><p><b>For Bouygues:</b> ${esc(s.fit)}</p></div>
       <div class="acts"><a class="btn primary" href="${esc(c.url)}" target="_blank" rel="noopener">Open in Dealroom</a></div>`;
     drawer.style.visibility = "visible"; scrim.classList.add("open");
@@ -494,7 +509,7 @@ function render(d) {
   links.forEach((l) => io.observe(document.getElementById(l.hash.slice(1))));
 
   $("#foot").innerHTML = `<div><b>Source:</b> Dealroom API, companies tagged PFAS with headquarters in Europe, generated ${esc(d.generatedAt.slice(0, 10))}. Funding is the total raised, in USD as returned by the API.</div>
-    <div><b>Caveats:</b> segments were assigned by hand. "No funding recorded" can mean undisclosed or bootstrapped. Haemers Technologies and Cornelsen Umwelttechnologie are established firms rather than startups, kept because they specialise in PFAS remediation. Colours approximate the Bouygues Construction palette.</div>`;
+    <div><b>Caveats:</b> segments were assigned by hand. "No funding recorded" can mean undisclosed or bootstrapped. Haemers Technologies, Cornelsen Umwelttechnologie and Dekonta are established firms rather than startups, kept because they specialise in PFAS remediation. Mivanor was acquired by Cubility in 2025. Colours approximate the Bouygues Construction palette.</div>`;
 }
 
 anim($$(".hero [data-r]"), { opacity: [0, 1], y: [20, 0] }, { duration: 0.8, delay: stagger(0.08, { startDelay: 0.05 }), ease: EASE });

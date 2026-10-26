@@ -46,9 +46,9 @@ Copy the template below for each new request and fill it in. Newest requests go 
   - Geography: Europe
   - Company types: startups and research spinouts
   - Angle: relevance to construction (water, soil remediation, infrastructure)
-- **Dealroom endpoints / filters used:** `GET /data/companies` (view=summary) with `taxonomy_id[in_any]:2284101` (sector PFAS) and `hq_location[in_any]:76` (Europe); `/reference/filters/taxonomy_id/values?q=` to find the tag; adjacent tag counts for context. 29 credits.
+- **Dealroom endpoints / filters used:** `GET /data/companies` (view=summary) with `taxonomy_id[in_any]:2284101` (sector PFAS) and `hq_location[in_any]:76` (Europe); plus every European company in Remediation, Soil Restoration, Water Purification and Wastewater Treatment (692), screened for PFAS terms in tagline and description. `semantic_keyword` (Smart Keyword) was tried but ignores the phrase on the beta API. About 730 credits per rebuild.
 - **Files:** `pfas-europe.js` (data builder), `public/pfas-europe-9qntdi.html` (page at http://localhost:3000/pfas-europe-9qntdi), cache `data/pfas-europe.json`. Static GitHub Pages copy: `docs/pfas-europe-9qntdi/` (build with `npm run build:pages`), to be published at https://philippinedr.github.io/api-examples/pfas-europe-9qntdi/
 - **Notes / open questions:**
-  - Funnel: 60 PFAS-tagged worldwide, 24 in Europe, 13 kept (the rest are PFAS-free alternatives or unrelated). Segments assigned by hand.
-  - Small extract on purpose, to show what the API can do. Possible extension: screen Remediation, Water Purification and Soil Restoration companies for PFAS mentions.
+  - Funnel: PFAS tag gives 24 in Europe, 13 kept; screening 692 neighbouring companies gives 40 PFAS mentions, 33 new, 14 kept. 27 companies in total. Segments and inclusion reviewed by hand.
+  - Possible extension: screen Water Treatment and Water Tech the same way (about 750 more credits).
   - No client contact or deadline yet.

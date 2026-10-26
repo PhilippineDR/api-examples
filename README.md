@@ -14,7 +14,7 @@
 
 - Challenge 4 page (HV Capital, Revolut founder mafia): http://localhost:3000/revolut-mafia-1gw5ua (data from `GET /api/revolut-mafia-1gw5ua`, cached in `data/revolut-mafia.json`, add `?refresh=1` to rebuild for about 960 credits).
 
-- Bouygues Construction example (PFAS clean-up startups in Europe): http://localhost:3000/pfas-europe-9qntdi (data from `GET /api/pfas-europe-9qntdi`, cached in `data/pfas-europe.json`, add `?refresh=1` to rebuild for about 30 credits).
+- Bouygues Construction example (PFAS clean-up startups in Europe): http://localhost:3000/pfas-europe-9qntdi (data from `GET /api/pfas-europe-9qntdi`, cached in `data/pfas-europe.json`, add `?refresh=1` to rebuild for about 730 credits).
 
 ## Credentials and authentication
 
