@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { buildReport, refreshUniversities } from "./marseille-aix.js";
 import { buildCgtReport } from "./cgt-europe.js";
-import { buildPfasReport } from "./pfas-europe.js";
 import { buildRevolutReport } from "./revolut-mafia.js";
 
 dotenv.config();
@@ -146,19 +145,6 @@ app.get("/api/cgt-europe", async (req, res) => {
     const report = await buildCgtReport(dealroomGet);
     mkdirSync("data", { recursive: true });
     writeFileSync(CGT_FILE, JSON.stringify(report));
-    res.json(report);
-  } catch (err) {
-    res.status(502).json({ error: err.message });
-  }
-});
-// Bouygues Construction example: PFAS remediation startups in Europe, cached the same way.
-const PFAS_FILE = "data/pfas-europe.json";
-app.get("/api/pfas-europe", async (req, res) => {
-  try {
-    if (!req.query.refresh && existsSync(PFAS_FILE)) return res.type("json").send(readFileSync(PFAS_FILE, "utf8"));
-    const report = await buildPfasReport(dealroomGet);
-    mkdirSync("data", { recursive: true });
-    writeFileSync(PFAS_FILE, JSON.stringify(report));
     res.json(report);
   } catch (err) {
     res.status(502).json({ error: err.message });
