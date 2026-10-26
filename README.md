@@ -12,6 +12,10 @@
 
 - Challenge 3 page: http://localhost:3000/cgt-europe (European cell & gene therapy; data from `GET /api/cgt-europe`, cached in `data/cgt-europe.json`, add `?refresh=1` to rebuild for about 440 credits).
 
+- Challenge 4 page (HV Capital, Revolut founder mafia): http://localhost:3000/revolut-mafia (data from `GET /api/revolut-mafia`, cached in `data/revolut-mafia.json`, add `?refresh=1` to rebuild for about 960 credits).
+
+- Bouygues Construction example (PFAS clean-up startups in Europe): http://localhost:3000/pfas-europe (data from `GET /api/pfas-europe`, cached in `data/pfas-europe.json`, add `?refresh=1` to rebuild for about 30 credits).
+
 ## Credentials and authentication
 
 - Credentials live in `.env` in this folder (gitignored). Never commit the client secret or paste it anywhere.

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Revolut Founder Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f7fb; --card: rgba(255,255,255,.78); --card-solid: #ffffff; --ink: #172033; --muted: #5f6c80; --line: rgba(23,32,51,.10);
+    --early: #e0561f; --building: #3b6df0; --scaled: #1a8a5a; --gone: #9aa5b1;
+    --b1: #bcd3ff; --b2: #ffd9c4; --b3: #cdeedd; --shadow: 0 1px 2px rgba(23,32,51,.04), 0 8px 24px rgba(23,32,51,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d1219; --card: rgba(24,32,44,.72); --card-solid: #18202c; --ink: #e9eef6; --muted: #98a6b8; --line: rgba(255,255,255,.09);
+            --early: #f0824f; --building: #7aa2ff; --scaled: #4cc790; --gone: #6b7785;
+            --b1: #1d3a78; --b2: #5a2a14; --b3: #124433; --shadow: 0 8px 24px rgba(0,0,0,.35); }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 "Plus Jakarta Sans", -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  /* Light drifting background: three soft colour blobs */
+  .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+  .bg i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .65; will-change: transform; }
+  .bg i:nth-child(1) { width: 52vmax; height: 52vmax; left: -12vmax; top: -14vmax; background: var(--b1); animation: d1 28s ease-in-out infinite alternate; }
+  .bg i:nth-child(2) { width: 44vmax; height: 44vmax; right: -10vmax; top: 18vh; background: var(--b2); animation: d2 34s ease-in-out infinite alternate; }
+  .bg i:nth-child(3) { width: 48vmax; height: 48vmax; left: 20vw; bottom: -22vmax; background: var(--b3); animation: d3 40s ease-in-out infinite alternate; }
+  @keyframes d1 { to { transform: translate(18vw, 14vh) scale(1.15); } }
+  @keyframes d2 { to { transform: translate(-16vw, 20vh) scale(.9); } }
+  @keyframes d3 { to { transform: translate(-14vw, -16vh) scale(1.2); } }
+  @media (prefers-reduced-motion: reduce) { .bg i { animation: none; } html { scroll-behavior: auto; } }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 20px 72px; }
+  .eyebrow { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .6px; text-transform: uppercase; color: var(--early); background: var(--card); border: 1px solid var(--line); padding: 4px 12px; border-radius: 99px; margin-bottom: 12px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -1px; line-height: 1.1; margin: 0 0 10px; }
+  header p, .lead, .note, .muted { color: var(--muted); }
+  header p { margin: 0; max-width: 640px; font-size: 16px; }
+  section { margin-top: 48px; }
+  h2 { font-size: 22px; font-weight: 700; letter-spacing: -.3px; margin: 0 0 6px; }
+  .lead { margin: 0 0 16px; max-width: 780px; }
+  .grid { display: grid; gap: 12px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .two { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .kpi .v { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; }
+  .kpi .l { color: var(--muted); font-size: 13px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; margin: 0 0 8px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: baseline; }
+  .early { --c: var(--early); } .building { --c: var(--building); } .scaled { --c: var(--scaled); } .gone { --c: var(--gone); }
+  .dot { background: var(--c); }
+  .tabs { display: flex; gap: 8px; margin: 0 0 12px; flex-wrap: wrap; }
+  .tabs button { font: inherit; font-weight: 500; padding: 8px 18px; transition: background .15s; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  .tabs button.on { background: var(--building); border-color: var(--building); color: #fff; }
+  .tabs .sp { flex: 1; }
+  #orbit text { fill: var(--ink); pointer-events: none; }
+  #orbit .sub { fill: var(--muted); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+  .pc { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); backdrop-filter: blur(12px); transition: transform .15s, border-color .15s; padding: 16px; text-align: center; text-decoration: none; color: var(--ink); display: block; }
+  .pc:hover { border-color: var(--early); transform: translateY(-3px); }
+  .av { position: relative; width: 84px; height: 84px; margin: 0 auto 8px; }
+  .av .ph1 { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; background: var(--building); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 24px; }
+  .av .bd { position: absolute; right: -6px; bottom: -4px; width: 32px; height: 32px; border-radius: 50%; background: #fff; border: 2px solid var(--card); object-fit: contain; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #333; overflow: hidden; }
+  .pc .cn { font-weight: 700; font-size: 15px; }
+  .pc .fn { font-size: 13px; color: var(--muted); }
+  .pc .fu { font-weight: 700; margin-top: 2px; }
+  .pc .tg { font-size: 12px; color: var(--muted); margin: 4px 0; min-height: 34px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  #tip { position: fixed; pointer-events: none; background: var(--card-solid); color: var(--ink); border: 1px solid var(--line);
+         border-radius: 8px; padding: 8px 10px; font-size: 13px; max-width: 280px; box-shadow: 0 4px 16px rgba(0,0,0,.18); display: none; z-index: 5; }
+  .bars .row { display: grid; grid-template-columns: 110px 1fr 36px; gap: 8px; align-items: center; font-size: 13px; margin: 3px 0; }
+  .bars .track { background: var(--line); height: 8px; border-radius: 4px; overflow: hidden; display: flex; }
+  .bars .track span { display: block; height: 100%; }
+  .chart { display: flex; align-items: flex-end; gap: 5px; height: 160px; }
+  .col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; font-size: 11px; color: var(--muted); }
+  .col .stack { width: 100%; max-width: 34px; display: flex; flex-direction: column-reverse; }
+  .col .stack span { display: block; width: 100%; background: var(--c); }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+  input, select { font: inherit; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+  input { flex: 1; min-width: 200px; }
+  .person { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .person:last-child { border-bottom: 0; }
+  .ph { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+  .ph .nm { font-weight: 650; font-size: 16px; }
+  .person p { margin: 0; }
+  .chip { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 99px; border: 1px solid var(--c, var(--line)); color: var(--c, var(--muted)); margin: 2px 4px 0 0; }
+  .chip.sig { color: var(--ink); border-color: var(--line); }
+  .meta { font-size: 13px; color: var(--muted); }
+  a { color: var(--building); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .scroll { overflow-x: auto; }
+  .loading, .error { padding: 40px; text-align: center; color: var(--muted); }
+  .error { color: var(--early); }
+  footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+  @media print { .toolbar { display: none; } body { background: #fff; } }
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Prepared for HV Capital</span>
+    <h1>The Revolut Founder Map</h1>
+    <p>Founders who worked at Revolut and have left: what they are building, where, and who is worth a call before anyone else.</p>
+  </header>
+  <div id="app" class="loading">Loading from Dealroom…</div>
+  <footer id="foot"></footer>
+</div>
+<div id="tip"></div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const eur = (n) => n == null ? "n/a" : n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`;
+const BUCKET = { early: "Early signal", building: "Building", scaled: "Scaled", gone: "Acquired / closed" };
+
+let NOW;
+function monthsSince(d) { // "2026", "2026-03"
+  if (!d) return null;
+  const [y, m] = String(d).split("-").map(Number);
+  return (NOW.getFullYear() - y) * 12 + (NOW.getMonth() + 1 - (m || 6));
+}
+
+// Bucket for a venture: acquired/closed, scaled (25M+), early signal (new and barely funded, or tagged stealth), else building.
+function bucket(v) {
+  if (!v) return null;
+  if (["acquired", "closed", "low_activity"].includes(v.status)) return "gone";
+  if ((v.funding ?? 0) >= 25e6 || v.stage === "Breakout stage" || v.stage === "Late stage") return "scaled";
+  const age = monthsSince(v.launched);
+  if (v.stealth || (age != null && age <= 24 && (v.funding ?? 0) < 5e6)) return "early";
+  return "building";
+}
+
+// Why a founder is worth a call now. Higher score = earlier and stronger.
+function watch(p) {
+  const v = p.main, why = []; let s = 0;
+  if (!v || bucket(v) !== "early") return { s: 0, why };
+  const age = monthsSince(v.launched);
+  if (v.stealth) { s += 25; why.push("Tagged stealth startup"); }
+  if (age != null && age <= 12) { s += 20; why.push(`Launched ${v.launched}`); } else if (age != null && age <= 24) { s += 10; why.push(`Launched ${v.launched}`); }
+  if (!v.funding) { s += 10; why.push("No funding recorded yet (pre-round)"); } else { s += 5; why.push(`${eur(v.funding)} raised so far`); }
+  if (p.labels.includes("super_founder")) { s += 15; why.push("Super founder: built a company at scale before"); }
+  else if (p.labels.includes("serial_founder")) { s += 10; why.push("Serial founder"); }
+  else if (p.labels.includes("strong_founder")) { s += 8; why.push("Strong founder label"); }
+  else if (p.labels.includes("promising_founder")) { s += 6; why.push("Promising founder label"); }
+  if (p.revolut && p.revolut.end && Number(p.revolut.end) >= NOW.getFullYear() - 1) { s += 8; why.push(`Left Revolut ${p.revolut.end}`); }
+  if (v.employeeGrowth1y > 0.3) { s += 5; why.push("Headcount growing"); }
+  s += (p.signal ?? 0) / 10;
+  return { s, why };
+}
+
+function describe(p) {
+  const v = p.main, r = p.revolut;
+  const parts = [];
+  if (r) parts.push(`${r.title ?? "Worked"} at Revolut${r.start || r.end ? ` (${[r.start, r.end].filter(Boolean).join("–")})` : ""}.`);
+  else parts.push("Worked at Revolut (role not in the preview).");
+  if (v) parts.push(`${v.current ? "Now" : "Previously"} ${v.role ? esc(v.role) + " of" : "founder of"} <b>${esc(v.name)}</b>${v.tagline ? `: ${esc(v.tagline)}` : ""}.`);
+  const others = p.ventures.filter((x) => x !== v).map((x) => x.name);
+  if (others.length) parts.push(`Also founded ${esc(others.slice(0, 3).join(", "))}${others.length > 3 ? ` and ${others.length - 3} more` : ""}.`);
+  return parts.join(" ");
+}
+
+function chips(p) {
+  const v = p.main, b = bucket(v), out = [];
+  if (b) out.push(`<span class="chip ${b}">${BUCKET[b]}</span>`);
+  if (v?.industry) out.push(`<span class="chip sig">${esc(v.industry)}${v.subIndustry ? " · " + esc(v.subIndustry) : ""}</span>`);
+  if (v?.technology?.includes("Artificial Intelligence")) out.push(`<span class="chip sig">AI</span>`);
+  if (v?.ownership?.length) out.push(`<span class="chip sig">${esc(v.ownership[0])}</span>`);
+  for (const l of p.labels) out.push(`<span class="chip sig">${esc(l.replace("_", " "))}</span>`);
+  return out.join("");
+}
+
+function personRow(p, showWhy) {
+  const v = p.main, w = p._w;
+  return `<div class="person">
+    <div class="ph"><span class="nm">${esc(p.name)}</span>
+      <span class="meta">${[p.location, p.signal != null ? `Dealroom signal ${p.signal}` : null].filter(Boolean).map(esc).join(" · ")}</span>
+      <span class="meta">${p.linkedin ? `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a> · ` : ""}<a href="${esc(p.url)}" target="_blank" rel="noopener">Dealroom</a></span></div>
+    <p>${describe(p)}</p>
+    <div class="meta">${v ? `${esc([v.city, v.country].filter(Boolean).join(", ") || "location n/a")} · launched ${esc(v.launched ?? "n/a")} · ${v.funding ? eur(v.funding) + " raised" : "no funding recorded"}${v.employees ? ` · ${v.employees} employees` : ""}` : "No founded company found in the profile preview"}</div>
+    <div>${chips(p)}${showWhy ? w.why.map((x) => `<span class="chip early">${esc(x)}</span>`).join("") : ""}</div>
+  </div>`;
+}
+
+function render(d) {
+  NOW = new Date(d.generatedAt);
+  const P = d.people;
+  P.forEach((p) => { p._b = bucket(p.main); p._w = watch(p); });
+  const V = P.filter((p) => p.main);
+  const count = (b) => V.filter((p) => p._b === b).length;
+  const raised = V.reduce((a, p) => a + (p.main.funding ?? 0), 0);
+  const countries = new Set(V.map((p) => p.main.country).filter(Boolean)).size;
+  const watchlist = P.filter((p) => p._w.s > 0).sort((a, b) => b._w.s - a._w.s);
+
+
+  $("#app").className = "";
+  $("#app").innerHTML = `
+  <section>
+    <div class="grid kpis">
+      <div class="card kpi"><div class="v">${P.length}</div><div class="l">ex-Revolut people recorded as founders</div></div>
+      <div class="card kpi"><div class="v">${eur(raised)}</div><div class="l">raised by their main companies</div></div>
+      <div class="card kpi"><div class="v">${countries}</div><div class="l">countries where they build</div></div>
+      <div class="card kpi"><div class="v" style="color:var(--early)">${count("early")}</div><div class="l">early signals (new and barely funded, or stealth)</div></div>
+      <div class="card kpi"><div class="v" style="color:var(--scaled)">${count("scaled")}</div><div class="l">scaled ($25M+ raised)</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The orbit: early and stealth founders</h2>
+    <p class="lead">Ex-Revolut founders whose new company is just launched, barely funded or tagged stealth. The closer to the centre, the stronger the signal (stealth tag, recent launch, track record, recent exit from Revolut). Hover for the reasons, click to open Dealroom.</p>
+    <div class="tabs" id="tabs">
+      <button data-v="orbit" class="on">Orbit</button><button data-v="grid">Grid</button><span class="sp"></span>
+      <button data-f="all" class="on">All early signals</button><button data-f="proven">Proven founders</button>
+    </div>
+    <div class="card" id="orbitBox"><svg id="orbit" viewBox="0 0 1100 1000" style="width:100%;height:auto;display:block"></svg></div>
+    <div id="gridBox" class="cards" style="display:none"></div>
+  </section>
+
+  <section>
+    <h2>Early-signal pipeline</h2>
+    <p class="lead">The ${watchlist.length} early-signal founders only. How many launched a company each month, and where they are based.</p>
+    <div class="grid two">
+      <div class="card"><b>Launched per month (last 12 months)</b><div class="chart" id="months"></div><p class="note" id="monthNote"></p></div>
+      <div class="card bars"><b>Where they are based</b><div id="countries"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Watchlist: founders to know about early</h2>
+    <p class="lead">Ex-Revolut founders whose current company is new (launched in the last two years and under $5M raised) or tagged as stealth. Ranked by a simple score that adds stealth tag, recency, prior founder success, a recent exit from Revolut and the Dealroom signal rating. The reasons are shown under each name.</p>
+    <div class="card">${watchlist.slice(0, 25).map((p) => personRow(p, true)).join("") || "<p class='muted'>None found.</p>"}
+      <p class="note muted">Showing the top 25 of ${watchlist.length}. The grid above shows all of them.</p></div>
+  </section>
+
+  <section>
+    <h2>Look someone up</h2>
+    <p class="lead">Search all ${P.length} ex-Revolut founders by name, company or city.</p>
+    <div class="toolbar"><input id="q" type="search" placeholder="Search name, company, tagline…"></div>
+    <div class="card" id="listCard" style="display:none"><div id="list"></div><p class="note" id="count"></p></div>
+  </section>`;
+
+  // Orbit + grid of early-signal founders
+  const tip = $("#tip");
+  const img = (u) => (u ? "https://" + u : null);
+  const initials = (n) => n.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const stealthName = (v) => /^stealth/i.test(v.name);
+  const lbl = (p) => (stealthName(p.main) ? p.name : p.main.name);
+  let view = "orbit", flt = "all";
+  const pool = () => watchlist.filter((p) => flt === "all" || (flt === "proven" && (p.labels.includes("super_founder") || p.labels.includes("serial_founder") || p.labels.includes("strong_founder"))));
+  const showTip = (e, p) => { tip.style.display = "block"; tip.style.left = Math.min(e.clientX + 14, innerWidth - 300) + "px"; tip.style.top = e.clientY + 14 + "px";
+    tip.innerHTML = `<b>${esc(p.name)}</b> · ${esc(p.main.name)}<br><span class="muted">${esc(p.main.tagline ?? "")}</span><br>${p._w.why.map(esc).join("<br>")}`; };
+  function drawOrbit() {
+    const svg = $("#orbit"), cx = 550, cy = 500, rings = [{ r: 215, n: 6 }, { r: 340, n: 9 }, { r: 455, n: 12 }];
+    const list = pool().slice(0, 27); let k = 0, h = "";
+    h += rings.map((r) => `<circle cx="${cx}" cy="${cy}" r="${r.r}" fill="none" stroke="var(--line)" stroke-dasharray="3 5"/>`).join("");
+    const nodes = [];
+    rings.forEach((r, ri) => { const items = list.slice(k, k + r.n); k += r.n;
+      items.forEach((p, i) => { const a = (i / items.length) * 2 * Math.PI + ri * 0.5 - Math.PI / 2; nodes.push({ p, x: cx + r.r * Math.cos(a), y: cy + r.r * Math.sin(a) * 0.93 }); }); });
+    h += nodes.map((n) => `<line x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}" stroke="var(--line)" stroke-width="1.5"/>`).join("");
+    h += `<circle cx="${cx}" cy="${cy}" r="92" fill="var(--card-solid)" stroke="var(--line)" stroke-width="2"/><image href="https://storage.googleapis.com/dealroom-images-production/2025/09/21/2e120572df79761e39e343d9aef44b76.png" x="${cx - 45}" y="${cy - 45}" width="90" height="90"/>`;
+    h += nodes.map((n, i) => { const p = n.p, v = p.main, im = img(p.image), vi = img(v.image);
+      return `<g class="nd" data-i="${i}" style="cursor:pointer">
+        <clipPath id="c${i}"><circle cx="${n.x}" cy="${n.y}" r="36"/></clipPath>
+        <circle cx="${n.x}" cy="${n.y}" r="39" fill="${im ? "var(--early)" : "var(--building)"}" fill-opacity="${im ? (v.stealth ? 1 : 0.35) : 0.35}"/>
+        ${im ? `<image href="${im}" x="${n.x - 36}" y="${n.y - 36}" width="72" height="72" clip-path="url(#c${i})" preserveAspectRatio="xMidYMid slice"/>` : `<circle cx="${n.x}" cy="${n.y}" r="36" fill="var(--building)"/><text x="${n.x}" y="${n.y + 6}" text-anchor="middle" font-size="18" font-weight="700" style="fill:#fff">${esc(initials(p.name))}</text>`}
+        <circle cx="${n.x + 28}" cy="${n.y + 26}" r="14" fill="#fff" stroke="var(--card)" stroke-width="2"/>
+        ${vi ? `<image href="${vi}" x="${n.x + 17}" y="${n.y + 15}" width="22" height="22" preserveAspectRatio="xMidYMid meet"/>` : `<text x="${n.x + 28}" y="${n.y + 30}" text-anchor="middle" font-size="10" font-weight="700" style="fill:#333">${esc(v.name[0])}</text>`}
+        <text x="${n.x}" y="${n.y + 62}" text-anchor="middle" font-size="13" font-weight="700">${esc(lbl(p).length > 22 ? lbl(p).slice(0, 21) + "…" : lbl(p))}</text>
+        <text x="${n.x}" y="${n.y + 78}" text-anchor="middle" font-size="12" class="sub">${stealthName(v) ? "Stealth · " : ""}${v.funding ? eur(v.funding) : "pre-funding"}</text></g>`; }).join("");
+    svg.innerHTML = h;
+    svg.querySelectorAll(".nd").forEach((g) => { const p = nodes[g.dataset.i].p;
+      g.addEventListener("mousemove", (e) => showTip(e, p)); g.addEventListener("mouseleave", () => (tip.style.display = "none")); g.addEventListener("click", () => window.open(p.url, "_blank")); });
+  }
+  function drawGrid() {
+    const list = pool();
+    $("#gridBox").innerHTML = list.map((p, i) => { const v = p.main, im = img(p.image), vi = img(v.image);
+      return `<a class="pc" href="${esc(p.url)}" target="_blank" rel="noopener" data-i="${i}">
+        <div class="av">${im ? `<img class="ph1" src="${im}" alt="" loading="lazy">` : `<div class="ph1">${esc(initials(p.name))}</div>`}${vi ? `<img class="bd" src="${vi}" alt="" loading="lazy">` : `<div class="bd">${esc(v.name[0])}</div>`}</div>
+        <div class="cn">${esc(lbl(p))}</div><div class="fn">${stealthName(v) ? "Stealth startup" : esc(p.name)}</div><div class="fu">${v.funding ? eur(v.funding) : "pre-funding"}</div>
+        <div class="tg">${esc(v.tagline ?? "")}</div><div class="meta">${esc([v.city, v.country].filter(Boolean).join(", "))} · ${esc(v.launched ?? "")}</div>
+        <div>${v.stealth ? `<span class="chip early">Stealth</span>` : ""}${p.labels.includes("super_founder") ? `<span class="chip sig">super founder</span>` : p.labels.includes("serial_founder") ? `<span class="chip sig">serial</span>` : ""}</div></a>`; }).join("") || "<p class='muted'>None.</p>";
+    document.querySelectorAll("#gridBox .pc").forEach((el) => { const p = list[el.dataset.i];
+      el.addEventListener("mousemove", (e) => showTip(e, p)); el.addEventListener("mouseleave", () => (tip.style.display = "none")); });
+  }
+  const redraw = () => { $("#orbitBox").style.display = view === "orbit" ? "" : "none"; $("#gridBox").style.display = view === "grid" ? "" : "none"; view === "orbit" ? drawOrbit() : drawGrid(); };
+  $("#tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.v) view = b.dataset.v; if (b.dataset.f) flt = b.dataset.f;
+    document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("on", x.dataset.v === view || x.dataset.f === flt)); redraw(); });
+  redraw();
+
+  // Early-signal founders: launches per month (one colour) and country
+  const mk = (i) => { const d = new Date(NOW.getFullYear(), NOW.getMonth() - i, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
+  const months = Array.from({ length: 12 }, (_, i) => mk(11 - i));
+  const perMonth = Object.fromEntries(months.map((m) => [m, 0]));
+  let yearOnly = 0;
+  watchlist.forEach((p) => { const l = String(p.main.launched ?? ""); if (l.length === 7) { if (l in perMonth) perMonth[l]++; } else yearOnly++; });
+  const maxM = Math.max(1, ...Object.values(perMonth));
+  $("#months").innerHTML = months.map((m) => `<div class="col"><span>${perMonth[m]}</span><div class="stack" style="height:${(perMonth[m] / maxM) * 120}px"><span style="height:100%;background:var(--early)"></span></div>${new Date(m + "-01").toLocaleString("en", { month: "short" })}</div>`).join("");
+  $("#monthNote").textContent = yearOnly ? `${yearOnly} founders have only a launch year recorded and are not shown here.` : "";
+  const cc = d3.rollups(watchlist, (a) => a.length, (p) => p.main.country ?? "Not recorded").sort((a, b) => b[1] - a[1]).slice(0, 8);
+  $("#countries").innerHTML = cc.map(([c, n]) => `<div class="row"><span>${esc(c)}</span><div class="track"><span style="width:${(n / cc[0][1]) * 100}%;background:var(--early)"></span></div><span>${n}</span></div>`).join("");
+
+  // Search (nothing is listed until the user types)
+  const draw = () => {
+    const q = $("#q").value.trim().toLowerCase();
+    $("#listCard").style.display = q.length >= 2 ? "" : "none";
+    if (q.length < 2) return;
+    const rows = P.filter((p) => [p.name, p.main?.name, p.main?.tagline, p.location].join(" ").toLowerCase().includes(q)).sort((a, b) => (b.signal ?? -1) - (a.signal ?? -1));
+    $("#list").innerHTML = rows.slice(0, 10).map((p) => personRow(p, false)).join("") || "<p class='muted'>No match.</p>";
+    $("#count").textContent = rows.length > 10 ? `Showing the top 10 of ${rows.length}. Refine the search to narrow it down.` : "";
+  };
+  $("#q").addEventListener("input", draw);
+
+  $("#foot").innerHTML = `Source: Dealroom API (people filtered on past or current employment at Revolut, founder role, no longer employed there). Data as of ${esc(d.generatedAt)}.
+    <br>Caveats: "worked at Revolut" includes advisers and board members as well as employees, and a person's profile previews at most 5 roles, so some ventures may be missing. Funding is the total recorded by Dealroom; "no funding recorded" can also mean undisclosed.`;
+}
+
+fetch("/api/revolut-mafia").then((r) => r.json()).then((d) => { if (d.error) throw new Error(d.error); render(d); })
+  .catch((e) => { $("#app").className = "error"; $("#app").textContent = "Could not load: " + e.message; });
+</script>
+</body>
+</html>
