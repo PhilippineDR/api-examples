@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Revolut Founder Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,7 +69,12 @@
   .nav a { position: relative; z-index: 1; padding: 6px 14px; font-size: 13.5px; font-weight: 500; color: var(--muted); border-radius: 99px; text-decoration: none; transition: color .2s; }
   .nav a.on { color: var(--ink); }
   .nav .thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: 0; border-radius: 99px; background: var(--brand-50); }
-  @media (max-width: 760px) { .nav { display: none; } .brand .client, .brand .sep { display: none; } }
+  @media (max-width: 760px) {
+    .bar .in { flex-wrap: wrap; gap: 10px; padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left)); }
+    .nav { order: 2; width: 100%; margin: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav a { flex: 1; text-align: center; padding: 8px 12px; }
+  }
 
   .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px 96px; }
 
@@ -113,6 +118,8 @@
   #orbit { width: 100%; height: auto; display: block; }
   #orbit text { fill: var(--ink); font-family: Inter, sans-serif; pointer-events: none; }
   #orbit .sub { fill: var(--muted); }
+  #orbit .lb text { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+  #orbit .st { fill: var(--stealth); font-weight: 600; }
   #orbit .nd { cursor: pointer; outline: none; }
   #orbit .ring { fill: none; stroke: var(--line); stroke-dasharray: 2 7; stroke-linecap: round; }
   #orbit .spoke { stroke: var(--line); stroke-width: 1.25; transition: stroke .2s, stroke-width .2s; }
@@ -134,7 +141,7 @@
   /* Avatars */
   .av { position: relative; flex: none; width: var(--s, 72px); height: var(--s, 72px); }
   .av .ph { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: grid; place-items: center; font-weight: 600; font-size: calc(var(--s, 72px) * .32);
-            background: linear-gradient(140deg, var(--brand-300), var(--brand-600)); color: #fff; box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--line); }
+            background: var(--brand-50); color: var(--brand); box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--line); }
   .av .bd { position: absolute; right: -4px; bottom: -2px; width: calc(var(--s, 72px) * .4); height: calc(var(--s, 72px) * .4); border-radius: 50%; background: #fff; object-fit: contain;
             box-shadow: 0 0 0 2px var(--surface), var(--shadow-sm); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--ink-2); overflow: hidden; padding: 2px; }
 
@@ -219,6 +226,57 @@
   footer { margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
   .loading { padding: 120px 0; text-align: center; color: var(--muted); }
   .error { color: var(--stealth); }
+  /* ---- Mobile ---------------------------------------------------------------------------- */
+  body { overflow-x: clip; }
+  .wrap { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: max(96px, env(safe-area-inset-bottom)); }
+  /* Touch screens: 44px targets, no hover-only behaviour */
+  @media (pointer: coarse) {
+    .seg button, .btn, .nav a { min-height: 44px; }
+    .seg button { padding: 10px 14px; }
+    .row { min-height: 72px; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 15px; }
+    .wrap { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+    .hero { padding: 36px 0 24px; }
+    h1 { font-size: clamp(32px, 10vw, 44px); letter-spacing: -0.03em; }
+    .eyebrow { flex-wrap: wrap; border-radius: 14px; }
+    .kpis { margin-top: 28px; }
+    .kpi { padding: 16px; }
+    .kpi .v { font-size: 26px; }
+    .kpi .l { font-size: 12.5px; }
+    section { margin-top: 64px; }
+    .sh { margin-bottom: 16px; }
+    .controls, .seg { width: 100%; }
+    .seg button { flex: 1; padding-left: 8px; padding-right: 8px; }
+    .stage { padding: 0; }
+    .stage .legend { position: static; padding: 0 16px 14px; }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pc { padding: 36px 10px 14px; }
+    .pc .st { top: 8px; right: 8px; font-size: 10.5px; padding: 2px 7px; }
+    .pc .rank { top: 9px; left: 10px; }
+    .pc .av { --s: 60px !important; }
+    .pc .cn { font-size: 14px; margin-top: 10px; overflow-wrap: anywhere; }
+    .pc .tg { font-size: 12px; min-height: 0; }
+    .panel { padding: 18px 16px; }
+    .cols { gap: 4px; height: 170px; }
+    .cols .v { font-size: 10.5px; }
+    .cols .m { font-size: 10px; }
+    .hb { grid-template-columns: 96px 1fr 24px; gap: 8px; font-size: 13px; }
+    .row { gap: 12px; align-items: start; }
+    .row .co { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    footer { margin-top: 64px; }
+    /* Drawer becomes a bottom sheet */
+    .drawer { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 88vh; border-radius: 22px 22px 0 0; border-bottom: 0; transform: translateY(110%);
+              padding-bottom: env(safe-area-inset-bottom); }
+    .drawer::before { content: ""; position: sticky; top: 0; display: block; width: 40px; height: 4px; margin: 10px auto -4px; border-radius: 99px; background: var(--line); z-index: 1; }
+    .drawer .bd2 { padding: 0 20px 24px; }
+    .drawer .facts { grid-template-columns: 1fr 1fr; }
+    .drawer .acts { position: sticky; bottom: 0; background: var(--surface); padding: 12px 0 4px; margin-top: 20px; }
+    .drawer .acts .btn { flex: 1; justify-content: center; }
+  }
+  /* Hover polish only where a real hover exists */
+  @media (hover: none) { .pc:hover { border-color: var(--line); box-shadow: var(--shadow-sm); } .row:hover { background: none; } }
   @media print { .bar, .bg, .controls { display: none; } body { background: #fff; } .reveal { opacity: 1 !important; } }
 </style>
 </head>
@@ -257,6 +315,8 @@ if (REDUCED) document.documentElement.classList.add("no-motion");
 const anim = (el, kf, o = {}) => animate(el, kf, REDUCED ? { ...o, duration: 0, delay: 0 } : o);
 const EASE = [0.22, 1, 0.36, 1];
 const SPRING = { type: "spring", stiffness: 260, damping: 24 };
+const HOVER = matchMedia("(hover: hover)").matches;          // touch screens get tap-to-open, no tooltips or lift
+const SHEET = () => matchMedia("(max-width: 640px)").matches; // drawer slides up from the bottom on phones
 // Runs fn once per element, the first time it scrolls into view (Motion 11 passes an IntersectionObserverEntry).
 const seen = new WeakSet();
 const onView = (target, fn, opts = { amount: 0.25 }) => inView(target, (a) => { const el = a?.target ?? a; if (seen.has(el)) return; seen.add(el); fn(el); }, opts);
@@ -352,7 +412,7 @@ function render(d) {
     </div>
     <div id="viewBox">
       <div class="card stage reveal" data-r id="orbitBox"><svg id="orbit" viewBox="0 0 1100 1000" role="img" aria-label="Orbit of early-signal founders around Revolut"></svg>
-        <div class="legend"><span><i style="background:var(--stealth)"></i>Stealth</span><span><i style="background:var(--brand)"></i>Recently launched</span><span class="mono" style="color:var(--faint)">Inner ring = strongest signal</span></div></div>
+        <div class="legend"><span class="mono">Inner ring = strongest signal</span></div></div>
       <div class="cards" id="gridBox" style="display:none"></div>
     </div>
   </section>
@@ -396,6 +456,7 @@ function render(d) {
   // ---- Tooltip -----------------------------------------------------------------------------
   const tip = $("#tip"); let tipOn = false;
   const showTip = (e, p) => {
+    if (!HOVER) return;
     tip.innerHTML = `<b>${esc(p.name)}</b> · ${esc(stealthName(p.main) ? "Stealth startup" : p.main.name)}<div class="m">${esc(p._w.why.slice(0, 3).join(" · "))}</div>`;
     tip.style.left = Math.min(e.clientX + 16, innerWidth - 316) + "px"; tip.style.top = e.clientY + 18 + "px";
     if (!tipOn) { tipOn = true; anim(tip, { opacity: [0, 1], y: [4, 0] }, { duration: 0.18 }); }
@@ -403,6 +464,26 @@ function render(d) {
   const hideTip = () => { if (tipOn) { tipOn = false; anim(tip, { opacity: 0 }, { duration: 0.12 }); } };
 
   // ---- Orbit ---------------------------------------------------------------------------------
+  // Put each node's two-line label where it hits no other avatar and no earlier label:
+  // below first, then above, then outward to the side. Labels are measured roughly from character count.
+  function placeLabels(nodes, cx, cy) {
+    const R = 42, boxes = [];
+    const avatarHit = (b) => nodes.some((m) => { const dx = Math.max(b.x1 - m.x, 0, m.x - b.x2), dy = Math.max(b.y1 - m.y, 0, m.y - b.y2); return dx * dx + dy * dy < R * R; });
+    const labelHit = (b) => boxes.some((o) => b.x1 < o.x2 && b.x2 > o.x1 && b.y1 < o.y2 && b.y2 > o.y1);
+    for (const n of nodes) {
+      const raw = label(n.p); n.name = raw.length > 22 ? raw.slice(0, 21) + "…" : raw;
+      const v = n.p.main, sub = `${v.stealth || stealthName(v) ? "Stealth · " : ""}${v.funding ? usd(v.funding) : "pre-funding"}`;
+      const w = Math.max(n.name.length * 7.6, sub.length * 6.6) + 12, h = 36, out = n.x >= cx ? 1 : -1;   // + halo and breathing room
+      const tries = [
+        { lx: 0, ly: 60, anchor: "middle", box: { x1: -w / 2, x2: w / 2, y1: 47, y2: 47 + h } },
+        { lx: 0, ly: -66, anchor: "middle", box: { x1: -w / 2, x2: w / 2, y1: -79, y2: -79 + h } },
+        { lx: out * 50, ly: -2, anchor: out > 0 ? "start" : "end", box: out > 0 ? { x1: 50, x2: 50 + w, y1: -15, y2: -15 + h } : { x1: -50 - w, x2: -50, y1: -15, y2: -15 + h } },
+      ];
+      const abs = (t) => ({ x1: n.x + t.box.x1, x2: n.x + t.box.x2, y1: n.y + t.box.y1, y2: n.y + t.box.y2 });
+      const pick = tries.find((t) => !avatarHit(abs(t)) && !labelHit(abs(t))) ?? tries.find((t) => !avatarHit(abs(t))) ?? tries[0];
+      Object.assign(n, { lx: pick.lx, ly: pick.ly, anchor: pick.anchor }); boxes.push(abs(pick));
+    }
+  }
   let loops = [];
   function drawOrbit() {
     loops.forEach((l) => l.stop?.()); loops = [];
@@ -410,25 +491,25 @@ function render(d) {
     const list = pool().slice(0, 27); let k = 0;
     const nodes = [];
     rings.forEach((r, ri) => { const items = list.slice(k, k + r.n); k += r.n;
-      items.forEach((p, i) => { const a = (i / items.length) * 2 * Math.PI + ri * 0.5 - Math.PI / 2; nodes.push({ p, ri, x: cx + r.r * Math.cos(a), y: cy + r.r * Math.sin(a) * 0.93 }); }); });
+      items.forEach((p, i) => { const a = ((i + (ri % 2) * 0.5) / items.length) * 2 * Math.PI + ri * 0.35 - Math.PI / 2; nodes.push({ p, ri, x: cx + r.r * Math.cos(a), y: cy + r.r * Math.sin(a) * 0.93 }); }); });
+    placeLabels(nodes, cx, cy);
     let h = `<defs><radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--brand)" stop-opacity=".18"/><stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/></radialGradient>
       <filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0b1533" flood-opacity=".14"/></filter></defs>`;
     h += `<circle cx="${cx}" cy="${cy}" r="260" fill="url(#core)"/>`;
     h += rings.map((r) => `<ellipse class="ring" cx="${cx}" cy="${cy}" rx="${r.r}" ry="${r.r * 0.93}"/>`).join("");
     h += nodes.map((n, i) => `<line class="spoke" data-i="${i}" x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}"/>`).join("");
-    h += `<circle class="pulse" cx="${cx}" cy="${cy}" r="92" fill="none" stroke="var(--brand)" stroke-width="1.5" opacity="0"/>
-      <g class="core"><circle cx="${cx}" cy="${cy}" r="88" fill="var(--surface)" stroke="var(--line)" filter="url(#sh)"/><image href="${REVOLUT_LOGO}" x="${cx - 42}" y="${cy - 42}" width="84" height="84"/></g>`;
+    h += `<g class="core"><circle cx="${cx}" cy="${cy}" r="88" fill="var(--surface)" stroke="var(--line)" filter="url(#sh)"/><image href="${REVOLUT_LOGO}" x="${cx - 42}" y="${cy - 42}" width="84" height="84"/></g>`;
     h += nodes.map((n, i) => { const p = n.p, v = p.main, im = img(p.image), vi = img(v.image), st = v.stealth || stealthName(v), name = label(p);
       return `<g class="nd" data-i="${i}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(p.name)}"><g class="in">
         <clipPath id="c${i}"><circle r="34"/></clipPath>
         <circle r="40" fill="var(--surface)" filter="url(#sh)"/>
-        <circle r="38" fill="none" stroke="${st ? "var(--stealth)" : "var(--brand)"}" stroke-width="2.5"/>
+        <circle r="37" fill="none" stroke="var(--line)" stroke-width="1.5"/>
         ${im ? `<image href="${im}" x="-34" y="-34" width="68" height="68" clip-path="url(#c${i})" preserveAspectRatio="xMidYMid slice"/>`
-             : `<circle r="34" fill="var(--brand)"/><text y="6" text-anchor="middle" font-size="17" font-weight="600" style="fill:#fff">${esc(initials(p.name))}</text>`}
+             : `<circle r="34" fill="var(--brand-50)"/><text y="6" text-anchor="middle" font-size="17" font-weight="600" style="fill:var(--brand)">${esc(initials(p.name))}</text>`}
         <circle cx="27" cy="26" r="13" fill="#fff" stroke="var(--surface)" stroke-width="2.5"/>
         ${vi ? `<image href="${vi}" x="17" y="16" width="20" height="20" preserveAspectRatio="xMidYMid meet"/>` : `<text x="27" y="30" text-anchor="middle" font-size="10" font-weight="700" style="fill:#2a3452">${esc(v.name[0])}</text>`}
-        <text y="62" text-anchor="middle" font-size="13" font-weight="600">${esc(name.length > 22 ? name.slice(0, 21) + "…" : name)}</text>
-        <text y="78" text-anchor="middle" font-size="11.5" class="sub">${st ? "Stealth · " : ""}${v.funding ? usd(v.funding) : "pre-funding"}</text></g></g>`; }).join("");
+        <g class="lb" transform="translate(${n.lx} ${n.ly})"><text y="0" text-anchor="${n.anchor}" font-size="13" font-weight="600">${esc(n.name)}</text>
+        <text y="16" text-anchor="${n.anchor}" font-size="11.5" class="sub">${st ? `<tspan class="st">Stealth</tspan> · ` : ""}${v.funding ? usd(v.funding) : "pre-funding"}</text></g></g></g>`; }).join("");
     svg.innerHTML = h;
 
     // Entrance: rings and spokes draw, core pops, nodes spring out ring by ring
@@ -440,9 +521,8 @@ function render(d) {
     anim(core, { opacity: [0, 1], transform: ["scale(.6)", "scale(1)"] }, { ...SPRING, delay: 0.05 });
     const inner = $$(".nd .in", svg);
     inner.forEach((el, i) => anim(el, { opacity: [0, 1], transform: ["scale(.3)", "scale(1)"] }, { ...SPRING, delay: 0.45 + nodes[i].ri * 0.16 + (i % 9) * 0.03 }));
-    // Ambient life: a soft pulse from the core and slowly drifting ring dashes
+    // Ambient life: slowly drifting ring dashes
     if (!REDUCED) {
-      loops.push(animate($(".pulse", svg), { r: [92, 200], opacity: [0.35, 0] }, { duration: 3.2, repeat: Infinity, ease: "easeOut", delay: 1.2 }));
       $$(".ring", svg).forEach((el, i) => loops.push(animate(el, { strokeDashoffset: [0, i % 2 ? 90 : -90] }, { duration: 24 + i * 6, repeat: Infinity, ease: "linear" })));
     }
     // Hover: lift the node, light up its spoke
@@ -467,7 +547,7 @@ function render(d) {
     const cards = $$("#gridBox .pc");
     anim(cards, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, delay: stagger(0.025, { startDelay: 0.05 }), ease: EASE });
     cards.forEach((el) => { const p = list[el.dataset.i];
-      el.addEventListener("mouseenter", () => anim(el, { y: -4 }, SPRING)); el.addEventListener("mouseleave", () => { anim(el, { y: 0 }, SPRING); hideTip(); });
+      if (HOVER) { el.addEventListener("mouseenter", () => anim(el, { y: -4 }, SPRING)); el.addEventListener("mouseleave", () => { anim(el, { y: 0 }, SPRING); hideTip(); }); }
       el.addEventListener("click", () => openDrawer(p)); el.addEventListener("keydown", (e) => { if (e.key === "Enter") openDrawer(p); }); });
   }
 
@@ -558,7 +638,9 @@ function render(d) {
       <div class="acts"><a class="btn primary" href="${esc(p.url)}" target="_blank" rel="noopener">Open in Dealroom</a>${p.linkedin ? `<a class="btn" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}</div>`;
     drawer.style.visibility = "visible"; scrim.classList.add("open");
     anim(scrim, { opacity: 1 }, { duration: 0.25 });
-    anim(drawer, { transform: ["translateX(110%)", "translateX(0%)"] }, { type: "spring", stiffness: 280, damping: 32 });
+    const off = SHEET() ? "translateY(110%)" : "translateX(110%)", on = SHEET() ? "translateY(0%)" : "translateX(0%)";
+    drawer.scrollTop = 0;
+    anim(drawer, { transform: [off, on] }, { type: "spring", stiffness: 280, damping: 32 });
     anim($$("#dbody > *"), { opacity: [0, 1], y: [10, 0] }, { duration: 0.4, delay: stagger(0.035, { startDelay: 0.08 }), ease: EASE });
     $("#close").focus();
   };
@@ -566,7 +648,7 @@ function render(d) {
     if (!scrim.classList.contains("open")) return;
     scrim.classList.remove("open");
     anim(scrim, { opacity: 0 }, { duration: 0.2 });
-    await anim(drawer, { transform: "translateX(110%)" }, { duration: 0.28, ease: [0.4, 0, 1, 1] });
+    await anim(drawer, { transform: SHEET() ? "translateY(110%)" : "translateX(110%)" }, { duration: 0.28, ease: [0.4, 0, 1, 1] });
     drawer.style.visibility = "hidden";
   };
   $("#close").addEventListener("click", closeDrawer); scrim.addEventListener("click", closeDrawer);
