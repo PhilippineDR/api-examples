@@ -6,115 +6,270 @@
 <title>The Revolut Founder Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* Tokens follow Dealroom's own product styling (developers.dealroom.co): primary blue #3662E3, Inter, a mono accent. */
   :root {
-    --bg: #f5f7fb; --card: rgba(255,255,255,.78); --card-solid: #ffffff; --ink: #172033; --muted: #5f6c80; --line: rgba(23,32,51,.10);
-    --early: #e0561f; --building: #3b6df0; --scaled: #1a8a5a; --gone: #9aa5b1;
-    --b1: #bcd3ff; --b2: #ffd9c4; --b3: #cdeedd; --shadow: 0 1px 2px rgba(23,32,51,.04), 0 8px 24px rgba(23,32,51,.06);
+    --brand: #3662e3; --brand-600: #2b51c4; --brand-300: #5a82eb; --brand-50: #eef2fd; --brand-100: #dfe7fb;
+    --ink: #0b1533; --ink-2: #2a3452; --muted: #5d6680; --faint: #8a92a8;
+    --bg: #f7f8fc; --surface: #ffffff; --surface-2: #fbfcfe; --line: #e5e8f0; --line-2: #eef0f6;
+    --stealth: #f26b3a; --stealth-50: #fff1eb; --good: #13865a;
+    --r: 14px; --r-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(11,21,51,.05);
+    --shadow: 0 1px 2px rgba(11,21,51,.04), 0 6px 20px -6px rgba(11,21,51,.08);
+    --shadow-lg: 0 2px 4px rgba(11,21,51,.04), 0 24px 60px -18px rgba(11,21,51,.22);
+    --glow-a: rgba(54,98,227,.16); --glow-b: rgba(90,130,235,.12);
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #0d1219; --card: rgba(24,32,44,.72); --card-solid: #18202c; --ink: #e9eef6; --muted: #98a6b8; --line: rgba(255,255,255,.09);
-            --early: #f0824f; --building: #7aa2ff; --scaled: #4cc790; --gone: #6b7785;
-            --b1: #1d3a78; --b2: #5a2a14; --b3: #124433; --shadow: 0 8px 24px rgba(0,0,0,.35); }
+    :root:not([data-theme="light"]) {
+      --brand: #6b8ff0; --brand-600: #5a82eb; --brand-300: #8eaaf5; --brand-50: #18224a; --brand-100: #1f2c5c;
+      --ink: #eef1f8; --ink-2: #ccd3e4; --muted: #99a2ba; --faint: #6f7893;
+      --bg: #0a0f1e; --surface: #111831; --surface-2: #0f162c; --line: #222b48; --line-2: #1a2240;
+      --stealth: #ff8a5c; --stealth-50: #3a1d12; --good: #43c58c;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5); --shadow-lg: 0 24px 60px -18px rgba(0,0,0,.7);
+      --glow-a: rgba(54,98,227,.22); --glow-b: rgba(90,130,235,.14);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --brand: #6b8ff0; --brand-600: #5a82eb; --brand-300: #8eaaf5; --brand-50: #18224a; --brand-100: #1f2c5c;
+    --ink: #eef1f8; --ink-2: #ccd3e4; --muted: #99a2ba; --faint: #6f7893;
+    --bg: #0a0f1e; --surface: #111831; --surface-2: #0f162c; --line: #222b48; --line-2: #1a2240;
+    --stealth: #ff8a5c; --stealth-50: #3a1d12; --good: #43c58c; color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 "Plus Jakarta Sans", -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
-  /* Light drifting background: three soft colour blobs */
-  .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
-  .bg i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .65; will-change: transform; }
-  .bg i:nth-child(1) { width: 52vmax; height: 52vmax; left: -12vmax; top: -14vmax; background: var(--b1); animation: d1 28s ease-in-out infinite alternate; }
-  .bg i:nth-child(2) { width: 44vmax; height: 44vmax; right: -10vmax; top: 18vh; background: var(--b2); animation: d2 34s ease-in-out infinite alternate; }
-  .bg i:nth-child(3) { width: 48vmax; height: 48vmax; left: 20vw; bottom: -22vmax; background: var(--b3); animation: d3 40s ease-in-out infinite alternate; }
-  @keyframes d1 { to { transform: translate(18vw, 14vh) scale(1.15); } }
-  @keyframes d2 { to { transform: translate(-16vw, 20vh) scale(.9); } }
-  @keyframes d3 { to { transform: translate(-14vw, -16vh) scale(1.2); } }
-  @media (prefers-reduced-motion: reduce) { .bg i { animation: none; } html { scroll-behavior: auto; } }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 20px 72px; }
-  .eyebrow { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .6px; text-transform: uppercase; color: var(--early); background: var(--card); border: 1px solid var(--line); padding: 4px 12px; border-radius: 99px; margin-bottom: 12px; }
-  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -1px; line-height: 1.1; margin: 0 0 10px; }
-  header p, .lead, .note, .muted { color: var(--muted); }
-  header p { margin: 0; max-width: 640px; font-size: 16px; }
-  section { margin-top: 48px; }
-  h2 { font-size: 22px; font-weight: 700; letter-spacing: -.3px; margin: 0 0 6px; }
-  .lead { margin: 0 0 16px; max-width: 780px; }
-  .grid { display: grid; gap: 12px; }
-  .kpis { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-  .two { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  .kpi .v { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; }
-  .kpi .l { color: var(--muted); font-size: 13px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; margin: 0 0 8px; }
-  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: baseline; }
-  .early { --c: var(--early); } .building { --c: var(--building); } .scaled { --c: var(--scaled); } .gone { --c: var(--gone); }
-  .dot { background: var(--c); }
-  .tabs { display: flex; gap: 8px; margin: 0 0 12px; flex-wrap: wrap; }
-  .tabs button { font: inherit; font-weight: 500; padding: 8px 18px; transition: background .15s; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
-  .tabs button.on { background: var(--building); border-color: var(--building); color: #fff; }
-  .tabs .sp { flex: 1; }
-  #orbit text { fill: var(--ink); pointer-events: none; }
+  html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 Inter, -apple-system, "Segoe UI", sans-serif; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .num, .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-feature-settings: "zero"; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+  button { font: inherit; color: inherit; }
+
+  /* Background: faint dot grid + two slow brand-blue glows (moved by Motion) */
+  .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .bg .dots { position: absolute; inset: 0; background-image: radial-gradient(var(--line) 1px, transparent 1px); background-size: 22px 22px;
+              mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%); }
+  .bg .g { position: absolute; border-radius: 50%; filter: blur(80px); }
+  .bg .g1 { width: 46vmax; height: 46vmax; left: -10vmax; top: -18vmax; background: var(--glow-a); }
+  .bg .g2 { width: 38vmax; height: 38vmax; right: -8vmax; top: 10vh; background: var(--glow-b); }
+
+  /* Top bar */
+  .bar { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(1.6) blur(14px); -webkit-backdrop-filter: saturate(1.6) blur(14px);
+         background: color-mix(in srgb, var(--bg) 78%, transparent); border-bottom: 1px solid transparent; transition: border-color .2s; }
+  .bar.scrolled { border-bottom-color: var(--line); }
+  .bar .in { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.2px; color: var(--ink); white-space: nowrap; }
+  .brand .mk { width: 26px; height: 26px; border-radius: 7px; background: var(--brand); display: grid; place-items: center; color: #fff; font-size: 13px; font-weight: 700; }
+  .brand .sep { color: var(--faint); font-weight: 400; }
+  .brand .client { color: var(--muted); font-weight: 500; }
+  .nav { position: relative; display: flex; gap: 2px; margin-left: auto; padding: 4px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+  .nav a { position: relative; z-index: 1; padding: 6px 14px; font-size: 13.5px; font-weight: 500; color: var(--muted); border-radius: 99px; text-decoration: none; transition: color .2s; }
+  .nav a.on { color: var(--ink); }
+  .nav .thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: 0; border-radius: 99px; background: var(--brand-50); }
+  @media (max-width: 760px) { .nav { display: none; } .brand .client, .brand .sep { display: none; } }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px 96px; }
+
+  /* Hero */
+  .hero { padding: 72px 0 40px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 500; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); padding: 5px 12px 5px 6px; border-radius: 99px; box-shadow: var(--shadow-sm); }
+  .eyebrow .pill { background: var(--brand); color: #fff; border-radius: 99px; padding: 1px 8px; font-size: 11.5px; font-weight: 600; }
+  h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; margin: 20px 0 16px; max-width: 900px; }
+  h1 .hl { background: linear-gradient(100deg, var(--brand) 10%, var(--brand-300) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { font-size: clamp(16px, 1.6vw, 18.5px); color: var(--muted); max-width: 640px; margin: 0; line-height: 1.55; }
+
+  .kpis { margin-top: 44px; display: grid; grid-template-columns: repeat(5, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; }
+  .kpi { padding: 22px 22px 20px; border-left: 1px solid var(--line-2); }
+  .kpi:first-child { border-left: 0; }
+  .kpi .v { font-size: clamp(26px, 3vw, 34px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .kpi .l { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+  .kpi.accent .v { color: var(--brand); }
+  @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, 1fr); } .kpi { border-left: 0; border-top: 1px solid var(--line-2); } .kpi:nth-child(-n+2) { border-top: 0; } .kpi:nth-child(even) { border-left: 1px solid var(--line-2); } .kpi:last-child { grid-column: 1 / -1; border-left: 0; } }
+
+  /* Sections */
+  section { margin-top: 88px; }
+  .sh { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+  .kicker { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--brand); margin: 0 0 8px; }
+  h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 650; letter-spacing: -0.025em; line-height: 1.15; margin: 0; }
+  .lead { color: var(--muted); margin: 10px 0 0; max-width: 680px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+  .reveal { opacity: 0; }
+  .no-motion .reveal { opacity: 1; }
+
+  /* Segmented controls */
+  .seg { position: relative; display: inline-flex; padding: 4px; border-radius: 12px; background: var(--line-2); border: 1px solid var(--line); }
+  .seg button { position: relative; z-index: 1; border: 0; background: none; padding: 7px 14px; font-size: 13.5px; font-weight: 500; color: var(--muted); cursor: pointer; border-radius: 9px; transition: color .2s; white-space: nowrap; }
+  .seg button.on { color: var(--ink); }
+  .seg .thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; border-radius: 9px; background: var(--surface); box-shadow: 0 1px 2px rgba(11,21,51,.08), 0 2px 8px -2px rgba(11,21,51,.10); }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Orbit */
+  .stage { position: relative; padding: 8px; overflow: hidden; }
+  .stage .legend { position: absolute; left: 22px; bottom: 18px; display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); z-index: 2; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+  #orbit { width: 100%; height: auto; display: block; }
+  #orbit text { fill: var(--ink); font-family: Inter, sans-serif; pointer-events: none; }
   #orbit .sub { fill: var(--muted); }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
-  .pc { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); backdrop-filter: blur(12px); transition: transform .15s, border-color .15s; padding: 16px; text-align: center; text-decoration: none; color: var(--ink); display: block; }
-  .pc:hover { border-color: var(--early); transform: translateY(-3px); }
-  .av { position: relative; width: 84px; height: 84px; margin: 0 auto 8px; }
-  .av .ph1 { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; background: var(--building); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 24px; }
-  .av .bd { position: absolute; right: -6px; bottom: -4px; width: 32px; height: 32px; border-radius: 50%; background: #fff; border: 2px solid var(--card); object-fit: contain; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #333; overflow: hidden; }
-  .pc .cn { font-weight: 700; font-size: 15px; }
+  #orbit .nd { cursor: pointer; outline: none; }
+  #orbit .ring { fill: none; stroke: var(--line); stroke-dasharray: 2 7; stroke-linecap: round; }
+  #orbit .spoke { stroke: var(--line); stroke-width: 1.25; transition: stroke .2s, stroke-width .2s; }
+  #orbit .spoke.hot { stroke: var(--brand); stroke-width: 2; }
+
+  /* Grid of founders */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .pc { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 22px 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
+        box-shadow: var(--shadow-sm); color: var(--ink); cursor: pointer; transition: border-color .2s, box-shadow .25s; }
+  .pc:hover { border-color: var(--brand-100); box-shadow: var(--shadow); }
+  .pc .rank { position: absolute; top: 12px; left: 14px; font-size: 11.5px; color: var(--faint); }
+  .pc .st { position: absolute; top: 12px; right: 12px; }
+  .pc .cn { font-weight: 600; font-size: 15px; letter-spacing: -.01em; margin-top: 12px; }
   .pc .fn { font-size: 13px; color: var(--muted); }
-  .pc .fu { font-weight: 700; margin-top: 2px; }
-  .pc .tg { font-size: 12px; color: var(--muted); margin: 4px 0; min-height: 34px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  #tip { position: fixed; pointer-events: none; background: var(--card-solid); color: var(--ink); border: 1px solid var(--line);
-         border-radius: 8px; padding: 8px 10px; font-size: 13px; max-width: 280px; box-shadow: 0 4px 16px rgba(0,0,0,.18); display: none; z-index: 5; }
-  .bars .row { display: grid; grid-template-columns: 110px 1fr 36px; gap: 8px; align-items: center; font-size: 13px; margin: 3px 0; }
-  .bars .track { background: var(--line); height: 8px; border-radius: 4px; overflow: hidden; display: flex; }
-  .bars .track span { display: block; height: 100%; }
-  .chart { display: flex; align-items: flex-end; gap: 5px; height: 160px; }
-  .col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; font-size: 11px; color: var(--muted); }
-  .col .stack { width: 100%; max-width: 34px; display: flex; flex-direction: column-reverse; }
-  .col .stack span { display: block; width: 100%; background: var(--c); }
-  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
-  input, select { font: inherit; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
-  input { flex: 1; min-width: 200px; }
-  .person { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-  .person:last-child { border-bottom: 0; }
-  .ph { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
-  .ph .nm { font-weight: 650; font-size: 16px; }
-  .person p { margin: 0; }
-  .chip { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 99px; border: 1px solid var(--c, var(--line)); color: var(--c, var(--muted)); margin: 2px 4px 0 0; }
-  .chip.sig { color: var(--ink); border-color: var(--line); }
-  .meta { font-size: 13px; color: var(--muted); }
-  a { color: var(--building); }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
-  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .scroll { overflow-x: auto; }
-  .loading, .error { padding: 40px; text-align: center; color: var(--muted); }
-  .error { color: var(--early); }
-  footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
-  @media print { .toolbar { display: none; } body { background: #fff; } }
+  .pc .tg { font-size: 12.5px; color: var(--muted); margin: 8px 0 10px; line-height: 1.45; min-height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .pc .ft { margin-top: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px; font-size: 12px; color: var(--faint); }
+  .pc .ft span { white-space: nowrap; }
+
+  /* Avatars */
+  .av { position: relative; flex: none; width: var(--s, 72px); height: var(--s, 72px); }
+  .av .ph { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: grid; place-items: center; font-weight: 600; font-size: calc(var(--s, 72px) * .32);
+            background: linear-gradient(140deg, var(--brand-300), var(--brand-600)); color: #fff; box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--line); }
+  .av .bd { position: absolute; right: -4px; bottom: -2px; width: calc(var(--s, 72px) * .4); height: calc(var(--s, 72px) * .4); border-radius: 50%; background: #fff; object-fit: contain;
+            box-shadow: 0 0 0 2px var(--surface), var(--shadow-sm); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--ink-2); overflow: hidden; padding: 2px; }
+
+  /* Chips */
+  .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 99px; background: var(--line-2); color: var(--ink-2); margin: 3px 4px 0 0; white-space: nowrap; }
+  .chip.b { background: var(--brand-50); color: var(--brand); }
+  .chip.s { background: var(--stealth-50); color: var(--stealth); }
+  .chip.s::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* Pipeline charts */
+  .two { display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+  .panel { padding: 22px 24px; }
+  .panel h3 { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  .panel .sub { color: var(--muted); font-size: 13px; margin: 2px 0 18px; }
+  .cols { display: flex; align-items: flex-end; gap: 8px; height: 190px; }
+  .cols .c { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+  .cols .bar { width: 100%; max-width: 30px; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, var(--brand-300), var(--brand)); transform-origin: bottom; }
+  .cols .bar.zero { background: var(--line); }
+  .cols .v { font-size: 12px; color: var(--ink-2); margin-bottom: 6px; }
+  .cols .m { font-size: 11.5px; color: var(--faint); margin-top: 8px; }
+  .hb { display: grid; grid-template-columns: 128px 1fr 28px; gap: 12px; align-items: center; font-size: 13.5px; padding: 6px 0; }
+  .hb .t { height: 8px; border-radius: 99px; background: var(--line-2); overflow: hidden; }
+  .hb .t span { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--brand), var(--brand-300)); transform-origin: left; }
+  .hb .n { text-align: right; color: var(--ink-2); font-size: 12.5px; }
+  .note { font-size: 12.5px; color: var(--faint); margin: 14px 0 0; }
+
+  /* Watchlist */
+  .wl { padding: 6px 0; }
+  .row { display: grid; grid-template-columns: 44px auto 1fr auto; gap: 18px; align-items: center; padding: 16px 24px; border-top: 1px solid var(--line-2); cursor: pointer; transition: background .2s; }
+  .row:first-child { border-top: 0; }
+  .row:hover { background: var(--surface-2); }
+  .row .rk { font-size: 13px; color: var(--faint); }
+  .row .who { min-width: 0; }
+  .row .nm { font-weight: 600; letter-spacing: -.01em; }
+  .row .co { color: var(--muted); font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row .why { margin-top: 4px; }
+  .row .rt { text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .row .rt b { display: block; color: var(--ink); font-weight: 600; font-size: 14px; }
+  .score { display: inline-block; width: 64px; height: 4px; border-radius: 99px; background: var(--line-2); overflow: hidden; margin-top: 6px; }
+  .score span { display: block; height: 100%; background: var(--brand); border-radius: 99px; }
+  @media (max-width: 700px) { .row { grid-template-columns: auto 1fr; padding: 14px 16px; } .row .rk, .row .rt { display: none; } }
+  .more { display: flex; justify-content: center; padding: 14px; border-top: 1px solid var(--line-2); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 9px 16px; border-radius: 10px; font-size: 13.5px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow-sm); transition: border-color .2s; }
+  .btn:hover { border-color: var(--brand-300); }
+  .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.primary:hover { background: var(--brand-600); text-decoration: none; }
+
+  /* Search */
+  .search { position: relative; }
+  .search svg { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--faint); }
+  .search input { width: 100%; font: inherit; font-size: 16px; padding: 16px 18px 16px 50px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); transition: border-color .2s, box-shadow .2s; }
+  .search input:focus { outline: none; border-color: var(--brand-300); box-shadow: 0 0 0 4px var(--brand-50); }
+  #results { margin-top: 14px; }
+  #results .card { overflow: hidden; }
+
+  /* Tooltip + drawer */
+  #tip { position: fixed; z-index: 40; pointer-events: none; max-width: 300px; padding: 10px 12px; font-size: 13px; line-height: 1.45; background: var(--ink); color: var(--bg); border-radius: 10px; box-shadow: var(--shadow-lg); opacity: 0; }
+  #tip .m { opacity: .7; }
+  .scrim { position: fixed; inset: 0; z-index: 50; background: rgba(11,21,51,.32); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; }
+  .scrim.open { pointer-events: auto; }
+  .drawer { position: fixed; z-index: 51; top: 12px; right: 12px; bottom: 12px; width: min(440px, calc(100vw - 24px)); background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow-lg);
+            overflow: auto; transform: translateX(110%); visibility: hidden; }
+  .drawer .hd { position: sticky; top: 0; display: flex; justify-content: flex-end; padding: 14px 14px 0; background: var(--surface); }
+  .drawer .x { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; display: grid; place-items: center; color: var(--muted); }
+  .drawer .bd2 { padding: 0 28px 28px; }
+  .drawer h3 { font-size: 22px; letter-spacing: -.02em; margin: 16px 0 2px; }
+  .drawer .loc { color: var(--muted); font-size: 14px; }
+  .drawer .blk { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line-2); }
+  .drawer .lbl { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
+  .drawer .co { display: flex; gap: 12px; align-items: center; }
+  .drawer .co img, .drawer .co .lg { width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #fff; border: 1px solid var(--line); padding: 4px; display: grid; place-items: center; font-weight: 700; color: var(--ink-2); }
+  .drawer .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .drawer .facts div { background: var(--surface-2); border: 1px solid var(--line-2); border-radius: 12px; padding: 10px 12px; }
+  .drawer .facts span { display: block; font-size: 12px; color: var(--faint); }
+  .drawer .facts b { font-weight: 600; font-size: 14.5px; }
+  .drawer ul { margin: 0; padding: 0; list-style: none; }
+  .drawer li { display: flex; gap: 10px; padding: 6px 0; font-size: 14px; }
+  .drawer li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 8px; border-radius: 50%; background: var(--brand); }
+  .drawer .acts { display: flex; gap: 8px; margin-top: 24px; }
+
+  footer { margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+  .loading { padding: 120px 0; text-align: center; color: var(--muted); }
+  .error { color: var(--stealth); }
+  @media print { .bar, .bg, .controls { display: none; } body { background: #fff; } .reveal { opacity: 1 !important; } }
 </style>
 </head>
 <body>
-<div class="bg"><i></i><i></i><i></i></div>
+<div class="bg"><div class="dots"></div><div class="g g1"></div><div class="g g2"></div></div>
+
+<div class="bar" id="bar"><div class="in">
+  <div class="brand"><span class="mk">d</span>dealroom<span class="sep">/</span><span class="client">HV Capital</span></div>
+  <nav class="nav" id="nav"><span class="thumb"></span>
+    <a href="#orbit-sec">Orbit</a><a href="#pipeline">Pipeline</a><a href="#watchlist">Watchlist</a><a href="#lookup">Search</a>
+  </nav>
+</div></div>
+
 <div class="wrap">
-  <header>
-    <span class="eyebrow">Prepared for HV Capital</span>
-    <h1>The Revolut Founder Map</h1>
-    <p>Founders who worked at Revolut and have left: what they are building, where, and who is worth a call before anyone else.</p>
+  <header class="hero">
+    <span class="eyebrow reveal" data-r><span class="pill">Founder intelligence</span><span id="asof">Prepared for HV Capital</span></span>
+    <h1 class="reveal" data-r>The <span class="hl">Revolut</span> founder map</h1>
+    <p class="reveal" data-r>Everyone who left Revolut to start something: what they are building, where, and who is worth a call before the round is announced.</p>
+    <div class="kpis reveal" data-r id="kpis"></div>
   </header>
-  <div id="app" class="loading">Loading from Dealroom…</div>
+  <div id="app"><div class="loading">Loading Dealroom data…</div></div>
   <footer id="foot"></footer>
 </div>
+
 <div id="tip"></div>
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Founder details"><div class="hd"><button class="x" id="close" aria-label="Close">
+  <svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div><div class="bd2" id="dbody"></div></aside>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <script>
-const $ = (s) => document.querySelector(s);
+const { animate, inView, stagger } = window.Motion;
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (REDUCED) document.documentElement.classList.add("no-motion");
+// Motion wrapper: jumps straight to the end state when the viewer prefers reduced motion.
+const anim = (el, kf, o = {}) => animate(el, kf, REDUCED ? { ...o, duration: 0, delay: 0 } : o);
+const EASE = [0.22, 1, 0.36, 1];
+const SPRING = { type: "spring", stiffness: 260, damping: 24 };
+// Runs fn once per element, the first time it scrolls into view (Motion 11 passes an IntersectionObserverEntry).
+const seen = new WeakSet();
+const onView = (target, fn, opts = { amount: 0.25 }) => inView(target, (a) => { const el = a?.target ?? a; if (seen.has(el)) return; seen.add(el); fn(el); }, opts);
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const eur = (n) => n == null ? "n/a" : n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`;
-const BUCKET = { early: "Early signal", building: "Building", scaled: "Scaled", gone: "Acquired / closed" };
+const usd = (n) => n == null ? "n/a" : n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`;
+const img = (u) => (u ? "https://" + u : null);
+const initials = (n) => n.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+const stealthName = (v) => /^stealth/i.test(v?.name ?? "");
+const label = (p) => (stealthName(p.main) ? p.name : p.main.name);
+const REVOLUT_LOGO = "https://storage.googleapis.com/dealroom-images-production/2025/09/21/2e120572df79761e39e343d9aef44b76.png";
 
 let NOW;
 function monthsSince(d) { // "2026", "2026-03"
@@ -140,185 +295,305 @@ function watch(p) {
   const age = monthsSince(v.launched);
   if (v.stealth) { s += 25; why.push("Tagged stealth startup"); }
   if (age != null && age <= 12) { s += 20; why.push(`Launched ${v.launched}`); } else if (age != null && age <= 24) { s += 10; why.push(`Launched ${v.launched}`); }
-  if (!v.funding) { s += 10; why.push("No funding recorded yet (pre-round)"); } else { s += 5; why.push(`${eur(v.funding)} raised so far`); }
+  if (!v.funding) { s += 10; why.push("No funding recorded yet"); } else { s += 5; why.push(`${usd(v.funding)} raised so far`); }
   if (p.labels.includes("super_founder")) { s += 15; why.push("Super founder: built a company at scale before"); }
   else if (p.labels.includes("serial_founder")) { s += 10; why.push("Serial founder"); }
-  else if (p.labels.includes("strong_founder")) { s += 8; why.push("Strong founder label"); }
-  else if (p.labels.includes("promising_founder")) { s += 6; why.push("Promising founder label"); }
+  else if (p.labels.includes("strong_founder")) { s += 8; why.push("Strong founder"); }
+  else if (p.labels.includes("promising_founder")) { s += 6; why.push("Promising founder"); }
   if (p.revolut && p.revolut.end && Number(p.revolut.end) >= NOW.getFullYear() - 1) { s += 8; why.push(`Left Revolut ${p.revolut.end}`); }
   if (v.employeeGrowth1y > 0.3) { s += 5; why.push("Headcount growing"); }
   s += (p.signal ?? 0) / 10;
   return { s, why };
 }
+const proven = (p) => ["super_founder", "serial_founder", "strong_founder"].some((l) => p.labels.includes(l));
 
-function describe(p) {
-  const v = p.main, r = p.revolut;
-  const parts = [];
-  if (r) parts.push(`${r.title ?? "Worked"} at Revolut${r.start || r.end ? ` (${[r.start, r.end].filter(Boolean).join("–")})` : ""}.`);
-  else parts.push("Worked at Revolut (role not in the preview).");
-  if (v) parts.push(`${v.current ? "Now" : "Previously"} ${v.role ? esc(v.role) + " of" : "founder of"} <b>${esc(v.name)}</b>${v.tagline ? `: ${esc(v.tagline)}` : ""}.`);
-  const others = p.ventures.filter((x) => x !== v).map((x) => x.name);
-  if (others.length) parts.push(`Also founded ${esc(others.slice(0, 3).join(", "))}${others.length > 3 ? ` and ${others.length - 3} more` : ""}.`);
-  return parts.join(" ");
-}
+const avatar = (p, size = 72) => {
+  const im = img(p.image), vi = img(p.main?.image);
+  return `<div class="av" style="--s:${size}px">${im ? `<img class="ph" src="${im}" alt="" loading="lazy">` : `<div class="ph">${esc(initials(p.name))}</div>`}${
+    p.main ? (vi ? `<img class="bd" src="${vi}" alt="" loading="lazy">` : `<div class="bd">${esc(p.main.name[0])}</div>`) : ""}</div>`;
+};
 
-function chips(p) {
-  const v = p.main, b = bucket(v), out = [];
-  if (b) out.push(`<span class="chip ${b}">${BUCKET[b]}</span>`);
-  if (v?.industry) out.push(`<span class="chip sig">${esc(v.industry)}${v.subIndustry ? " · " + esc(v.subIndustry) : ""}</span>`);
-  if (v?.technology?.includes("Artificial Intelligence")) out.push(`<span class="chip sig">AI</span>`);
-  if (v?.ownership?.length) out.push(`<span class="chip sig">${esc(v.ownership[0])}</span>`);
-  for (const l of p.labels) out.push(`<span class="chip sig">${esc(l.replace("_", " "))}</span>`);
-  return out.join("");
-}
-
-function personRow(p, showWhy) {
-  const v = p.main, w = p._w;
-  return `<div class="person">
-    <div class="ph"><span class="nm">${esc(p.name)}</span>
-      <span class="meta">${[p.location, p.signal != null ? `Dealroom signal ${p.signal}` : null].filter(Boolean).map(esc).join(" · ")}</span>
-      <span class="meta">${p.linkedin ? `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a> · ` : ""}<a href="${esc(p.url)}" target="_blank" rel="noopener">Dealroom</a></span></div>
-    <p>${describe(p)}</p>
-    <div class="meta">${v ? `${esc([v.city, v.country].filter(Boolean).join(", ") || "location n/a")} · launched ${esc(v.launched ?? "n/a")} · ${v.funding ? eur(v.funding) + " raised" : "no funding recorded"}${v.employees ? ` · ${v.employees} employees` : ""}` : "No founded company found in the profile preview"}</div>
-    <div>${chips(p)}${showWhy ? w.why.map((x) => `<span class="chip early">${esc(x)}</span>`).join("") : ""}</div>
-  </div>`;
-}
-
+// ---------------------------------------------------------------------------------------------
 function render(d) {
   NOW = new Date(d.generatedAt);
   const P = d.people;
   P.forEach((p) => { p._b = bucket(p.main); p._w = watch(p); });
   const V = P.filter((p) => p.main);
-  const count = (b) => V.filter((p) => p._b === b).length;
   const raised = V.reduce((a, p) => a + (p.main.funding ?? 0), 0);
   const countries = new Set(V.map((p) => p.main.country).filter(Boolean)).size;
   const watchlist = P.filter((p) => p._w.s > 0).sort((a, b) => b._w.s - a._w.s);
+  watchlist.forEach((p, i) => (p._rank = i + 1));
+  const stealthCount = watchlist.filter((p) => p.main.stealth || stealthName(p.main)).length;
+  const maxScore = watchlist[0]?._w.s ?? 1;
 
+  $("#asof").textContent = `Prepared for HV Capital · data as of ${new Date(d.generatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`;
 
-  $("#app").className = "";
+  // KPIs with count-up
+  const K = [
+    { v: P.length, f: (x) => Math.round(x), l: "ex-Revolut people now recorded as founders" },
+    { v: watchlist.length, f: (x) => Math.round(x), l: "early signals: new, barely funded or stealth", accent: true },
+    { v: stealthCount, f: (x) => Math.round(x), l: "of them building in stealth", accent: true },
+    { v: raised, f: (x) => usd(x), l: "raised by their main companies" },
+    { v: countries, f: (x) => Math.round(x), l: "countries they build from" },
+  ];
+  $("#kpis").innerHTML = K.map((k) => `<div class="kpi${k.accent ? " accent" : ""}"><div class="v" data-v="${k.v}">0</div><div class="l">${esc(k.l)}</div></div>`).join("");
+  $$("#kpis .v").forEach((el, i) => anim(0, K[i].v, { duration: 1.4, delay: 0.35 + i * 0.08, ease: EASE, onUpdate: (x) => (el.textContent = K[i].f(x)) }));
+  if (REDUCED) $$("#kpis .v").forEach((el, i) => (el.textContent = K[i].f(K[i].v)));
+
   $("#app").innerHTML = `
-  <section>
-    <div class="grid kpis">
-      <div class="card kpi"><div class="v">${P.length}</div><div class="l">ex-Revolut people recorded as founders</div></div>
-      <div class="card kpi"><div class="v">${eur(raised)}</div><div class="l">raised by their main companies</div></div>
-      <div class="card kpi"><div class="v">${countries}</div><div class="l">countries where they build</div></div>
-      <div class="card kpi"><div class="v" style="color:var(--early)">${count("early")}</div><div class="l">early signals (new and barely funded, or stealth)</div></div>
-      <div class="card kpi"><div class="v" style="color:var(--scaled)">${count("scaled")}</div><div class="l">scaled ($25M+ raised)</div></div>
+  <section id="orbit-sec">
+    <div class="sh reveal" data-r>
+      <div><p class="kicker">01 · Early signals</p><h2>Who is building, and how close to a round</h2>
+        <p class="lead">The ${watchlist.length} ex-Revolut founders whose company is just launched, barely funded or in stealth. The closer to Revolut, the stronger the signal. Click anyone for the full profile.</p></div>
+      <div class="controls">
+        <div class="seg" id="segView"><span class="thumb"></span><button data-v="orbit" class="on">Orbit</button><button data-v="grid">Grid</button></div>
+        <div class="seg" id="segFilter"><span class="thumb"></span><button data-f="all" class="on">All early signals</button><button data-f="proven">Proven founders</button></div>
+      </div>
+    </div>
+    <div id="viewBox">
+      <div class="card stage reveal" data-r id="orbitBox"><svg id="orbit" viewBox="0 0 1100 1000" role="img" aria-label="Orbit of early-signal founders around Revolut"></svg>
+        <div class="legend"><span><i style="background:var(--stealth)"></i>Stealth</span><span><i style="background:var(--brand)"></i>Recently launched</span><span class="mono" style="color:var(--faint)">Inner ring = strongest signal</span></div></div>
+      <div class="cards" id="gridBox" style="display:none"></div>
     </div>
   </section>
 
-  <section>
-    <h2>The orbit: early and stealth founders</h2>
-    <p class="lead">Ex-Revolut founders whose new company is just launched, barely funded or tagged stealth. The closer to the centre, the stronger the signal (stealth tag, recent launch, track record, recent exit from Revolut). Hover for the reasons, click to open Dealroom.</p>
-    <div class="tabs" id="tabs">
-      <button data-v="orbit" class="on">Orbit</button><button data-v="grid">Grid</button><span class="sp"></span>
-      <button data-f="all" class="on">All early signals</button><button data-f="proven">Proven founders</button>
-    </div>
-    <div class="card" id="orbitBox"><svg id="orbit" viewBox="0 0 1100 1000" style="width:100%;height:auto;display:block"></svg></div>
-    <div id="gridBox" class="cards" style="display:none"></div>
-  </section>
-
-  <section>
-    <h2>Early-signal pipeline</h2>
-    <p class="lead">The ${watchlist.length} early-signal founders only. How many launched a company each month, and where they are based.</p>
-    <div class="grid two">
-      <div class="card"><b>Launched per month (last 12 months)</b><div class="chart" id="months"></div><p class="note" id="monthNote"></p></div>
-      <div class="card bars"><b>Where they are based</b><div id="countries"></div></div>
+  <section id="pipeline">
+    <div class="sh reveal" data-r><div><p class="kicker">02 · Pipeline</p><h2>When they launched, and where</h2>
+      <p class="lead">Early-signal founders only. A steady flow of new companies each month, concentrated in London.</p></div></div>
+    <div class="two">
+      <div class="card panel reveal" data-r><h3>Companies launched per month</h3><p class="sub">Last 12 months</p><div class="cols" id="months"></div><p class="note" id="monthNote"></p></div>
+      <div class="card panel reveal" data-r><h3>Where they are based</h3><p class="sub">Top 8 countries</p><div id="countries"></div></div>
     </div>
   </section>
 
-  <section>
-    <h2>Watchlist: founders to know about early</h2>
-    <p class="lead">Ex-Revolut founders whose current company is new (launched in the last two years and under $5M raised) or tagged as stealth. Ranked by a simple score that adds stealth tag, recency, prior founder success, a recent exit from Revolut and the Dealroom signal rating. The reasons are shown under each name.</p>
-    <div class="card">${watchlist.slice(0, 25).map((p) => personRow(p, true)).join("") || "<p class='muted'>None found.</p>"}
-      <p class="note muted">Showing the top 25 of ${watchlist.length}. The grid above shows all of them.</p></div>
+  <section id="watchlist">
+    <div class="sh reveal" data-r><div><p class="kicker">03 · Watchlist</p><h2>Founders to call first</h2>
+      <p class="lead">Ranked by a simple score: stealth tag, how recent the launch is, prior founder success, a recent exit from Revolut and the Dealroom signal rating. The reasons sit under each name.</p></div></div>
+    <div class="card wl reveal" data-r><div id="wlRows"></div><div class="more"><button class="btn" id="wlMore">Show all ${watchlist.length}</button></div></div>
   </section>
 
-  <section>
-    <h2>Look someone up</h2>
-    <p class="lead">Search all ${P.length} ex-Revolut founders by name, company or city.</p>
-    <div class="toolbar"><input id="q" type="search" placeholder="Search name, company, tagline…"></div>
-    <div class="card" id="listCard" style="display:none"><div id="list"></div><p class="note" id="count"></p></div>
+  <section id="lookup">
+    <div class="sh reveal" data-r><div><p class="kicker">04 · Search</p><h2>Look someone up</h2>
+      <p class="lead">Search all ${P.length} ex-Revolut founders by name, company, tagline or city.</p></div></div>
+    <div class="search reveal" data-r><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Try “payments”, “Berlin” or a name…" autocomplete="off"></div>
+    <div id="results"></div>
   </section>`;
 
-  // Orbit + grid of early-signal founders
-  const tip = $("#tip");
-  const img = (u) => (u ? "https://" + u : null);
-  const initials = (n) => n.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
-  const stealthName = (v) => /^stealth/i.test(v.name);
-  const lbl = (p) => (stealthName(p.main) ? p.name : p.main.name);
-  let view = "orbit", flt = "all";
-  const pool = () => watchlist.filter((p) => flt === "all" || (flt === "proven" && (p.labels.includes("super_founder") || p.labels.includes("serial_founder") || p.labels.includes("strong_founder"))));
-  const showTip = (e, p) => { tip.style.display = "block"; tip.style.left = Math.min(e.clientX + 14, innerWidth - 300) + "px"; tip.style.top = e.clientY + 14 + "px";
-    tip.innerHTML = `<b>${esc(p.name)}</b> · ${esc(p.main.name)}<br><span class="muted">${esc(p.main.tagline ?? "")}</span><br>${p._w.why.map(esc).join("<br>")}`; };
+  // ---- Segmented controls (sliding thumb) --------------------------------------------------
+  function seg(root, key, onChange) {
+    const thumb = $(".thumb", root);
+    const place = (b, instant) => anim(thumb, { x: b.offsetLeft - 4, width: b.offsetWidth }, instant ? { duration: 0 } : SPRING);
+    root.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b || b.classList.contains("on")) return;
+      $$("button", root).forEach((x) => x.classList.toggle("on", x === b)); place(b); onChange(b.dataset[key]); });
+    requestAnimationFrame(() => place($("button.on", root), true));
+    addEventListener("resize", () => place($("button.on", root), true));
+  }
+  let view = innerWidth < 640 ? "grid" : "orbit", flt = "all";
+  if (view === "grid") $$("#segView button").forEach((b) => b.classList.toggle("on", b.dataset.v === "grid"));
+  const pool = () => watchlist.filter((p) => flt === "all" || proven(p));
+
+  // ---- Tooltip -----------------------------------------------------------------------------
+  const tip = $("#tip"); let tipOn = false;
+  const showTip = (e, p) => {
+    tip.innerHTML = `<b>${esc(p.name)}</b> · ${esc(stealthName(p.main) ? "Stealth startup" : p.main.name)}<div class="m">${esc(p._w.why.slice(0, 3).join(" · "))}</div>`;
+    tip.style.left = Math.min(e.clientX + 16, innerWidth - 316) + "px"; tip.style.top = e.clientY + 18 + "px";
+    if (!tipOn) { tipOn = true; anim(tip, { opacity: [0, 1], y: [4, 0] }, { duration: 0.18 }); }
+  };
+  const hideTip = () => { if (tipOn) { tipOn = false; anim(tip, { opacity: 0 }, { duration: 0.12 }); } };
+
+  // ---- Orbit ---------------------------------------------------------------------------------
+  let loops = [];
   function drawOrbit() {
+    loops.forEach((l) => l.stop?.()); loops = [];
     const svg = $("#orbit"), cx = 550, cy = 500, rings = [{ r: 215, n: 6 }, { r: 340, n: 9 }, { r: 455, n: 12 }];
-    const list = pool().slice(0, 27); let k = 0, h = "";
-    h += rings.map((r) => `<circle cx="${cx}" cy="${cy}" r="${r.r}" fill="none" stroke="var(--line)" stroke-dasharray="3 5"/>`).join("");
+    const list = pool().slice(0, 27); let k = 0;
     const nodes = [];
     rings.forEach((r, ri) => { const items = list.slice(k, k + r.n); k += r.n;
-      items.forEach((p, i) => { const a = (i / items.length) * 2 * Math.PI + ri * 0.5 - Math.PI / 2; nodes.push({ p, x: cx + r.r * Math.cos(a), y: cy + r.r * Math.sin(a) * 0.93 }); }); });
-    h += nodes.map((n) => `<line x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}" stroke="var(--line)" stroke-width="1.5"/>`).join("");
-    h += `<circle cx="${cx}" cy="${cy}" r="92" fill="var(--card-solid)" stroke="var(--line)" stroke-width="2"/><image href="https://storage.googleapis.com/dealroom-images-production/2025/09/21/2e120572df79761e39e343d9aef44b76.png" x="${cx - 45}" y="${cy - 45}" width="90" height="90"/>`;
-    h += nodes.map((n, i) => { const p = n.p, v = p.main, im = img(p.image), vi = img(v.image);
-      return `<g class="nd" data-i="${i}" style="cursor:pointer">
-        <clipPath id="c${i}"><circle cx="${n.x}" cy="${n.y}" r="36"/></clipPath>
-        <circle cx="${n.x}" cy="${n.y}" r="39" fill="${im ? "var(--early)" : "var(--building)"}" fill-opacity="${im ? (v.stealth ? 1 : 0.35) : 0.35}"/>
-        ${im ? `<image href="${im}" x="${n.x - 36}" y="${n.y - 36}" width="72" height="72" clip-path="url(#c${i})" preserveAspectRatio="xMidYMid slice"/>` : `<circle cx="${n.x}" cy="${n.y}" r="36" fill="var(--building)"/><text x="${n.x}" y="${n.y + 6}" text-anchor="middle" font-size="18" font-weight="700" style="fill:#fff">${esc(initials(p.name))}</text>`}
-        <circle cx="${n.x + 28}" cy="${n.y + 26}" r="14" fill="#fff" stroke="var(--card)" stroke-width="2"/>
-        ${vi ? `<image href="${vi}" x="${n.x + 17}" y="${n.y + 15}" width="22" height="22" preserveAspectRatio="xMidYMid meet"/>` : `<text x="${n.x + 28}" y="${n.y + 30}" text-anchor="middle" font-size="10" font-weight="700" style="fill:#333">${esc(v.name[0])}</text>`}
-        <text x="${n.x}" y="${n.y + 62}" text-anchor="middle" font-size="13" font-weight="700">${esc(lbl(p).length > 22 ? lbl(p).slice(0, 21) + "…" : lbl(p))}</text>
-        <text x="${n.x}" y="${n.y + 78}" text-anchor="middle" font-size="12" class="sub">${stealthName(v) ? "Stealth · " : ""}${v.funding ? eur(v.funding) : "pre-funding"}</text></g>`; }).join("");
+      items.forEach((p, i) => { const a = (i / items.length) * 2 * Math.PI + ri * 0.5 - Math.PI / 2; nodes.push({ p, ri, x: cx + r.r * Math.cos(a), y: cy + r.r * Math.sin(a) * 0.93 }); }); });
+    let h = `<defs><radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--brand)" stop-opacity=".18"/><stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/></radialGradient>
+      <filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0b1533" flood-opacity=".14"/></filter></defs>`;
+    h += `<circle cx="${cx}" cy="${cy}" r="260" fill="url(#core)"/>`;
+    h += rings.map((r) => `<ellipse class="ring" cx="${cx}" cy="${cy}" rx="${r.r}" ry="${r.r * 0.93}"/>`).join("");
+    h += nodes.map((n, i) => `<line class="spoke" data-i="${i}" x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}"/>`).join("");
+    h += `<circle class="pulse" cx="${cx}" cy="${cy}" r="92" fill="none" stroke="var(--brand)" stroke-width="1.5" opacity="0"/>
+      <g class="core"><circle cx="${cx}" cy="${cy}" r="88" fill="var(--surface)" stroke="var(--line)" filter="url(#sh)"/><image href="${REVOLUT_LOGO}" x="${cx - 42}" y="${cy - 42}" width="84" height="84"/></g>`;
+    h += nodes.map((n, i) => { const p = n.p, v = p.main, im = img(p.image), vi = img(v.image), st = v.stealth || stealthName(v), name = label(p);
+      return `<g class="nd" data-i="${i}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(p.name)}"><g class="in">
+        <clipPath id="c${i}"><circle r="34"/></clipPath>
+        <circle r="40" fill="var(--surface)" filter="url(#sh)"/>
+        <circle r="38" fill="none" stroke="${st ? "var(--stealth)" : "var(--brand)"}" stroke-width="2.5"/>
+        ${im ? `<image href="${im}" x="-34" y="-34" width="68" height="68" clip-path="url(#c${i})" preserveAspectRatio="xMidYMid slice"/>`
+             : `<circle r="34" fill="var(--brand)"/><text y="6" text-anchor="middle" font-size="17" font-weight="600" style="fill:#fff">${esc(initials(p.name))}</text>`}
+        <circle cx="27" cy="26" r="13" fill="#fff" stroke="var(--surface)" stroke-width="2.5"/>
+        ${vi ? `<image href="${vi}" x="17" y="16" width="20" height="20" preserveAspectRatio="xMidYMid meet"/>` : `<text x="27" y="30" text-anchor="middle" font-size="10" font-weight="700" style="fill:#2a3452">${esc(v.name[0])}</text>`}
+        <text y="62" text-anchor="middle" font-size="13" font-weight="600">${esc(name.length > 22 ? name.slice(0, 21) + "…" : name)}</text>
+        <text y="78" text-anchor="middle" font-size="11.5" class="sub">${st ? "Stealth · " : ""}${v.funding ? usd(v.funding) : "pre-funding"}</text></g></g>`; }).join("");
     svg.innerHTML = h;
-    svg.querySelectorAll(".nd").forEach((g) => { const p = nodes[g.dataset.i].p;
-      g.addEventListener("mousemove", (e) => showTip(e, p)); g.addEventListener("mouseleave", () => (tip.style.display = "none")); g.addEventListener("click", () => window.open(p.url, "_blank")); });
+
+    // Entrance: rings and spokes draw, core pops, nodes spring out ring by ring
+    $$(".ring", svg).forEach((el, i) => anim(el, { opacity: [0, 1], transform: ["scale(.85)", "scale(1)"] }, { duration: 0.9, delay: 0.1 + i * 0.12, ease: EASE }));
+    $$(".ring", svg).forEach((el) => (el.style.transformOrigin = `${cx}px ${cy}px`));
+    $$(".spoke", svg).forEach((el) => { const len = Math.hypot(el.x2.baseVal.value - cx, el.y2.baseVal.value - cy); el.style.strokeDasharray = len; el.style.strokeDashoffset = len;
+      anim(el, { strokeDashoffset: [len, 0] }, { duration: 0.8, delay: 0.35 + nodes[el.dataset.i].ri * 0.15 + Math.random() * 0.1, ease: EASE }); });
+    const core = $(".core", svg); core.style.transformOrigin = `${cx}px ${cy}px`;
+    anim(core, { opacity: [0, 1], transform: ["scale(.6)", "scale(1)"] }, { ...SPRING, delay: 0.05 });
+    const inner = $$(".nd .in", svg);
+    inner.forEach((el, i) => anim(el, { opacity: [0, 1], transform: ["scale(.3)", "scale(1)"] }, { ...SPRING, delay: 0.45 + nodes[i].ri * 0.16 + (i % 9) * 0.03 }));
+    // Ambient life: a soft pulse from the core and slowly drifting ring dashes
+    if (!REDUCED) {
+      loops.push(animate($(".pulse", svg), { r: [92, 200], opacity: [0.35, 0] }, { duration: 3.2, repeat: Infinity, ease: "easeOut", delay: 1.2 }));
+      $$(".ring", svg).forEach((el, i) => loops.push(animate(el, { strokeDashoffset: [0, i % 2 ? 90 : -90] }, { duration: 24 + i * 6, repeat: Infinity, ease: "linear" })));
+    }
+    // Hover: lift the node, light up its spoke
+    $$(".nd", svg).forEach((g) => { const i = +g.dataset.i, p = nodes[i].p, el = $(".in", g), sp = $(`.spoke[data-i="${i}"]`, svg);
+      const on = () => { sp.classList.add("hot"); anim(el, { transform: "scale(1.1)" }, { type: "spring", stiffness: 400, damping: 18 }); };
+      const off = () => { sp.classList.remove("hot"); anim(el, { transform: "scale(1)" }, { type: "spring", stiffness: 300, damping: 22 }); hideTip(); };
+      g.addEventListener("mouseenter", on); g.addEventListener("mousemove", (e) => showTip(e, p)); g.addEventListener("mouseleave", off);
+      g.addEventListener("focus", on); g.addEventListener("blur", off);
+      g.addEventListener("click", () => openDrawer(p)); g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDrawer(p); } }); });
   }
+
+  // ---- Grid ----------------------------------------------------------------------------------
   function drawGrid() {
     const list = pool();
-    $("#gridBox").innerHTML = list.map((p, i) => { const v = p.main, im = img(p.image), vi = img(v.image);
-      return `<a class="pc" href="${esc(p.url)}" target="_blank" rel="noopener" data-i="${i}">
-        <div class="av">${im ? `<img class="ph1" src="${im}" alt="" loading="lazy">` : `<div class="ph1">${esc(initials(p.name))}</div>`}${vi ? `<img class="bd" src="${vi}" alt="" loading="lazy">` : `<div class="bd">${esc(v.name[0])}</div>`}</div>
-        <div class="cn">${esc(lbl(p))}</div><div class="fn">${stealthName(v) ? "Stealth startup" : esc(p.name)}</div><div class="fu">${v.funding ? eur(v.funding) : "pre-funding"}</div>
-        <div class="tg">${esc(v.tagline ?? "")}</div><div class="meta">${esc([v.city, v.country].filter(Boolean).join(", "))} · ${esc(v.launched ?? "")}</div>
-        <div>${v.stealth ? `<span class="chip early">Stealth</span>` : ""}${p.labels.includes("super_founder") ? `<span class="chip sig">super founder</span>` : p.labels.includes("serial_founder") ? `<span class="chip sig">serial</span>` : ""}</div></a>`; }).join("") || "<p class='muted'>None.</p>";
-    document.querySelectorAll("#gridBox .pc").forEach((el) => { const p = list[el.dataset.i];
-      el.addEventListener("mousemove", (e) => showTip(e, p)); el.addEventListener("mouseleave", () => (tip.style.display = "none")); });
+    $("#gridBox").innerHTML = list.map((p, i) => { const v = p.main, st = v.stealth || stealthName(v);
+      return `<div class="pc" data-i="${i}" tabindex="0" role="button">
+        <span class="rank mono">#${p._rank}</span>${st ? `<span class="st chip s">Stealth</span>` : ""}
+        ${avatar(p, 76)}
+        <div class="cn">${esc(label(p))}</div><div class="fn">${st ? "Stealth startup" : esc(p.name)}</div>
+        <div class="tg">${esc(v.tagline ?? p._w.why.slice(0, 2).join(" · "))}</div>
+        <div class="ft"><span class="mono">${v.funding ? usd(v.funding) : "pre-funding"}</span><span>·</span><span>${esc(v.city ?? v.country ?? "n/a")}</span><span>·</span><span class="mono">${esc(v.launched ?? "")}</span></div></div>`; }).join("") || "<p class='lead'>No founder matches.</p>";
+    const cards = $$("#gridBox .pc");
+    anim(cards, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, delay: stagger(0.025, { startDelay: 0.05 }), ease: EASE });
+    cards.forEach((el) => { const p = list[el.dataset.i];
+      el.addEventListener("mouseenter", () => anim(el, { y: -4 }, SPRING)); el.addEventListener("mouseleave", () => { anim(el, { y: 0 }, SPRING); hideTip(); });
+      el.addEventListener("click", () => openDrawer(p)); el.addEventListener("keydown", (e) => { if (e.key === "Enter") openDrawer(p); }); });
   }
-  const redraw = () => { $("#orbitBox").style.display = view === "orbit" ? "" : "none"; $("#gridBox").style.display = view === "grid" ? "" : "none"; view === "orbit" ? drawOrbit() : drawGrid(); };
-  $("#tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
-    if (b.dataset.v) view = b.dataset.v; if (b.dataset.f) flt = b.dataset.f;
-    document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("on", x.dataset.v === view || x.dataset.f === flt)); redraw(); });
-  redraw();
 
-  // Early-signal founders: launches per month (one colour) and country
-  const mk = (i) => { const d = new Date(NOW.getFullYear(), NOW.getMonth() - i, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
+  // View switch: crossfade between orbit and grid
+  let firstDraw = true;
+  async function redraw() {
+    const box = $("#viewBox");
+    if (!firstDraw) await anim(box, { opacity: 0, y: 8 }, { duration: 0.18 });
+    $("#orbitBox").style.display = view === "orbit" ? "" : "none";
+    $("#gridBox").style.display = view === "grid" ? "" : "none";
+    $("#orbitBox").style.opacity = 1;
+    view === "orbit" ? drawOrbit() : drawGrid();
+    if (!firstDraw) anim(box, { opacity: 1, y: 0 }, { duration: 0.3, ease: EASE });
+    firstDraw = false;
+  }
+  seg($("#segView"), "v", (v) => { view = v; redraw(); });
+  seg($("#segFilter"), "f", (f) => { flt = f; redraw(); });
+  // Draw the first view when it scrolls into sight so the entrance is seen
+  onView("#viewBox", () => redraw(), { amount: 0.15 });
+
+  // ---- Pipeline charts -------------------------------------------------------------------------
+  const mk = (i) => { const x = new Date(NOW.getFullYear(), NOW.getMonth() - i, 1); return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}`; };
   const months = Array.from({ length: 12 }, (_, i) => mk(11 - i));
   const perMonth = Object.fromEntries(months.map((m) => [m, 0]));
   let yearOnly = 0;
   watchlist.forEach((p) => { const l = String(p.main.launched ?? ""); if (l.length === 7) { if (l in perMonth) perMonth[l]++; } else yearOnly++; });
   const maxM = Math.max(1, ...Object.values(perMonth));
-  $("#months").innerHTML = months.map((m) => `<div class="col"><span>${perMonth[m]}</span><div class="stack" style="height:${(perMonth[m] / maxM) * 120}px"><span style="height:100%;background:var(--early)"></span></div>${new Date(m + "-01").toLocaleString("en", { month: "short" })}</div>`).join("");
-  $("#monthNote").textContent = yearOnly ? `${yearOnly} founders have only a launch year recorded and are not shown here.` : "";
-  const cc = d3.rollups(watchlist, (a) => a.length, (p) => p.main.country ?? "Not recorded").sort((a, b) => b[1] - a[1]).slice(0, 8);
-  $("#countries").innerHTML = cc.map(([c, n]) => `<div class="row"><span>${esc(c)}</span><div class="track"><span style="width:${(n / cc[0][1]) * 100}%;background:var(--early)"></span></div><span>${n}</span></div>`).join("");
+  $("#months").innerHTML = months.map((m) => `<div class="c"><span class="v mono">${perMonth[m]}</span><div class="bar${perMonth[m] ? "" : " zero"}" style="height:${Math.max(perMonth[m] / maxM, 0.02) * 150}px"></div><span class="m">${new Date(m + "-01").toLocaleString("en", { month: "short" })}</span></div>`).join("");
+  $("#monthNote").textContent = yearOnly ? `${yearOnly} founders only have a launch year recorded and are not shown.` : "";
+  const byCountry = {};
+  watchlist.forEach((p) => { const c = p.main.country ?? "Not recorded"; byCountry[c] = (byCountry[c] || 0) + 1; });
+  const cc = Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  $("#countries").innerHTML = cc.map(([c, n]) => `<div class="hb"><span>${esc(c)}</span><div class="t"><span style="width:${(n / cc[0][1]) * 100}%"></span></div><span class="n mono">${n}</span></div>`).join("");
+  $$("#months .bar, #countries .t span").forEach((el) => (el.style.transform = el.classList.contains("bar") ? "scaleY(0)" : "scaleX(0)"));
+  onView("#months", () => anim($$("#months .bar"), { transform: ["scaleY(0)", "scaleY(1)"] }, { duration: 0.7, delay: stagger(0.045), ease: EASE }));
+  onView("#countries", () => anim($$("#countries .t span"), { transform: ["scaleX(0)", "scaleX(1)"] }, { duration: 0.8, delay: stagger(0.06), ease: EASE }));
 
-  // Search (nothing is listed until the user types)
-  const draw = () => {
-    const q = $("#q").value.trim().toLowerCase();
-    $("#listCard").style.display = q.length >= 2 ? "" : "none";
-    if (q.length < 2) return;
-    const rows = P.filter((p) => [p.name, p.main?.name, p.main?.tagline, p.location].join(" ").toLowerCase().includes(q)).sort((a, b) => (b.signal ?? -1) - (a.signal ?? -1));
-    $("#list").innerHTML = rows.slice(0, 10).map((p) => personRow(p, false)).join("") || "<p class='muted'>No match.</p>";
-    $("#count").textContent = rows.length > 10 ? `Showing the top 10 of ${rows.length}. Refine the search to narrow it down.` : "";
+  // ---- Watchlist -------------------------------------------------------------------------------
+  const rowHtml = (p) => { const v = p.main, st = v.stealth || stealthName(v);
+    return `<div class="row" tabindex="0" role="button" data-id="${p.id}">
+      <span class="rk mono">${String(p._rank).padStart(2, "0")}</span>${avatar(p, 48)}
+      <div class="who"><div class="nm">${esc(p.name)}</div><div class="co">${esc(st ? "Stealth startup" : v.name)}${v.tagline && !st ? ` · ${esc(v.tagline)}` : ""}</div>
+        <div class="why">${st ? `<span class="chip s">Stealth</span>` : ""}${p._w.why.filter((w) => w !== "Tagged stealth startup").slice(0, 3).map((w) => `<span class="chip">${esc(w)}</span>`).join("")}</div></div>
+      <div class="rt"><b class="mono">${v.funding ? usd(v.funding) : "Pre-funding"}</b>${esc(v.city ?? v.country ?? "")}<br><span class="score" title="Signal score"><span style="width:${(p._w.s / maxScore) * 100}%"></span></span></div></div>`; };
+  const byId = Object.fromEntries(P.map((p) => [p.id, p]));
+  const bindRows = (root) => $$(".row", root).forEach((el) => { el.addEventListener("click", () => openDrawer(byId[el.dataset.id])); el.addEventListener("keydown", (e) => { if (e.key === "Enter") openDrawer(byId[el.dataset.id]); }); });
+  let wlAll = false;
+  const drawWl = (fromIdx = 0) => {
+    $("#wlRows").innerHTML = watchlist.slice(0, wlAll ? watchlist.length : 10).map(rowHtml).join("");
+    bindRows($("#wlRows"));
+    const rows = $$("#wlRows .row").slice(fromIdx);
+    anim(rows, { opacity: [0, 1], x: [-10, 0] }, { duration: 0.45, delay: stagger(fromIdx ? 0.015 : 0.05), ease: EASE });
   };
-  $("#q").addEventListener("input", draw);
+  onView("#wlRows", () => drawWl(), { amount: 0.1 });
+  $("#wlMore").addEventListener("click", () => { wlAll = !wlAll; $("#wlMore").textContent = wlAll ? "Show top 10" : `Show all ${watchlist.length}`; drawWl(wlAll ? 10 : 0); if (!wlAll) $("#watchlist").scrollIntoView(); });
 
-  $("#foot").innerHTML = `Source: Dealroom API (people filtered on past or current employment at Revolut, founder role, no longer employed there). Data as of ${esc(d.generatedAt)}.
-    <br>Caveats: "worked at Revolut" includes advisers and board members as well as employees, and a person's profile previews at most 5 roles, so some ventures may be missing. Funding is the total recorded by Dealroom; "no funding recorded" can also mean undisclosed.`;
+  // ---- Search (nothing listed until typing) ----------------------------------------------------
+  let t;
+  $("#q").addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => {
+    const q = $("#q").value.trim().toLowerCase(), out = $("#results");
+    if (q.length < 2) { out.innerHTML = ""; return; }
+    const rows = P.filter((p) => [p.name, p.main?.name, p.main?.tagline, p.location, p.main?.city, p.main?.industry].join(" ").toLowerCase().includes(q))
+      .sort((a, b) => (b._w.s - a._w.s) || ((b.signal ?? -1) - (a.signal ?? -1)));
+    out.innerHTML = rows.length ? `<div class="card wl">${rows.slice(0, 8).map((p) => p.main ? rowHtml({ ...p, _rank: p._rank ?? "–" }) : "").join("")}</div>
+      ${rows.length > 8 ? `<p class="note">Showing 8 of ${rows.length}. Refine the search to narrow it down.</p>` : ""}` : `<p class="note">No founder matches “${esc(q)}”.</p>`;
+    bindRows(out);
+    anim($$(".row", out), { opacity: [0, 1], y: [8, 0] }, { duration: 0.3, delay: stagger(0.03), ease: EASE });
+  }, 120); });
+
+  // ---- Drawer ------------------------------------------------------------------------------------
+  const drawer = $("#drawer"), scrim = $("#scrim");
+  window.openDrawer = (p) => {
+    hideTip();
+    const v = p.main, r = p.revolut, st = v && (v.stealth || stealthName(v));
+    const others = p.ventures.filter((x) => x.id !== v?.id);
+    $("#dbody").innerHTML = `
+      ${avatar(p, 84)}
+      <h3>${esc(p.name)}</h3><div class="loc">${esc(p.location ?? "Location not recorded")}${p.signal != null ? ` · Dealroom signal <span class="mono">${p.signal}</span>` : ""}</div>
+      <div style="margin-top:10px">${st ? `<span class="chip s">Stealth</span>` : ""}${p.labels.map((l) => `<span class="chip b">${esc(l.replace("_", " "))}</span>`).join("")}${p.backgrounds.slice(0, 2).map((b) => `<span class="chip">${esc(b)}</span>`).join("")}</div>
+      ${p._w.why.length ? `<div class="blk"><div class="lbl">Why now</div><ul>${p._w.why.map((w) => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
+      ${v ? `<div class="blk"><div class="lbl">${v.current ? "Building now" : "Last company"}</div>
+        <div class="co">${img(v.image) ? `<img src="${img(v.image)}" alt="">` : `<div class="lg">${esc(v.name[0])}</div>`}<div><b>${esc(st ? "Stealth startup" : v.name)}</b><div class="loc">${esc(v.role ?? "Founder")}</div></div></div>
+        ${v.tagline ? `<p style="margin:12px 0 0;color:var(--ink-2)">${esc(v.tagline)}</p>` : ""}
+        <div class="facts"><div><span>Raised</span><b class="mono">${v.funding ? usd(v.funding) : "None recorded"}</b></div><div><span>Launched</span><b class="mono">${esc(v.launched ?? "n/a")}</b></div>
+          <div><span>Based in</span><b>${esc([v.city, v.country].filter(Boolean).join(", ") || "n/a")}</b></div><div><span>Sector</span><b>${esc(v.industry ?? "n/a")}</b></div></div></div>` : ""}
+      <div class="blk"><div class="lbl">At Revolut</div><div>${r ? `${esc(r.title ?? "Role not recorded")} <span class="mono" style="color:var(--muted)">${esc([r.start, r.end].filter(Boolean).join("–"))}</span>` : "Role not in the profile preview"}</div></div>
+      ${others.length ? `<div class="blk"><div class="lbl">Also founded</div><div>${others.map((o) => `<span class="chip">${esc(o.name)}</span>`).join("")}</div></div>` : ""}
+      <div class="acts"><a class="btn primary" href="${esc(p.url)}" target="_blank" rel="noopener">Open in Dealroom</a>${p.linkedin ? `<a class="btn" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}</div>`;
+    drawer.style.visibility = "visible"; scrim.classList.add("open");
+    anim(scrim, { opacity: 1 }, { duration: 0.25 });
+    anim(drawer, { transform: ["translateX(110%)", "translateX(0%)"] }, { type: "spring", stiffness: 280, damping: 32 });
+    anim($$("#dbody > *"), { opacity: [0, 1], y: [10, 0] }, { duration: 0.4, delay: stagger(0.035, { startDelay: 0.08 }), ease: EASE });
+    $("#close").focus();
+  };
+  const closeDrawer = async () => {
+    if (!scrim.classList.contains("open")) return;
+    scrim.classList.remove("open");
+    anim(scrim, { opacity: 0 }, { duration: 0.2 });
+    await anim(drawer, { transform: "translateX(110%)" }, { duration: 0.28, ease: [0.4, 0, 1, 1] });
+    drawer.style.visibility = "hidden";
+  };
+  $("#close").addEventListener("click", closeDrawer); scrim.addEventListener("click", closeDrawer);
+  addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+  // ---- Reveal on scroll, nav highlight, sticky bar ----------------------------------------------
+  onView("#app [data-r]", (el) => anim(el, { opacity: [0, 1], y: [18, 0] }, { duration: 0.7, ease: EASE }), { amount: 0.15 });
+  const nav = $("#nav"), navThumb = $(".thumb", nav), links = $$("a", nav);
+  const setNav = (id) => { const a = links.find((l) => l.hash === "#" + id); if (!a || a.classList.contains("on")) return;
+    links.forEach((l) => l.classList.toggle("on", l === a)); anim(navThumb, { x: a.offsetLeft - 4, width: a.offsetWidth }, SPRING); };
+  const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && setNav(e.target.id)), { rootMargin: "-45% 0px -50% 0px" });
+  ["orbit-sec", "pipeline", "watchlist", "lookup"].forEach((id) => io.observe(document.getElementById(id)));
+
+  $("#foot").innerHTML = `<div><b>Source:</b> Dealroom API. People who worked at Revolut, hold a founder role and no longer work there, plus the companies they founded. Data as of ${esc(d.generatedAt)}.</div>
+    <div><b>Caveats:</b> “worked at Revolut” also includes advisers and board members. Profiles preview at most 5 roles, so some ventures may be missing. “No funding recorded” can also mean undisclosed.</div>`;
 }
 
+// Hero entrance and ambient background run straight away
+anim($$(".hero [data-r]"), { opacity: [0, 1], y: [20, 0] }, { duration: 0.8, delay: stagger(0.08, { startDelay: 0.05 }), ease: EASE });
+if (!REDUCED) {
+  animate(".bg .g1", { x: ["0vw", "14vw"], y: ["0vh", "10vh"], scale: [1, 1.15] }, { duration: 22, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" });
+  animate(".bg .g2", { x: ["0vw", "-12vw"], y: ["0vh", "16vh"], scale: [1, 0.9] }, { duration: 28, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" });
+}
+addEventListener("scroll", () => $("#bar").classList.toggle("scrolled", scrollY > 8), { passive: true });
+
 fetch("revolut-mafia.json").then((r) => r.json()).then((d) => { if (d.error) throw new Error(d.error); render(d); })
-  .catch((e) => { $("#app").className = "error"; $("#app").textContent = "Could not load: " + e.message; });
+  .catch((e) => { $("#app").innerHTML = `<div class="loading error">Could not load: ${esc(e.message)}</div>`; });
 </script>
 </body>
 </html>
